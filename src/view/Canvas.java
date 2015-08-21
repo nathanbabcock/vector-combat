@@ -1,3 +1,7 @@
+package view;
+
+import model.Game;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -10,6 +14,8 @@ import java.io.File;
 public class Canvas extends JPanel {
     BufferedImage background;
     Game game;
+    public final int WIDTH = 800;
+    public final int HEIGHT = 600;
 
     public Canvas(Game game) {
         this.game = game;
@@ -20,7 +26,7 @@ public class Canvas extends JPanel {
             e.printStackTrace();
         }
 
-        setSize(new Dimension(800, 600));
+        setSize(new Dimension(WIDTH, HEIGHT));
     }
 
     @Override
@@ -31,8 +37,8 @@ public class Canvas extends JPanel {
         // Background
         g2.drawImage(background, 0, 0, null);
 
-        // Player
+        // model.Player
         g2.setColor(new Color((int) (Math.random() * 0x1000000)));
-        g2.fillRect(game.player.x, game.player.y, game.player.width, game.player.height);
+        g2.fillRect(game.player.position.x.intValue(), HEIGHT - game.player.position.y.intValue() + game.player.height.intValue(), game.player.width.intValue(), game.player.height.intValue());
     }
 }
