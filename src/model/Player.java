@@ -10,8 +10,10 @@ public class Player {
     public Float x, y;
     public Float width, height;
     public Vector2D velocity;
-    public static final Vector2D moveLeft = new Vector2D(256, 180);
-    public static final Vector2D moveRight = new Vector2D(256, 0);
+    public boolean movingLeft, movingRight;
+    public static final Vector2D leftImpulse = new Vector2D(50, 180);
+    public static final Vector2D rightImpulse = new Vector2D(50, 0);
+    public static final Vector2D jumpImpulse = new Vector2D(150, 90);
 
     public Point2D getPos() {
         return new Point2D(x, y);
@@ -20,15 +22,6 @@ public class Player {
     public void setPos(Point2D pos) {
         x = pos.x;
         y = pos.y;
-    }
-
-    public void moveLeft() {
-        velocity = moveLeft; //velocity.add(moveLeft);
-    }
-
-    public void moveRight() {
-        velocity = moveRight; //velocity.add(moveRight);
-
     }
 
 //    public Rectangle getHitBox() {

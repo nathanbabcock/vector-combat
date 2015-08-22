@@ -6,6 +6,7 @@ import view.Canvas;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 /**
  * Created by Nathan on 8/19/2015.
@@ -29,8 +30,10 @@ public class Play extends JFrame {
         repaint();
 
         // Listeners
-        KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-        manager.addKeyEventDispatcher(new MyDispatcher());
+        addKeyListener(new MyListener());
+
+//        KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+//        manager.addKeyEventDispatcher(new MyDispatcher());
 
         gameLoop();
     }
@@ -78,22 +81,58 @@ public class Play extends JFrame {
         }
     }
 
-    private class MyDispatcher implements KeyEventDispatcher {
+//    private class MyDispatcher implements KeyEventDispatcher {
+//        @Override
+//        public boolean dispatchKeyEvent(KeyEvent e) {
+//            int keyCode = e.getKeyCode();
+//            switch (keyCode) {
+//                case KeyEvent.VK_SPACE:
+////                    player.jump();
+//                    break;
+//                case KeyEvent.VK_LEFT:
+////                    game.player.moveingLeft = true;
+//                    break;
+//                case KeyEvent.VK_RIGHT:
+//                    game.player.moveRight();
+//                    break;
+//            }
+//            return true;
+//        }
+//    }
+
+    private class MyListener implements KeyListener {
         @Override
-        public boolean dispatchKeyEvent(KeyEvent e) {
+        public void keyPressed(KeyEvent e) {
             int keyCode = e.getKeyCode();
             switch (keyCode) {
                 case KeyEvent.VK_SPACE:
-//                    player.jump();
+                    game.player.velocity = game.player.velocity.add(game.player.jumpImpulse);
                     break;
                 case KeyEvent.VK_LEFT:
-                    game.player.moveLeft();
+                    game.player.velocity = game.player.velocity.add(game.player.leftImpulse);
                     break;
                 case KeyEvent.VK_RIGHT:
-                    game.player.moveRight();
+                    game.player.velocity = game.player.velocity.add(game.player.rightImpulse);
                     break;
             }
-            return true;
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+            int keyCode = e.getKeyCode();
+            switch (keyCode) {
+                case KeyEvent.VK_LEFT:
+                    game.player.velocity = game.player.velocity.subtract(game.player.leftImpulse);
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    game.player.velocity = game.player.velocity.subtract(game.player.rightImpulse);
+                    break;
+            }
+        }
+
+        @Override
+        public void keyTyped(KeyEvent e) {
+            // unused
         }
     }
 

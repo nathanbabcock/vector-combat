@@ -15,6 +15,18 @@ public class Vector2D {
         return new Vector2D(magnitude * scalar, direction);
     }
 
+    public Vector2D rotate(float rotation) {
+        return new Vector2D(magnitude, direction + rotation);
+    }
+
+    public Vector2D negate() {
+        return rotate(180);
+    }
+
+    public Vector2D subtract(Vector2D other) {
+        return add(other.negate());
+    }
+
     public Vector2D add(Vector2D other) {
         float deltaX = deltaX() + other.deltaX();
         float deltaY = deltaY() + other.deltaY();
@@ -22,8 +34,13 @@ public class Vector2D {
         float magnitude = (float) Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
         float direction = (float) Math.toDegrees(Math.atan(deltaY / deltaX));
 
-//        TODO fix this method mo betta
-//        if(deltaY > 0 || deltaX > 0) direction += 180;
+        if (deltaX < 0)
+            direction += 180;
+
+//        if(deltaX >= 0 && deltaY > 0)
+//            direction += 180;
+//        else if(deltaX <= 0 && deltaY > 0)
+//            direction += 180;
 
         return new Vector2D(magnitude, direction);
     }

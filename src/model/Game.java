@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class Game {
     public Player player;
     public Map map;
+
     public static final Vector2D gravity = new Vector2D(100, -90); // acceleration in px/sec^2
 
     public Game() {
@@ -28,7 +29,6 @@ public class Game {
 
     public void update(float deltaTime) {
         // Apply gravity
-        // TODO something here
         player.velocity = player.velocity.add(gravity.scale(deltaTime));
 
         System.out.println(player.velocity.magnitude + " @ " + player.velocity.direction);
@@ -51,12 +51,14 @@ public class Game {
             int deltaY = (int) (p.y - prev.y);
             prev = player.getPos();
             player.setPos(p);
+
             // Vertical collision detection
             if ((deltaY < 0 && checkCollisions_bottom(player)) || (deltaY > 0 && checkCollisions_top(player))) {
                 player.velocity.zeroY();
                 player.setPos(prev);
                 return;
             }
+
             // Horizontal collision detection
             if ((deltaX < 0 && checkCollisions_left(player)) || (deltaX > 0 && checkCollisions_right(player))) {
                 player.velocity.zeroX();

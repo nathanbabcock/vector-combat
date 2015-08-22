@@ -30,14 +30,14 @@ public class TestVector2D extends JFrame {
         @Override
         public void paintComponent(Graphics g) {
             Graphics2D g2 = (Graphics2D) g;
-            Vector2D v = new Vector2D(100, -1000);
+            Vector2D v = new Vector2D(100, 180);
             Point2D start = new Point2D(500, 500);
             Point2D end = start.translate(v);
             g2.setColor(Color.GREEN);
             g2.drawLine(start.x.intValue(), start.y.intValue(), end.x.intValue(), end.y.intValue());
             g2.drawOval(end.x.intValue() - 5, end.y.intValue() - 5, 10, 10);
 
-            Vector2D v2 = new Vector2D(100, 0);
+            Vector2D v2 = new Vector2D(100, 90);
             Point2D end2 = end.translate(v2);
             g2.setColor(Color.YELLOW);
             g2.drawLine(end.x.intValue(), end.y.intValue(), end2.x.intValue(), end2.y.intValue());
