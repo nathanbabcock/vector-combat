@@ -20,7 +20,7 @@ public class Play extends JFrame {
         game = new Game();
         canvas = new Canvas(game);
 
-        setSize(new Dimension(canvas.WIDTH, canvas.HEIGHT));
+        setSize(new Dimension(game.map.WIDTH, game.map.HEIGHT));
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
 
@@ -57,7 +57,7 @@ public class Play extends JFrame {
             }
 
             // update the game logic
-            game.update(delta);
+            game.update(OPTIMAL_TIME / 1000000000f);
             canvas.repaint();
 
             // we want each frame to take 10 milliseconds, to do this

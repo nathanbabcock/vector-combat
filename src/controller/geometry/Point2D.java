@@ -17,11 +17,7 @@ public class Point2D {
     }
 
     public Point2D translate(Vector2D vector) {
-        float magnitude = vector.magnitude;
-        float direction = vector.direction;
-        float deltaX = (float) (magnitude * Math.cos(Math.toRadians(direction)));
-        float deltaY = (float) (magnitude * Math.sin(Math.toRadians(direction)));
-        return new Point2D(x + deltaX, y + deltaY);
+        return new Point2D(x + vector.deltaX(), y + vector.deltaY());
     }
 
     public void translateTo(Vector2D vector) {
