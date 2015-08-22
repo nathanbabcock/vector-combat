@@ -5,6 +5,7 @@ import view.Canvas;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 
 /**
  * Created by Nathan on 8/19/2015.
@@ -20,12 +21,16 @@ public class Play extends JFrame {
         game = new Game();
         canvas = new Canvas(game);
 
+        // Layout
         setSize(new Dimension(game.map.WIDTH, game.map.HEIGHT));
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
-
         add(canvas);
         repaint();
+
+        // Listeners
+        KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        manager.addKeyEventDispatcher(new MyDispatcher());
 
         gameLoop();
     }
@@ -70,6 +75,25 @@ public class Play extends JFrame {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private class MyDispatcher implements KeyEventDispatcher {
+        @Override
+        public boolean dispatchKeyEvent(KeyEvent e) {
+            int keyCode = e.getKeyCode();
+            switch (keyCode) {
+                case KeyEvent.VK_SPACE:
+//                    player.jump();
+                    break;
+                case KeyEvent.VK_LEFT:
+                    game.player.moveLeft();
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    game.player.moveRight();
+                    break;
+            }
+            return true;
         }
     }
 

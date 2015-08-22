@@ -1,4 +1,4 @@
-package controller.geometry;
+package model.geometry;
 
 /**
  * Created by Nathan on 8/20/2015.
@@ -21,6 +21,10 @@ public class Vector2D {
 
         float magnitude = (float) Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
         float direction = (float) Math.toDegrees(Math.atan(deltaY / deltaX));
+
+//        TODO fix this method mo betta
+//        if(deltaY > 0 || deltaX > 0) direction += 180;
+
         return new Vector2D(magnitude, direction);
     }
 
@@ -30,6 +34,15 @@ public class Vector2D {
         if (deltaX > 0)
             direction = 0;
         else if (deltaX < 0)
+            direction = 180;
+    }
+
+    public void zeroX() {
+        float deltaY = deltaY();
+        magnitude = deltaY;
+        if (deltaY > 0)
+            direction = 0;
+        else if (deltaY < 0)
             direction = 180;
     }
 

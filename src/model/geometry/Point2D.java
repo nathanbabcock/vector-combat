@@ -1,4 +1,4 @@
-package controller.geometry;
+package model.geometry;
 
 /**
  * Created by Nathan on 8/20/2015.
