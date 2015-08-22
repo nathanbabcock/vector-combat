@@ -5,8 +5,6 @@ import view.Canvas;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 /**
  * Created by Nathan on 8/19/2015.
@@ -30,8 +28,6 @@ public class Play extends JFrame {
         repaint();
 
         // Listeners
-        addKeyListener(new MyListener());
-
 //        KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
 //        manager.addKeyEventDispatcher(new MyDispatcher());
 
@@ -99,42 +95,6 @@ public class Play extends JFrame {
 //            return true;
 //        }
 //    }
-
-    private class MyListener implements KeyListener {
-        @Override
-        public void keyPressed(KeyEvent e) {
-            int keyCode = e.getKeyCode();
-            switch (keyCode) {
-                case KeyEvent.VK_SPACE:
-                    game.player.velocity = game.player.jumpImpulse;
-                    break;
-                case KeyEvent.VK_LEFT:
-                    game.player.velocity = game.player.leftImpulse;
-                    break;
-                case KeyEvent.VK_RIGHT:
-                    game.player.velocity = game.player.rightImpulse;
-                    break;
-            }
-        }
-
-        @Override
-        public void keyReleased(KeyEvent e) {
-            int keyCode = e.getKeyCode();
-            switch (keyCode) {
-                case KeyEvent.VK_LEFT:
-                    game.player.velocity.zero();
-                    break;
-                case KeyEvent.VK_RIGHT:
-                    game.player.velocity.zero();
-                    break;
-            }
-        }
-
-        @Override
-        public void keyTyped(KeyEvent e) {
-            // unused
-        }
-    }
 
     public static void main(String[] args) {
         new Play();

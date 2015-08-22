@@ -17,12 +17,17 @@ public class Point2D {
     }
 
     public Point2D translate(Vector2D vector) {
-        return new Point2D(x + vector.deltaX(), y + vector.deltaY());
+        return new Point2D(x + vector.x, y + vector.y);
     }
 
-    public void translateTo(Vector2D vector) {
-        Point2D b = translate(vector);
-        x = b.x;
-        y = b.y;
+    public Point2D displace(Vector2D acceleration, Vector2D velocity, float time) {
+        float deltaX = (float) (0.5 * acceleration.x * Math.pow(time, 2) + velocity.x * time);
+        float deltaY = (float) (0.5 * acceleration.y * Math.pow(time, 2) + velocity.y * time);
+        return new Point2D(x + deltaX, y + deltaY);
     }
+
+//    public void translateTo(Vector2D vector) {
+//        x += vector.x;
+//        y += vector.y;
+//    }
 }

@@ -42,8 +42,8 @@ public class Canvas extends JPanel {
 
         // Physics graphs
         positionGraph.add(HEIGHT - player.y);
-        velocityGraph.add(HEIGHT - player.velocity.magnitude);
-        accelerationGraph.add(HEIGHT - game.gravity.magnitude);
+        velocityGraph.add(HEIGHT - player.velocity.magnitude());
+        accelerationGraph.add(HEIGHT + game.gravity);
         g2.setColor(Color.GREEN);
         for (int i = 0; i < positionGraph.size(); i++)
             g2.fillRect(i, positionGraph.get(i).intValue(), 2, 2); // height
