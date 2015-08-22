@@ -19,7 +19,6 @@ public class TestVector2D extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
         add(new VectorCanvas());
-
     }
 
     private class VectorCanvas extends JPanel {

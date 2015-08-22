@@ -15,6 +15,8 @@ public class Game {
 
     public static final Vector2D gravity = new Vector2D(100, -90); // acceleration in px/sec^2
 
+    public float time = 0;
+
     public Game() {
         map = new Map();
 
@@ -28,17 +30,21 @@ public class Game {
     }
 
     public void update(float deltaTime) {
+        // Debug
+        time += deltaTime;
+        System.out.println(time + ": Velocity = (" + player.velocity.magnitude + " @ " + player.velocity.direction + "), Position = (" + player.x + ", " + player.y + ")");
+
         // Apply gravity
         player.velocity = player.velocity.add(gravity.scale(deltaTime));
-
-        System.out.println(player.velocity.magnitude + " @ " + player.velocity.direction);
 
         // Move player
         movePlayer(deltaTime);
     }
 
     private void movePlayer(float deltaTime) {
-        Point2D destination = player.getPos().translate(player.velocity.scale(deltaTime));
+        player.x += player.velocity.deltaX() * deltaTime;
+        player.y += player.velocity.deltaY() * deltaTime;
+        /*Point2D destination = player.getPos().translate(player.velocity.scale(deltaTime));
         Point2D prev = null;
         // Step towards destination, checking collisions at each step
         ArrayList<Point2D> line = besenham(player.getPos(), destination);
@@ -51,6 +57,7 @@ public class Game {
             int deltaY = (int) (p.y - prev.y);
             prev = player.getPos();
             player.setPos(p);
+        }
 
             // Vertical collision detection
             if ((deltaY < 0 && checkCollisions_bottom(player)) || (deltaY > 0 && checkCollisions_top(player))) {
@@ -64,8 +71,10 @@ public class Game {
                 player.velocity.zeroX();
                 player.setPos(prev);
                 return;
-            }
-        }
+            }*/
+
+//            player.setPos(player.getPos().translate(player.velocity.scale(deltaTime)));
+
     }
 
     // TODO refactor collision detection to avoid duplicate code

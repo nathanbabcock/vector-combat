@@ -106,13 +106,13 @@ public class Play extends JFrame {
             int keyCode = e.getKeyCode();
             switch (keyCode) {
                 case KeyEvent.VK_SPACE:
-                    game.player.velocity = game.player.velocity.add(game.player.jumpImpulse);
+                    game.player.velocity = game.player.jumpImpulse;
                     break;
                 case KeyEvent.VK_LEFT:
-                    game.player.velocity = game.player.velocity.add(game.player.leftImpulse);
+                    game.player.velocity = game.player.leftImpulse;
                     break;
                 case KeyEvent.VK_RIGHT:
-                    game.player.velocity = game.player.velocity.add(game.player.rightImpulse);
+                    game.player.velocity = game.player.rightImpulse;
                     break;
             }
         }
@@ -122,10 +122,10 @@ public class Play extends JFrame {
             int keyCode = e.getKeyCode();
             switch (keyCode) {
                 case KeyEvent.VK_LEFT:
-                    game.player.velocity = game.player.velocity.subtract(game.player.leftImpulse);
+                    game.player.velocity.zero();
                     break;
                 case KeyEvent.VK_RIGHT:
-                    game.player.velocity = game.player.velocity.subtract(game.player.rightImpulse);
+                    game.player.velocity.zero();
                     break;
             }
         }
