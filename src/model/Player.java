@@ -10,6 +10,8 @@ public class Player {
     public Float x, y;
     public Float width, height;
     public Vector2D velocity, acceleration;
+    public Float moveSpeed = 200f;
+    public Float jumpSpeed = 200f;
 
     public Point2D getPos() {
         return new Point2D(x, y);

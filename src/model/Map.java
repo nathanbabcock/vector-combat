@@ -14,7 +14,7 @@ public class Map {
 
     public Map() {
         try {
-            mask = background = ImageIO.read(new File("res/map.png"));
+            mask = background = ImageIO.read(new File("res/simplemap.png"));
         } catch (Exception e) {
             e.printStackTrace();
         }

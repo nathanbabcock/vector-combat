@@ -33,7 +33,7 @@ public class Game {
     public void update(float deltaTime) {
         // Debug
         time += deltaTime;
-        System.out.println("t = " + time + ", pos = (" + player.x + ", " + player.y + "), v = (" + player.velocity.x + ", " + player.velocity.y + "), a = (" + player.acceleration.x + ", " + player.acceleration.y + ")");
+//        System.out.println("t = " + time + ", pos = (" + player.x + ", " + player.y + "), v = (" + player.velocity.x + ", " + player.velocity.y + "), a = (" + player.acceleration.x + ", " + player.acceleration.y + ")");
 
         // Apply gravity
         player.velocity = player.velocity.add(player.acceleration.scale(deltaTime));
@@ -46,43 +46,54 @@ public class Game {
 //        Vector2D displacement = player.velocity.scale(deltaTime);
 //        Point2D destination = player.getPos().translate(displacement);
         Point2D destination = player.getPos().displace(player.acceleration, player.velocity, deltaTime);
+        float deltaX = destination.x - player.x;
+        float deltaY = destination.y - player.y;
 
-        Point2D prev = null;
+        Point2D oldPos = player.getPos();
+        player.setPos(destination);
+
         // Step towards destination, checking collisions at each step
-        ArrayList<Point2D> line = besenham(player.getPos(), destination);
+        ArrayList<Point2D> line = besenham(oldPos, destination);
+        Point2D prev = null;
         for (Point2D p : line) {
             if (prev == null) {
                 prev = p;
                 continue;
             }
-            prev = player.getPos();
-            player.setPos(p);
-        }
 
-            /*// Vertical collision detection
-            if ((deltaY < 0 && checkCollisions_bottom(player)) || (deltaY > 0 && checkCollisions_top(player))) {
-                player.velocity.zeroY();
+            // Vertical collision detection
+
+            if (checkCollisions_bottom(p)) {
+                player.velocity.y = 0f;
+                player.acceleration.y = 0f;
                 player.setPos(prev);
                 return;
+            } else {
+                player.acceleration.y = gravity;
             }
 
-            // Horizontal collision detection
+/*            // Horizontal collision detection
             if ((deltaX < 0 && checkCollisions_left(player)) || (deltaX > 0 && checkCollisions_right(player))) {
-                player.velocity.zeroX();
+                player.velocity.x = 0f;
                 player.setPos(prev);
                 return;
             }*/
+
+            prev = p;
+        }
+
+
     }
 
     // TODO refactor collision detection to avoid duplicate code
-    private boolean checkCollisions_bottom(Player player) {
-        int y = player.y.intValue();
-        for (int x2 = player.x.intValue(); x2 <= player.x + player.width; x2++)
-            if (Color.BLACK.equals(new Color(map.mask.getRGB(x2, (int) (map.HEIGHT - y - 1)))))
+    private boolean checkCollisions_bottom(Point2D position) {
+        Float y = position.y;
+        for (Float x2 = position.x; x2 <= position.x + player.width; x2++)
+            if (Color.BLACK.equals(new Color(map.mask.getRGB(x2.intValue(), (int) (map.HEIGHT - y - 1)))))
                 return true;
         return false;
     }
-
+/*
     private boolean checkCollisions_top(Player player) {
         int y = (int) (player.y + player.height);
         for (int x2 = player.x.intValue(); x2 <= player.x + player.width; x2++)
@@ -105,7 +116,7 @@ public class Game {
             if (Color.BLACK.equals(new Color(map.mask.getRGB(x + 1, map.HEIGHT - y2))))
                 return true;
         return false;
-    }
+    }*/
 
     /**
      * Basenham's line drawing algorithm. Rasterizes a mathematical representation of a line
