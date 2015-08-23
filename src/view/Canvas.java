@@ -2,6 +2,7 @@ package view;
 
 import model.Game;
 import model.Player;
+import model.geometry.Line2D;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,6 +35,11 @@ public class Canvas extends JPanel {
 
         // Background
         g2.drawImage(game.map.background, 0, 0, null);
+
+        // Boundaries
+        g2.setColor(Color.MAGENTA);
+        for (Line2D b : game.map.boundaries)
+            g2.drawLine(b.a.x.intValue(), HEIGHT - b.a.y.intValue(), b.b.x.intValue(), HEIGHT - b.b.y.intValue());
 
         // Player
         Player player = game.player;

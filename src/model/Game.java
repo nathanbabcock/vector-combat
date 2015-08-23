@@ -1,5 +1,6 @@
 package model;
 
+import model.geometry.Line2D;
 import model.geometry.Point2D;
 import model.geometry.Vector2D;
 
@@ -33,7 +34,7 @@ public class Game {
     public void update(float deltaTime) {
         // Debug
         time += deltaTime;
-//        System.out.println("t = " + time + ", pos = (" + player.x + ", " + player.y + "), v = (" + player.velocity.x + ", " + player.velocity.y + "), a = (" + player.acceleration.x + ", " + player.acceleration.y + ")");
+        System.out.println("t = " + time + ", pos = (" + player.x + ", " + player.y + "), v = (" + player.velocity.x + ", " + player.velocity.y + "), a = (" + player.acceleration.x + ", " + player.acceleration.y + ")");
 
         // Apply gravity
         player.velocity = player.velocity.add(player.acceleration.scale(deltaTime));
@@ -43,6 +44,20 @@ public class Game {
     }
 
     private void movePlayer(float deltaTime) {
+        Line2D translation = new Line2D(player.getPos(), player.getPos().displace(player.acceleration, player.velocity, deltaTime));
+        for (Line2D boundary : map.boundaries) {
+            Point2D intersection = boundary.intersection(translation);
+            if (intersection != null && !intersection.equals(player.getPos())) {
+                player.setPos(intersection);
+                player.velocity.y = 0f;
+                player.acceleration.y = 0f;
+                return;
+            }
+        }
+        player.setPos(translation.b);
+    }
+
+    private void movePlayer_old(float deltaTime) {
 //        Vector2D displacement = player.velocity.scale(deltaTime);
 //        Point2D destination = player.getPos().translate(displacement);
         Point2D destination = player.getPos().displace(player.acceleration, player.velocity, deltaTime);
@@ -67,6 +82,8 @@ public class Game {
                 player.velocity.y = 0f;
                 player.acceleration.y = 0f;
                 player.setPos(prev);
+                player.y = (float) Math.ceil(player.y);
+//                palyer.y
                 return;
             } else {
                 player.acceleration.y = gravity;
@@ -89,7 +106,7 @@ public class Game {
     private boolean checkCollisions_bottom(Point2D position) {
         Float y = position.y;
         for (Float x2 = position.x; x2 <= position.x + player.width; x2++)
-            if (Color.BLACK.equals(new Color(map.mask.getRGB(x2.intValue(), (int) (map.HEIGHT - y - 1)))))
+            if (Color.BLACK.equals(new Color(map.mask.getRGB(Math.round(x2), Math.round(map.HEIGHT - y - 1)))))
                 return true;
         return false;
     }

@@ -153,6 +153,7 @@ public class Play extends JFrame {
             public void actionPerformed(ActionEvent e) {
 //                System.out.println("Space pressed");
                 game.player.velocity.y = game.player.jumpSpeed;
+                game.player.acceleration.y += game.gravity;
             }
         };
         am.put("spacePressed", spacePressed);

@@ -26,6 +26,14 @@ public class Point2D {
         return new Point2D(x + deltaX, y + deltaY);
     }
 
+    public String toString() {
+        return "(" + x + ", " + y + ")";
+    }
+
+    public boolean equals(Point2D other) {
+        return x.equals(other.x) && y.equals(other.y);
+    }
+
 //    public void translateTo(Vector2D vector) {
 //        x += vector.x;
 //        y += vector.y;
