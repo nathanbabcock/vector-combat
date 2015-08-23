@@ -1,14 +1,15 @@
 package model;
 
 import model.geometry.Point2D;
+import model.geometry.Rect2D;
 import model.geometry.Vector2D;
 
 /**
  * Created by Nathan on 8/19/2015.
  */
-public class Player {
-    public Float x, y;
-    public Float width, height;
+public class Player extends Rect2D {
+    //    public Float x, y;
+//    public Float width, height;
     public Vector2D velocity, acceleration;
     public Float moveSpeed = 200f;
     public Float jumpSpeed = 100f;

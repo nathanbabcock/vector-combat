@@ -21,6 +21,9 @@ public class Map {
             mask = background = ImageIO.read(new File("res/simplemap.png"));
             boundaries = new ArrayList<>();
             boundaries.add(new Line2D(0, 24, 800, 24));
+            boundaries.add(new Line2D(400, 24, 400, 64));
+            boundaries.add(new Line2D(300, 64, 400, 64));
+            boundaries.add(new Line2D(200, 24, 300, 64));
         } catch (Exception e) {
             e.printStackTrace();
         }

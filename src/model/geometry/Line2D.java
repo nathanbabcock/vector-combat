@@ -42,4 +42,8 @@ public class Line2D {
             return new Point2D(x, y);
         return null;
     }
+
+    public Vector2D toVector() {
+        return new Vector2D(b.x - a.x, b.y - a.y);
+    }
 }
