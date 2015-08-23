@@ -22,4 +22,8 @@ public class Vector2D {
     public float magnitude() {
         return (float) Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
     }
+
+    public Vector2D negate() {
+        return scale(-1);
+    }
 }

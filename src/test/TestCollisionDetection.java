@@ -10,6 +10,7 @@ import model.geometry.Vector2D;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by Nathan on 8/21/2015.
@@ -38,12 +39,13 @@ public class TestCollisionDetection extends JFrame {
             // Init
             Map map = new Map();
             Player player = new Player();
-            player.x = 400f;
-            player.y = 550f;
+            player.x = 500f;
+            player.y = 500f;
             player.width = 25f;
             player.height = 50f;
             ArrayList<Line2D> boundaries = new ArrayList<>();
-            boundaries.add(new Line2D(300, 500, 350, 700));
+            Random rand = new Random();
+            boundaries.add(new Line2D(300, 600, 600, 600));
 
             // Boundaries
             g2.setColor(Color.MAGENTA);
@@ -55,7 +57,7 @@ public class TestCollisionDetection extends JFrame {
             g2.fillRect(player.x.intValue(), height - player.y.intValue() - player.height.intValue(), player.width.intValue(), player.height.intValue());
 
             // Draw collided position
-            Vector2D displacement = new Vector2D(-90, 0);
+            Vector2D displacement = new Vector2D(0, 75);
             Rect2D oldRect = player.getRect();
             player.setPos(player.getPos().translate(displacement));
 
@@ -70,14 +72,23 @@ public class TestCollisionDetection extends JFrame {
             // Detect edge collisions
             Point2D intersection = null;
             Line2D boundary = null;
+            Line2D edge = null;
             for (Line2D b : boundaries) {
-                for (Line2D edge : player.getEdges()) {
-                    boundary = b;
-                    intersection = b.intersection(edge);
-                    if (intersection != null)
+                int i = 0;
+                for (Line2D e : player.getEdges()) {
+                    intersection = b.intersection(e);
+                    if (intersection != null) {
+                        boundary = b;
+                        edge = e;
                         break;
+                    }
+                    i++;
                 }
+
             }
+
+            if (intersection == null)
+                return;
 
             g2.setColor(Color.BLACK);
             g2.drawOval(intersection.x.intValue() - 2, height - intersection.y.intValue() - 2, 4, 4);
@@ -85,15 +96,17 @@ public class TestCollisionDetection extends JFrame {
             // Pick closest vertex
             // TODO generalize to any direction/edge
             Point2D closestVertex = null;
-            /*if (boundary.a.x == boundary.b.x)
-                closestVertex = player.;
-            else */
-            if (boundary.slope() < 0)
-                closestVertex = oldRect.bottomLeft();
-            else if (boundary.slope() > 0)
-                closestVertex = oldRect.topLeft();
-            else
-                ; // handle horizontal line collision
+            if (displacement.x < 0 || displacement.y < 0) {
+                if (boundary.slope() <= edge.slope())
+                    closestVertex = oldRect.bottomLeft(); //originalSide.a;
+                else// if (boundary.slope() > edge.slope())
+                    closestVertex = oldRect.topLeft(); //originalSide.b;
+            } else {//if (displacement.x > 0 || displacement.y > 0) {
+                if (boundary.slope() >= edge.slope())
+                    closestVertex = oldRect.bottomRight(); //originalSide.a;
+                else// if (boundary.slope() > edge.slope())
+                    closestVertex = oldRect.topRight(); //originalSide.b;
+            }
 
             g2.drawOval(closestVertex.x.intValue() - 2, height - closestVertex.y.intValue() - 2, 4, 4);
 
