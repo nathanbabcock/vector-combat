@@ -2,6 +2,7 @@ package model;
 
 import model.geometry.Line2D;
 import model.geometry.Point2D;
+import model.geometry.Rect2D;
 import model.geometry.Vector2D;
 
 import java.awt.*;
@@ -24,7 +25,7 @@ public class Game {
         // Spawn player
         player = new Player();
         player.x = 400f;
-        player.y = 550f;
+        player.y = 549f;
         player.width = 25f;
         player.height = 50f;
         player.velocity = new Vector2D(0, 0);
@@ -44,106 +45,145 @@ public class Game {
     }
 
     private void movePlayer(float deltaTime) {
-        Line2D translation = new Line2D(player.getPos(), player.getPos().displace(player.acceleration, player.velocity, deltaTime));
-        for (Line2D boundary : map.boundaries) {
-            Point2D intersection = boundary.intersection(translation);
-            if (intersection != null && !intersection.equals(player.getPos())) {
-                player.setPos(intersection);
-                player.velocity.y = 0f;
-                player.acceleration.y = 0f;
-                return;
-            }
-        }
-        player.setPos(translation.b);
-    }
-
-    private void movePlayer_old(float deltaTime) {
-//        Vector2D displacement = player.velocity.scale(deltaTime);
-//        Point2D destination = player.getPos().translate(displacement);
+//        Point2D newPos = ;
         Point2D destination = player.getPos().displace(player.acceleration, player.velocity, deltaTime);
-        float deltaX = destination.x - player.x;
-        float deltaY = destination.y - player.y;
+        Line2D translation = new Line2D(player.getPos(), destination);
+//        Vector2D displacement = translation.toVector();
 
+//        Rect2D oldRect = player.getRect();
         Point2D oldPos = player.getPos();
-        player.setPos(destination);
+        player.setPos(translation.b);
+        checkCollisions(oldPos);
+//        checkCollisions(oldRect, displacement);
 
-        // Step towards destination, checking collisions at each step
-        ArrayList<Point2D> line = besenham(oldPos, destination);
-        Point2D prev = null;
-        for (Point2D p : line) {
-            if (prev == null) {
-                prev = p;
-                continue;
+//        for (Line2D boundary : map.boundaries) {
+//            Point2D intersection = boundary.intersection(translation);
+//            if (intersection != null && !intersection.equals(player.getPos())) {
+//                player.setPos(intersection);
+//                player.velocity.y = 0f;
+//                player.acceleration.y = 0f;
+//                return;
+//            }
+//        }
+
+    }
+
+    private void checkCollisions(Point2D oldPos) {
+//        Vector2D displacement = new Vector2D(player.x - oldPos.x, player.y - oldPos.y);
+//        float deltaX = player.x - oldPos.x;
+//        float deltaY = player.y - oldPos.y;
+
+
+        // TODO optimize by not checking every single pixel
+
+        // Resolve collision
+        ArrayList<Point2D> path = besenham(player.getPos(), oldPos);
+        for (int i = 0; i < path.size(); i++) {
+            boolean collision = false;
+            // First check if there is currently a collision
+            int px = (int) (player.x + 1);
+            int py = (int) (player.y + 1);
+            outer:
+            for (int x = px; x <= px + player.width; x++) {
+                for (int y = py; y <= py + player.height; y++) {
+                    if (Color.BLACK.equals(new Color(map.mask.getRGB(x, map.HEIGHT - y)))) {
+                        System.out.println("Collision occurred at (" + x + ", " + y + ")");
+                        collision = true;
+                        break outer;
+                    }
+                }
             }
 
-            // Vertical collision detection
-
-            if (checkCollisions_bottom(p)) {
-                player.velocity.y = 0f;
-                player.acceleration.y = 0f;
-                player.setPos(prev);
-                player.y = (float) Math.ceil(player.y);
-//                palyer.y
+            if (!collision)
                 return;
-            } else {
-                player.acceleration.y = gravity;
+
+            // For now just step along the besenham and re-check until collision in resolved
+            player.setPos(path.get(i));
+            player.acceleration.y = 0f;
+            player.velocity.y = 0f;
+        }
+    }
+
+    private void checkCollisions_old(Rect2D oldRect, Vector2D displacement) {
+        // Detect edge collisions
+        Point2D intersection = null;
+        Line2D boundary = null;
+        Line2D edge = null;
+        outer:
+        for (Line2D b : map.boundaries) {
+            for (Line2D e : player.getEdges()) {
+                intersection = b.intersection(e);
+                if (intersection != null) {
+                    boundary = b;
+                    edge = e;
+                    break outer;
+                }
             }
 
-/*            // Horizontal collision detection
-            if ((deltaX < 0 && checkCollisions_left(player)) || (deltaX > 0 && checkCollisions_right(player))) {
-                player.velocity.x = 0f;
-                player.setPos(prev);
-                return;
-            }*/
+        }
 
-            prev = p;
+        if (intersection == null) {
+            System.out.println("No collisions");
+            return;
+        } else {
+            System.out.println("Collision");
+        }
+
+        // Pick closest vertex
+        // TODO generalize to any direction/edge
+        Point2D closestVertex = null;
+        if (displacement.x < 0 || displacement.y < 0) {
+            if (boundary.slope() <= edge.slope())
+                closestVertex = oldRect.bottomLeft(); //originalSide.a;
+            else// if (boundary.slope() > edge.slope())
+                closestVertex = oldRect.topLeft(); //originalSide.b;
+        } else {//if (displacement.x > 0 || displacement.y > 0) {
+            if (boundary.slope() >= edge.slope())
+                closestVertex = oldRect.bottomRight(); //originalSide.a;
+            else// if (boundary.slope() > edge.slope())
+                closestVertex = oldRect.topRight(); //originalSide.b;
+        }
+
+//            float slope = displacement.y / displacement.x;
+        Line2D movedDisplacement = new Line2D(closestVertex, closestVertex.translate(displacement));
+        Point2D newIntersection = movedDisplacement.intersection(boundary);
+        Line2D newDisplacement = new Line2D(closestVertex, newIntersection);
+        if (newIntersection == null) {
+            for (Line2D e : oldRect.getEdges()) {
+                newIntersection = new Line2D(boundary.b, boundary.b.translate(displacement.negate())).intersection(e);
+                if (newIntersection != null) {
+                    newDisplacement = new Line2D(boundary.b, newIntersection);
+                    break;
+                }
+                newIntersection = new Line2D(boundary.a, boundary.a.translate(displacement.negate())).intersection(e);
+                if (newIntersection != null) {
+                    newDisplacement = new Line2D(boundary.a, newIntersection);
+                    break;
+                }
+            }
         }
 
 
+        // Move player out of collision
+        player.setPos(oldRect.bottomLeft().translate(newDisplacement.toVector()));
+        player.acceleration.y = 0f;
+        player.velocity.y = 0f;
+//        player.y++;
     }
-
-    // TODO refactor collision detection to avoid duplicate code
-    private boolean checkCollisions_bottom(Point2D position) {
-        Float y = position.y;
-        for (Float x2 = position.x; x2 <= position.x + player.width; x2++)
-            if (Color.BLACK.equals(new Color(map.mask.getRGB(Math.round(x2), Math.round(map.HEIGHT - y - 1)))))
-                return true;
-        return false;
-    }
-/*
-    private boolean checkCollisions_top(Player player) {
-        int y = (int) (player.y + player.height);
-        for (int x2 = player.x.intValue(); x2 <= player.x + player.width; x2++)
-            if (Color.BLACK.equals(new Color(map.mask.getRGB(x2, (int) (map.HEIGHT - y + 1)))))
-                return true;
-        return false;
-    }
-
-    private boolean checkCollisions_left(Player player) {
-        int x = player.x.intValue();
-        for (int y2 = player.y.intValue(); y2 <= player.y + player.height; y2++)
-            if (Color.BLACK.equals(new Color(map.mask.getRGB(x - 1, map.HEIGHT - y2))))
-                return true;
-        return false;
-    }
-
-    private boolean checkCollisions_right(Player player) {
-        int x = (int) (player.x + player.width);
-        for (int y2 = player.y.intValue(); y2 <= player.y + player.height; y2++)
-            if (Color.BLACK.equals(new Color(map.mask.getRGB(x + 1, map.HEIGHT - y2))))
-                return true;
-        return false;
-    }*/
 
     /**
      * Basenham's line drawing algorithm. Rasterizes a mathematical representation of a line
      */
     public static ArrayList<Point2D> besenham(Point2D a, Point2D b) {
         ArrayList<Point2D> line = new ArrayList();
-        int x0 = a.x.intValue();
-        int y0 = a.y.intValue();
-        int x1 = b.x.intValue();
-        int y1 = b.y.intValue();
+//        int x0 = a.x.intValue();
+//        int y0 = a.y.intValue();
+//        int x1 = b.x.intValue();
+//        int y1 = b.y.intValue();
+        int x0 = (int) Math.floor(a.x);
+        int y0 = (int) Math.floor(a.y);
+        int x1 = (int) Math.floor(b.x);
+        int y1 = (int) (b.y + 1);
 
         int dx = Math.abs(x1 - x0), sx = x0 < x1 ? 1 : -1;
         int dy = -Math.abs(y1 - y0), sy = y0 < y1 ? 1 : -1;

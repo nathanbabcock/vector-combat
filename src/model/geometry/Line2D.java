@@ -26,6 +26,8 @@ public class Line2D {
 
     public Point2D intersection(Line2D other) {
         float x, y;
+//        if((contains(other.a) && contains(other.b)) || (other.contains(a) && other.contains(b)))
+//            return null;
         if (a.x.equals(b.x)) {
             x = a.x;
             y = other.slope() * x + other.intercept();
@@ -37,10 +39,17 @@ public class Line2D {
             y = slope() * x + intercept();
         }
         // TODO more elegant approach to this mess?
+        Point2D intersection = new Point2D(x, y);
+        if (intersection.equals(a) || intersection.equals(b) || intersection.equals(other.a) || intersection.equals(other.b))
+            return null;
         if (x >= Math.min(a.x, b.x) && x <= Math.max(a.x, b.x) && y >= Math.min(a.y, b.y) && y <= Math.max(a.y, b.y)
                 && (x >= Math.min(other.a.x, other.b.x) && x <= Math.max(other.a.x, other.b.x) && y >= Math.min(other.a.y, other.b.y) && y <= Math.max(other.a.y, other.b.y)))
-            return new Point2D(x, y);
+            return intersection;
         return null;
+    }
+
+    public boolean contains(Point2D point) {
+        return point.y.equals(slope() * point.x + intercept());
     }
 
     public Vector2D toVector() {

@@ -2,7 +2,6 @@ package view;
 
 import model.Game;
 import model.Player;
-import model.geometry.Line2D;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,9 +36,9 @@ public class Canvas extends JPanel {
         g2.drawImage(game.map.background, 0, 0, null);
 
         // Boundaries
-        g2.setColor(Color.MAGENTA);
-        for (Line2D b : game.map.boundaries)
-            g2.drawLine(b.a.x.intValue(), HEIGHT - b.a.y.intValue(), b.b.x.intValue(), HEIGHT - b.b.y.intValue());
+//        g2.setColor(Color.MAGENTA);
+//        for (Line2D b : game.map.boundaries)
+//            g2.drawLine(b.a.x.intValue(), HEIGHT - b.a.y.intValue(), b.b.x.intValue(), HEIGHT - b.b.y.intValue());
 
         // Player
         Player player = game.player;
@@ -60,6 +59,9 @@ public class Canvas extends JPanel {
         for (int i = 0; i < accelerationGraph.size(); i++)
             g2.fillRect(i, accelerationGraph.get(i).intValue(), 2, 2); // acceleration
 
+
+        g2.setColor(Color.RED);
+        g2.drawRect(0, HEIGHT - 1, 1, 1);
         /*// Besenham test
         ArrayList<Point2D> test = Game.besenham(0, 0, WIDTH, HEIGHT);
         for(Point2D p : test)

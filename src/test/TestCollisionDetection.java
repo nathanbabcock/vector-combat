@@ -39,13 +39,14 @@ public class TestCollisionDetection extends JFrame {
             // Init
             Map map = new Map();
             Player player = new Player();
-            player.x = 500f;
-            player.y = 500f;
+            player.x = 700f;
+            player.y = 375f;
             player.width = 25f;
             player.height = 50f;
             ArrayList<Line2D> boundaries = new ArrayList<>();
             Random rand = new Random();
-            boundaries.add(new Line2D(300, 600, 600, 600));
+            boundaries.add(new Line2D(300, 400, 600, 400));
+            boundaries.add(new Line2D(300, 400, 300, 500));
 
             // Boundaries
             g2.setColor(Color.MAGENTA);
@@ -57,7 +58,7 @@ public class TestCollisionDetection extends JFrame {
             g2.fillRect(player.x.intValue(), height - player.y.intValue() - player.height.intValue(), player.width.intValue(), player.height.intValue());
 
             // Draw collided position
-            Vector2D displacement = new Vector2D(0, 75);
+            Vector2D displacement = new Vector2D(-220, 0);
             Rect2D oldRect = player.getRect();
             player.setPos(player.getPos().translate(displacement));
 
