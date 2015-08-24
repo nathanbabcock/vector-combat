@@ -78,7 +78,7 @@ public class Game {
 
         // Resolve collision
         ArrayList<Point2D> path = besenham(player.getPos(), oldPos);
-        for (int i = 0; i < path.size(); i++) {
+        for (int i = 0; i <= path.size(); i++) {
             boolean collision = false;
             // First check if there is currently a collision
             int px = (int) (player.x + 1);
@@ -97,10 +97,18 @@ public class Game {
             if (!collision)
                 return;
 
+            // This triggers basically any time you are directly against a wall
+            if (i == path.size()) {
+                player.x = (float) Math.floor(oldPos.x);
+                player.y = (float) Math.floor(oldPos.y);
+                return;
+            }
+
             // For now just step along the besenham and re-check until collision in resolved
             player.setPos(path.get(i));
             player.acceleration.y = 0f;
             player.velocity.y = 0f;
+            player.velocity.x = 0f;
         }
     }
 
@@ -182,8 +190,8 @@ public class Game {
 //        int y1 = b.y.intValue();
         int x0 = (int) Math.floor(a.x);
         int y0 = (int) Math.floor(a.y);
-        int x1 = (int) Math.floor(b.x);
-        int y1 = (int) (b.y + 1);
+        int x1 = (int) Math.ceil(b.x);
+        int y1 = (int) Math.ceil(b.y); //(b.y + 1); // This line solves a bug for some reason
 
         int dx = Math.abs(x1 - x0), sx = x0 < x1 ? 1 : -1;
         int dy = -Math.abs(y1 - y0), sy = y0 < y1 ? 1 : -1;

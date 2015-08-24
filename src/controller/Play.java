@@ -97,7 +97,7 @@ public class Play extends JFrame {
             public void actionPerformed(ActionEvent e) {
 //                System.out.println("Right pressed");
 
-                game.player.velocity.x += game.player.moveSpeed;
+                game.player.velocity.x = game.player.moveSpeed;
 
                 am.remove("rightPressed");
             }
@@ -111,7 +111,7 @@ public class Play extends JFrame {
             public void actionPerformed(ActionEvent e) {
 //                System.out.println("Right released");
 
-                game.player.velocity.x -= game.player.moveSpeed;
+                game.player.velocity.x = 0f;
 
                 am.put("rightPressed", rightPressed);
             }
@@ -125,7 +125,7 @@ public class Play extends JFrame {
             public void actionPerformed(ActionEvent e) {
 //                System.out.println("Left pressed");
 
-                game.player.velocity.x -= game.player.moveSpeed;
+                game.player.velocity.x = -game.player.moveSpeed;
 
                 am.remove("leftPressed");
             }
@@ -139,7 +139,7 @@ public class Play extends JFrame {
             public void actionPerformed(ActionEvent e) {
 //                System.out.println("Left released");
 
-                game.player.velocity.x += game.player.moveSpeed;
+                game.player.velocity.x = 0f;
 
                 am.put("leftPressed", leftPressed);
             }
