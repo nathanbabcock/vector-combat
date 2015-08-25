@@ -96,10 +96,8 @@ public class Play extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 //                System.out.println("Right pressed");
-
                 game.player.velocity.x = game.player.moveSpeed;
-
-                am.remove("rightPressed");
+//                am.remove("rightPressed");
             }
         };
         am.put("rightPressed", rightPressed);
@@ -110,10 +108,8 @@ public class Play extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 //                System.out.println("Right released");
-
                 game.player.velocity.x = 0f;
-
-                am.put("rightPressed", rightPressed);
+//                am.put("rightPressed", rightPressed);
             }
         };
         am.put("rightReleased", rightReleased);
@@ -124,10 +120,8 @@ public class Play extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 //                System.out.println("Left pressed");
-
                 game.player.velocity.x = -game.player.moveSpeed;
-
-                am.remove("leftPressed");
+//                am.remove("leftPressed");
             }
         };
         am.put("leftPressed", leftPressed);
@@ -138,10 +132,8 @@ public class Play extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 //                System.out.println("Left released");
-
                 game.player.velocity.x = 0f;
-
-                am.put("leftPressed", leftPressed);
+//                am.put("leftPressed", leftPressed);
             }
         };
         am.put("leftReleased", leftReleased);
@@ -153,7 +145,7 @@ public class Play extends JFrame {
             public void actionPerformed(ActionEvent e) {
 //                System.out.println("Space pressed");
                 game.player.velocity.y = game.player.jumpSpeed;
-                game.player.acceleration.y = game.gravity;
+//                game.player.acceleration.y = game.gravity;
             }
         };
         am.put("spacePressed", spacePressed);
