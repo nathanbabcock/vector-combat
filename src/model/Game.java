@@ -1,11 +1,9 @@
 package model;
 
-import model.geometry.Line2D;
+import model.geometry.AABB;
 import model.geometry.Point2D;
-import model.geometry.Rect2D;
 import model.geometry.Vector2D;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -45,30 +43,38 @@ public class Game {
     }
 
     private void movePlayer(float deltaTime) {
-//        Point2D newPos = ;
-        Point2D destination = player.getPos().displace(player.acceleration, player.velocity, deltaTime);
-        Line2D translation = new Line2D(player.getPos(), destination);
-//        Vector2D displacement = translation.toVector();
+        // Move player
+        player.setPos(player.getPos().displace(player.acceleration, player.velocity, deltaTime));
 
-//        Rect2D oldRect = player.getRect();
-        Point2D oldPos = player.getPos();
-        player.setPos(translation.b);
-        checkCollisions(oldPos);
-//        checkCollisions(oldRect, displacement);
-
-//        for (Line2D boundary : map.boundaries) {
-//            Point2D intersection = boundary.intersection(translation);
-//            if (intersection != null && !intersection.equals(player.getPos())) {
-//                player.setPos(intersection);
-//                player.velocity.y = 0f;
-//                player.acceleration.y = 0f;
-//                return;
-//            }
-//        }
-
+        // Check collisions
+        checkCollisions_SAT();
     }
 
-    private void checkCollisions(Point2D oldPos) {
+
+    private void checkCollisions_SAT() {
+        AABB hitbox = player.getAABB();
+        for (AABB box : map.boxes) {
+            float dx = box.center.x - hitbox.center.x;
+            float px = (box.halfX + hitbox.halfX) - Math.abs(dx);
+            if (px <= 0)
+                continue;
+
+            float dy = box.center.y - hitbox.center.y;
+            float py = (box.halfY + hitbox.halfY) - Math.abs(dy);
+            if (py <= 0)
+                continue;
+
+            if (px < py) {
+                float sx = -Math.signum(dx);
+                player.x += px * sx;
+            } else {
+                float sy = -Math.signum(dy);
+                player.y += py * sy;
+            }
+        }
+    }
+
+/*    private void checkCollisions_raster(Point2D oldPos) {
 //        Vector2D displacement = new Vector2D(player.x - oldPos.x, player.y - oldPos.y);
 //        float deltaX = player.x - oldPos.x;
 //        float deltaY = player.y - oldPos.y;
@@ -112,7 +118,7 @@ public class Game {
         }
     }
 
-    private void checkCollisions_old(Rect2D oldRect, Vector2D displacement) {
+    private void checkCollisions_vector(Rect2D oldRect, Vector2D displacement) {
         // Detect edge collisions
         Point2D intersection = null;
         Line2D boundary = null;
@@ -177,7 +183,7 @@ public class Game {
         player.acceleration.y = 0f;
         player.velocity.y = 0f;
 //        player.y++;
-    }
+    }*/
 
     /**
      * Basenham's line drawing algorithm. Rasterizes a mathematical representation of a line

@@ -35,7 +35,7 @@ public class Point2D {
     }
 
 //    public void translateTo(Vector2D vector) {
-//        x += vector.x;
+//        halfX += vector.halfX;
 //        y += vector.y;
 //    }
 }

@@ -1,16 +1,7 @@
 package test;
 
-import model.Map;
-import model.Player;
-import model.geometry.Line2D;
-import model.geometry.Point2D;
-import model.geometry.Rect2D;
-import model.geometry.Vector2D;
-
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * Created by Nathan on 8/21/2015.
@@ -33,7 +24,7 @@ public class TestCollisionDetection extends JFrame {
         }
 
         @Override
-        public void paintComponent(Graphics g) {
+        public void paintComponent(Graphics g) {/*
             Graphics2D g2 = (Graphics2D) g;
 
             // Init
@@ -123,7 +114,7 @@ public class TestCollisionDetection extends JFrame {
             player.setPos(oldRect.bottomLeft().translate(newDisplacement.toVector()));
             g2.setColor(Color.GREEN);
             g2.drawRect(player.x.intValue(), height - player.y.intValue() - player.height.intValue(), player.width.intValue(), player.height.intValue());
-
+*/
         }
     }
 

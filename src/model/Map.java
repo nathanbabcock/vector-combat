@@ -1,5 +1,6 @@
 package model;
 
+import model.geometry.AABB;
 import model.geometry.Line2D;
 
 import javax.imageio.ImageIO;
@@ -15,15 +16,21 @@ public class Map {
     public final int WIDTH = 800;
     public final int HEIGHT = 600;
     public ArrayList<Line2D> boundaries;
+    public ArrayList<AABB> boxes;
 
     public Map() {
         try {
             mask = background = ImageIO.read(new File("res/simplemap.png"));
+
             boundaries = new ArrayList<>();
             boundaries.add(new Line2D(0, 24, 800, 24));
             boundaries.add(new Line2D(400, 24, 400, 64));
             boundaries.add(new Line2D(300, 64, 400, 64));
             boundaries.add(new Line2D(200, 24, 300, 64));
+
+            boxes = new ArrayList<>();
+            boxes.add(new AABB(0, 0, 800, 24));
+            boxes.add(new AABB(100, 24, 200, 64));
         } catch (Exception e) {
             e.printStackTrace();
         }

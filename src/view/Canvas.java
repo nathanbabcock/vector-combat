@@ -2,6 +2,7 @@ package view;
 
 import model.Game;
 import model.Player;
+import model.geometry.AABB;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,6 +40,11 @@ public class Canvas extends JPanel {
 //        g2.setColor(Color.MAGENTA);
 //        for (Line2D b : game.map.boundaries)
 //            g2.drawLine(b.a.x.intValue(), HEIGHT - b.a.y.intValue(), b.b.x.intValue(), HEIGHT - b.b.y.intValue());
+
+        // Boundaries
+        g2.setColor(Color.magenta);
+        for (AABB b : game.map.boxes)
+            g2.drawRect((int) (b.center.x - b.halfX), (int) (HEIGHT - b.center.y - b.halfY), (int) (2 * b.halfX), (int) (2 * b.halfY));
 
         // Player
         Player player = game.player;
