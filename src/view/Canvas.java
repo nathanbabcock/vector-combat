@@ -2,6 +2,7 @@ package view;
 
 import model.Game;
 import model.Player;
+import model.Rocket;
 import model.geometry.AABB;
 
 import javax.swing.*;
@@ -50,6 +51,15 @@ public class Canvas extends JPanel {
         Player player = game.player;
         g2.setColor(randColor);
         g2.fillRect(player.x.intValue(), HEIGHT - player.y.intValue() - player.height.intValue(), player.width.intValue(), player.height.intValue());
+
+        // Entities
+        for (Object entity : game.entities) {
+            if (entity instanceof Rocket) {
+                Rocket rocket = (Rocket) entity;
+                g2.setColor(Color.red);
+                g2.fillOval((int) (rocket.center.x - rocket.radius), (int) (HEIGHT - rocket.center.y - rocket.radius), (int) (2 * rocket.radius), (int) (2 * rocket.radius));
+            }
+        }
 
        /* // Physics graphs
         positionGraph.add(HEIGHT - player.y);

@@ -1,12 +1,15 @@
 package controller;
 
 import model.Game;
+import model.geometry.Point2D;
 import view.Canvas;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 /**
  * Created by Nathan on 8/19/2015.
@@ -151,6 +154,29 @@ public class Play extends JFrame {
         am.put("spacePressed", spacePressed);
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, false), "spacePressed");
 
+        canvas.addMouseListener(new MouseListener() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                Point xhair = e.getPoint();
+                game.shoot(new Point2D(xhair.x, game.map.HEIGHT - xhair.y));
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+        });
 
     }
 

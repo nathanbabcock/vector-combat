@@ -26,4 +26,8 @@ public class Vector2D {
     public Vector2D negate() {
         return scale(-1);
     }
+
+    public void setMagnitude(Float magnitude){
+
+    }
 }

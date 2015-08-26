@@ -34,6 +34,10 @@ public class Point2D {
         return x.equals(other.x) && y.equals(other.y);
     }
 
+    public float distance(Point2D other){
+        return (float) Math.sqrt(Math.pow(other.x - x, 2) + Math.pow(other.y - y, 2));
+    }
+
 //    public void translateTo(Vector2D vector) {
 //        halfX += vector.halfX;
 //        y += vector.y;
