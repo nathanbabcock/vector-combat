@@ -4,7 +4,7 @@ package model.geometry;
  * Created by Nathan on 8/22/2015.
  */
 public class Line2D {
-    public Point2D a, b;
+/*    public Point2D a, b;
 
     public Line2D(Point2D a, Point2D b) {
         this.a = a;
@@ -54,5 +54,5 @@ public class Line2D {
 
     public Vector2D toVector() {
         return new Vector2D(b.x - a.x, b.y - a.y);
-    }
+    }*/
 }

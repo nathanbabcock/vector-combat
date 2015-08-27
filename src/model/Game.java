@@ -25,21 +25,13 @@ public class Game {
 
         // Spawn player
         player = new Player();
-        player.x = 400f;
-        player.y = 549f;
-        player.width = 25f;
-        player.height = 50f;
-        player.velocity = new Vector2D(0, 0);
-        player.acceleration = new Vector2D(0, gravity);
+        player.position = new Point2D(400, 549);
+        player.acceleration.y = gravity;
 
         players = new ArrayList<>();
         players.add(player);
 
         entities = new ArrayList<>();
-//        Rocket rocket = new Rocket(500, 549, 10);
-//        rocket.acceleration = new Vector2D(0, gravity);
-//        rocket.velocity = new Vector2D(0, 0);
-//        entities.add(rocket);
     }
 
     public void update(float deltaTime) {
@@ -55,21 +47,21 @@ public class Game {
     private void movePlayers(float deltaTime) {
         for (Player player : players) {
             // Apply gravity
-            player.velocity = player.velocity.add(player.acceleration.scale(deltaTime));
+            player.velocity.add(player.acceleration.copy().scale(deltaTime));
 
             // Move player
-            player.setPos(player.getPos().displace(player.acceleration, player.velocity, deltaTime));
+            player.position.displace(player.acceleration, player.velocity, deltaTime);
 
             // Check collisions
-            for (AABB box : map.boxes) {
-                Collision collision = player.getAABB().collision(box);
+            for (AABB box : map.statics) {
+                Collision collision = player.collision(box);
                 if (collision != null) {
                     if (Math.abs(collision.delta.x) > Math.abs(collision.delta.y)) {
-                        player.x += collision.delta.x;
+                        player.position.x += collision.delta.x;
                         player.velocity.x = 0f;
                         player.acceleration.x = 0f;
                     } else {
-                        player.y += collision.delta.y;
+                        player.position.y += collision.delta.y;
                         player.velocity.y = 0f;
                     }
                 }
@@ -81,34 +73,22 @@ public class Game {
         for (Object entity : entities) {
             if (entity instanceof Rocket) {
                 Rocket rocket = (Rocket) entity;
-                // Apply gravity
-                rocket.velocity = rocket.velocity.add(rocket.acceleration.scale(deltaTime));
-
                 // Move player
-                rocket.center = (rocket.center.displace(rocket.acceleration, rocket.velocity, deltaTime));
+                rocket.position.displace(rocket.acceleration, rocket.velocity, deltaTime);
 
                 // Check collisions
-                for (AABB box : map.boxes) {
+                for (AABB box : map.statics) {
                     Collision collision = box.collision(rocket);
                     if (collision != null) {
 //                        entities.remove(rocket);
                         for (Player player : players) {
-                            float distance = player.getPos().distance(collision.position);
+                            float distance = player.position.distance(collision.position);
                             if (distance <= Rocket.EXPLOSION_RADIUS) {
-                                Vector2D explosion = new Vector2D(player.getAABB().center.x - collision.position.x, player.getAABB().center.y - collision.position.y);
+                                Vector2D explosion = new Vector2D(player.getCenter().x - collision.position.x, player.getCenter().y - collision.position.y);
 //                                explosion = explosion.scale(10);
-                                player.velocity = player.velocity.add(explosion);
+                                player.velocity.add(explosion);
                             }
                         }
-
-//                        if (Math.abs(collision.delta.x) > Math.abs(collision.delta.y)) {
-//                            rocket.center.x += collision.delta.x;
-//                            rocket.velocity.x = 0f;
-//                            rocket.acceleration.x = 0f;
-//                        } else {
-//                            rocket.center.y += collision.delta.y;
-//                            rocket.velocity.y = 0f;
-//                        }
                     }
                 }
             }
@@ -116,9 +96,9 @@ public class Game {
     }
 
     public void shoot(Point2D xhair) {
-        Rocket rocket = new Rocket(player.getAABB().center.x, player.getAABB().center.y, Rocket.RADIUS);
+        Rocket rocket = new Rocket(player.getCenter().x, player.getCenter().y, Rocket.RADIUS);
         rocket.owner = player;
-        Point2D origin = player.getAABB().center;
+        Point2D origin = player.getCenter();
         rocket.velocity = new Vector2D(xhair.x - origin.x, xhair.y - origin.y);
         rocket.velocity.setMagnitude(Rocket.VELOCITY);
         rocket.acceleration = new Vector2D(0, 0);

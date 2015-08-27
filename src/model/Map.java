@@ -12,25 +12,19 @@ import java.util.ArrayList;
  * Created by Nathan on 8/20/2015.
  */
 public class Map {
-    public BufferedImage background, mask;
+    public BufferedImage background;
     public final int WIDTH = 800;
     public final int HEIGHT = 600;
     public ArrayList<Line2D> boundaries;
-    public ArrayList<AABB> boxes;
+    public ArrayList<AABB> statics;
 
     public Map() {
         try {
-            mask = background = ImageIO.read(new File("res/simplemap.png"));
+            background = ImageIO.read(new File("res/simplemap.png"));
 
-            boundaries = new ArrayList<>();
-            boundaries.add(new Line2D(0, 24, 800, 24));
-            boundaries.add(new Line2D(400, 24, 400, 64));
-            boundaries.add(new Line2D(300, 64, 400, 64));
-            boundaries.add(new Line2D(200, 24, 300, 64));
-
-            boxes = new ArrayList<>();
-            boxes.add(new AABB(0, 0, 800, 24));
-            boxes.add(new AABB(100, 24, 200, 64));
+            statics = new ArrayList<>();
+            statics.add(new AABB(0, 0, 800, 24));
+            statics.add(new AABB(100, 24, 100, 40));
         } catch (Exception e) {
             e.printStackTrace();
         }

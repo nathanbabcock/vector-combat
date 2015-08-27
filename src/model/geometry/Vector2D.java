@@ -12,22 +12,26 @@ public class Vector2D {
     }
 
     public Vector2D add(Vector2D other) {
-        return new Vector2D(x + other.x, y + other.y);
+        x += other.x;
+        y += other.y;
+        return this;
     }
 
     public Vector2D scale(float scalar) {
-        return new Vector2D(x * scalar, y * scalar);
+        x *= scalar;
+        y *= scalar;
+        return this;
     }
 
-    public float magnitude() {
+    public Vector2D copy() {
+        return new Vector2D(x, y);
+    }
+
+    public float getMagnitude() {
         return (float) Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
     }
 
-    public Vector2D negate() {
-        return scale(-1);
-    }
-
     public void setMagnitude(Float magnitude){
-
+        // TODO implement
     }
 }
