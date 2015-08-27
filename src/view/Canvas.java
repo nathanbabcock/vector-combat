@@ -50,6 +50,7 @@ public class Canvas extends JPanel {
         for (Object entity : game.entities) {
             if (entity instanceof Rocket) {
                 Rocket rocket = (Rocket) entity;
+                if (rocket.exploded) continue;
                 g2.setColor(Color.red);
                 g2.fillOval((int) (rocket.getBottomLeft().x), (int) (HEIGHT - rocket.getBottomLeft().y - 2 * rocket.radius), (int) (2 * rocket.radius), (int) (2 * rocket.radius));
             }

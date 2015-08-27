@@ -31,7 +31,9 @@ public class Vector2D {
         return (float) Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
     }
 
-    public void setMagnitude(Float magnitude){
+    public Vector2D setMagnitude(Float magnitude) {
         // TODO implement
+        float ratio = magnitude / getMagnitude();
+        return scale(ratio);
     }
 }

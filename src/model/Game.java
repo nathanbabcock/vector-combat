@@ -4,8 +4,8 @@ import model.geometry.AABB;
 import model.geometry.Point2D;
 import model.geometry.Vector2D;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 /**
  * Created by Nathan on 8/19/2015.
@@ -14,9 +14,10 @@ public class Game {
     public Player player;
     public List<Player> players;
     public List<Object> entities;
+    public List<Object> garbage;
     public Map map;
 
-    public static final float gravity = -98;
+    public static final float gravity = -250;
 
     public float time = 0;
 
@@ -28,26 +29,30 @@ public class Game {
         player.position = new Point2D(400, 549);
         player.acceleration.y = gravity;
 
-        players = new ArrayList<>();
+        players = new Vector<>();
         players.add(player);
 
-        entities = new ArrayList<>();
+        entities = new Vector<>();
+        garbage = new Vector<>();
     }
 
     public void update(float deltaTime) {
         // Debug
         time += deltaTime;
-//        System.out.println("t = " + time + ", pos = (" + player.x + ", " + player.y + "), v = (" + player.velocity.x + ", " + player.velocity.y + "), a = (" + player.acceleration.x + ", " + player.acceleration.y + ")");
+        System.out.println("t = " + time + ", pos = " + player.position + ", v = (" + player.velocity.x + ", " + player.velocity.y + "), a = (" + player.acceleration.x + ", " + player.acceleration.y + ")");
 
         // Dynamics
         movePlayers(deltaTime);
         moveEntities(deltaTime);
+
+        takeOutGarbage();
     }
 
     private void movePlayers(float deltaTime) {
         for (Player player : players) {
             // Apply gravity
             player.velocity.add(player.acceleration.copy().scale(deltaTime));
+            player.acceleration.y = gravity;
 
             // Move player
             player.position.displace(player.acceleration, player.velocity, deltaTime);
@@ -63,6 +68,10 @@ public class Game {
                     } else {
                         player.position.y += collision.delta.y;
                         player.velocity.y = 0f;
+//                        player.velocity.x = 0f;
+
+                        if (collision.delta.y > 0)
+                            player.acceleration.y = 0f;
                     }
                 }
             }
@@ -73,19 +82,22 @@ public class Game {
         for (Object entity : entities) {
             if (entity instanceof Rocket) {
                 Rocket rocket = (Rocket) entity;
-                // Move player
+//                if(rocket.exploded) continue;
+
+                // Move rocket
                 rocket.position.displace(rocket.acceleration, rocket.velocity, deltaTime);
 
                 // Check collisions
                 for (AABB box : map.statics) {
                     Collision collision = box.collision(rocket);
                     if (collision != null) {
-//                        entities.remove(rocket);
+                        garbage.add(rocket);
                         for (Player player : players) {
                             float distance = player.position.distance(collision.position);
                             if (distance <= Rocket.EXPLOSION_RADIUS) {
-                                Vector2D explosion = new Vector2D(player.getCenter().x - collision.position.x, player.getCenter().y - collision.position.y);
-//                                explosion = explosion.scale(10);
+                                Vector2D explosion = new Vector2D(player.getCenter().x - rocket.getCenter().x, player.getCenter().y - rocket.getCenter().y);
+                                explosion.setMagnitude(300f);
+//                                explosion.setMagnitude(distance).scale(10);
                                 player.velocity.add(explosion);
                             }
                         }
@@ -93,6 +105,17 @@ public class Game {
                 }
             }
         }
+    }
+
+    private void takeOutGarbage() {
+        for (Object trash : garbage)
+            entities.remove(trash);
+//        for (Object entity : entities) {
+//            if (entity instanceof Rocket) {
+//                Rocket rocket = (Rocket) entity;
+//                if(rocket.exploded)
+//
+//        }
     }
 
     public void shoot(Point2D xhair) {
