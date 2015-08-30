@@ -31,6 +31,8 @@ public class Game {
 
         players = new Vector<>();
         players.add(player);
+        players.add(new Player());
+        players.get(1).position = new Point2D(400, 850);
 
         entities = new Vector<>();
         garbage = new Vector<>();
@@ -45,6 +47,7 @@ public class Game {
         movePlayers(deltaTime);
         moveEntities(deltaTime);
 
+        checkHealth();
         takeOutGarbage();
     }
 
@@ -87,17 +90,32 @@ public class Game {
                 rocket.position.displace(rocket.acceleration, rocket.velocity, deltaTime);
 
                 // Check collisions
-                for (AABB box : map.statics) {
-                    Collision collision = box.collision(rocket);
-                    if (collision != null) {
-                        garbage.add(rocket);
-                        for (Player player : players) {
-                            float distance = player.position.distance(rocket.position);
-                            if (distance <= Rocket.EXPLOSION_RADIUS) {
-                                Vector2D explosion = new Vector2D(player.getCenter().x - rocket.getCenter().x, player.getCenter().y - rocket.getCenter().y);
-                                explosion.setMagnitude(300f);
-                                player.velocity.add(explosion);
-                            }
+                Collision collision = null;
+                for (AABB box : map.statics) { // Walls
+                    collision = box.collision(rocket);
+                    if (collision != null)
+                        break;
+                }
+                if (collision == null) { // players
+                    for (Player player : players) {
+                        if (player == rocket.owner)
+                            continue;
+                        collision = player.collision(rocket);
+                        if (collision != null)
+                            break;
+                    }
+                }
+                if (collision != null) {
+                    garbage.add(rocket);
+                    for (Player player : players) {
+                        float distance = player.position.distance(rocket.position);
+                        if (distance <= Rocket.EXPLOSION_RADIUS) {
+                            Vector2D explosion = new Vector2D(player.getCenter().x - rocket.getCenter().x, player.getCenter().y - rocket.getCenter().y);
+                            // TODO scale damage and knockback with distance
+                            explosion.setMagnitude(300f);
+                            player.velocity.add(explosion);
+                            if (rocket.owner != player)
+                                player.damage(Rocket.DAMAGE);
                         }
                     }
                 }
@@ -106,14 +124,16 @@ public class Game {
     }
 
     private void takeOutGarbage() {
-        for (Object trash : garbage)
-            entities.remove(trash);
-//        for (Object entity : entities) {
-//            if (entity instanceof Rocket) {
-//                Rocket rocket = (Rocket) entity;
-//                if(rocket.exploded)
-//
-//        }
+        for (Object trash : garbage) {
+            boolean b = entities.remove(trash) || players.remove(trash);
+        }
+    }
+
+    private void checkHealth() {
+        for (Player player : players) {
+            if (player.health <= 0)
+                garbage.add(player);
+        }
     }
 
     public void shoot(Point2D xhair) {

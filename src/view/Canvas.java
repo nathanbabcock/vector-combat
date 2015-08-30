@@ -97,9 +97,10 @@ public class Canvas extends JPanel {
             g2.drawRect((int) b.getBottomLeft().x + cameraOffsetX, (int) (HEIGHT - cameraOffsetY - b.getBottomLeft().y - b.height), (int) (b.width), (int) (b.height));
 
         // Player
-        Player player = game.player;
+//        Player player = game.player;
         g2.setColor(randColor);
-        g2.fillRect((int) player.getBottomLeft().x + cameraOffsetX, (int) (HEIGHT - cameraOffsetY - player.getBottomLeft().y - player.height), (int) player.width, (int) player.height);
+        for (Player player : game.players)
+            g2.fillRect((int) player.getBottomLeft().x + cameraOffsetX, (int) (HEIGHT - cameraOffsetY - player.getBottomLeft().y - player.height), (int) player.width, (int) player.height);
 
         // Entities
         for (Object entity : game.entities) {

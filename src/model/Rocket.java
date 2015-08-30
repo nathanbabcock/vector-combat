@@ -14,6 +14,7 @@ public class Rocket extends Circle2D {
     public static final float RADIUS = 10;
     public static final float VELOCITY = 500;
     public static final float EXPLOSION_RADIUS = 100;
+    public static final int DAMAGE = 60;
 
     public Rocket(float x, float y, float radius) {
         super(x, y, radius);
