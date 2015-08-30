@@ -82,7 +82,6 @@ public class Game {
         for (Object entity : entities) {
             if (entity instanceof Rocket) {
                 Rocket rocket = (Rocket) entity;
-//                if(rocket.exploded) continue;
 
                 // Move rocket
                 rocket.position.displace(rocket.acceleration, rocket.velocity, deltaTime);

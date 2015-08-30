@@ -3,9 +3,7 @@ package model;
 import model.geometry.AABB;
 import model.geometry.Line2D;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -13,18 +11,20 @@ import java.util.ArrayList;
  */
 public class Map {
     public BufferedImage background;
-    public final int WIDTH = 800;
-    public final int HEIGHT = 600;
+    public final int WIDTH = 2000;
+    public final int HEIGHT = 2000;
     public ArrayList<Line2D> boundaries;
     public ArrayList<AABB> statics;
 
     public Map() {
         try {
-            background = ImageIO.read(new File("res/simplemap.png"));
+//            background = ImageIO.read(new File("res/simplemap.png"));
 
             statics = new ArrayList<>();
-            statics.add(new AABB(0, 0, 800, 24));
-            statics.add(new AABB(100, 24, 100, 40));
+            statics.add(new AABB(0, 0, 2000, 64));
+            statics.add(new AABB(0, 128, 400, 40));
+            statics.add(new AABB(1600, 128, 400, 40));
+            statics.add(new AABB(600, 256, 400, 40));
         } catch (Exception e) {
             e.printStackTrace();
         }

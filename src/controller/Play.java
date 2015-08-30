@@ -26,7 +26,7 @@ public class Play extends JFrame {
         canvas = new Canvas(game);
 
         // Layout
-        setSize(new Dimension(game.map.WIDTH, game.map.HEIGHT + 40));
+        setSize(new Dimension(canvas.WIDTH, canvas.HEIGHT + 40));
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
 
@@ -158,7 +158,7 @@ public class Play extends JFrame {
             @Override
             public void mousePressed(MouseEvent e) {
                 Point xhair = e.getPoint();
-                game.shoot(new Point2D(xhair.x, game.map.HEIGHT - xhair.y));
+                game.shoot(new Point2D(xhair.x - canvas.cameraOffsetX, canvas.HEIGHT - canvas.cameraOffsetY - xhair.y));
             }
 
             @Override
