@@ -70,6 +70,8 @@ public class AABB {
         return collision;
     }
 
+    // TODO collision.position is wrong?
+
     // TODO fix this
     public Collision collision(Circle2D other) {
         float dx = other.getCenter().x - getCenter().x;

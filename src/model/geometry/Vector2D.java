@@ -36,4 +36,9 @@ public class Vector2D {
         float ratio = magnitude / getMagnitude();
         return scale(ratio);
     }
+
+    @Override
+    public String toString() {
+        return "[" + x + ", " + y + "]";
+    }
 }

@@ -39,7 +39,7 @@ public class Game {
     public void update(float deltaTime) {
         // Debug
         time += deltaTime;
-        System.out.println("t = " + time + ", pos = " + player.position + ", v = (" + player.velocity.x + ", " + player.velocity.y + "), a = (" + player.acceleration.x + ", " + player.acceleration.y + ")");
+//        System.out.println("t = " + time + ", pos = " + player.position + ", v = (" + player.velocity.x + ", " + player.velocity.y + "), a = (" + player.acceleration.x + ", " + player.acceleration.y + ")");
 
         // Dynamics
         movePlayers(deltaTime);
@@ -93,11 +93,10 @@ public class Game {
                     if (collision != null) {
                         garbage.add(rocket);
                         for (Player player : players) {
-                            float distance = player.position.distance(collision.position);
+                            float distance = player.position.distance(rocket.position);
                             if (distance <= Rocket.EXPLOSION_RADIUS) {
                                 Vector2D explosion = new Vector2D(player.getCenter().x - rocket.getCenter().x, player.getCenter().y - rocket.getCenter().y);
                                 explosion.setMagnitude(300f);
-//                                explosion.setMagnitude(distance).scale(10);
                                 player.velocity.add(explosion);
                             }
                         }
