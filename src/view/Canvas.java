@@ -3,11 +3,14 @@ package view;
 import model.Game;
 import model.Player;
 import model.Rocket;
+import model.Sprite;
 import model.geometry.AABB;
 import model.geometry.Point2D;
+import model.geometry.Vector2D;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 
 /**
  * Created by Nathan on 8/19/2015.
@@ -23,6 +26,8 @@ public class Canvas extends JPanel {
     public int cameraOffsetX;
     public int cameraOffsetY;
 
+    public Point2D xhair;
+
     public final Color randColor = new Color((int) (Math.random() * 0x1000000));
 
 /*    ArrayList<Float> positionGraph = new ArrayList();
@@ -31,6 +36,7 @@ public class Canvas extends JPanel {
 
     public Canvas(Game game) {
         this.game = game;
+        xhair = new Point2D(0, 0);
 
         cameraOffsetX = cameraOffsetY = 0;
 
@@ -92,15 +98,51 @@ public class Canvas extends JPanel {
 //        g2.drawImage(game.map.background, 0, 0, null);
 
         // Boundaries
-        g2.setColor(Color.magenta);
+        g2.setColor(Color.black);
         for (AABB b : game.map.statics)
-            g2.drawRect((int) b.getBottomLeft().x + cameraOffsetX, (int) (HEIGHT - cameraOffsetY - b.getBottomLeft().y - b.height), (int) (b.width), (int) (b.height));
+            g2.fillRect((int) b.getBottomLeft().x + cameraOffsetX, (int) (HEIGHT - cameraOffsetY - b.getBottomLeft().y - b.height), (int) (b.width), (int) (b.height));
 
-        // Player
-//        Player player = game.player;
-        g2.setColor(randColor);
-        for (Player player : game.players)
-            g2.fillRect((int) player.getBottomLeft().x + cameraOffsetX, (int) (HEIGHT - cameraOffsetY - player.getBottomLeft().y - player.height), (int) player.width, (int) player.height);
+        // Players
+        for (Player player : game.players) {
+            // Draw hitbox
+//            g2.setColor(randColor);
+//            g2.fillRect((int) player.getBottomLeft().x + cameraOffsetX, (int) (HEIGHT - cameraOffsetY - player.getBottomLeft().y - player.height), (int) player.width, (int) player.height);
+
+            // Player
+            int playerX = (int) player.getBottomLeft().x + cameraOffsetX + player.sprite.offsetX;
+            int playerY = (int) (HEIGHT - cameraOffsetY - player.getBottomLeft().y - player.height - player.sprite.offsetY);
+            int playerWidth = player.sprite.width;
+            int playerHeight = player.sprite.height;
+
+            // Rocket launcher
+            // Draw rocket
+            Sprite rl = game.sprites.get("rocket_launcher");
+            int rlWidth = rl.width;
+            int rlX = playerX - 8;
+            Point2D rlOrigin = new Point2D(playerX + 12, playerY + 36);
+            Vector2D rlVector = new Vector2D(xhair.x - (player.getBottomLeft().x + 12), -xhair.y + (player.getBottomLeft().y + 36));
+
+            if (xhair != null && xhair.x < player.getCenter().x) {
+                playerWidth *= -1;
+                playerX += player.sprite.width;
+
+                rlWidth *= -1;
+                rlX += 40;
+            }
+
+            g2.drawImage(player.sprite.image, playerX, playerY, playerWidth, playerHeight, null);
+
+            AffineTransform backup = g2.getTransform();
+            AffineTransform trans = new AffineTransform();
+            trans.rotate(rlVector.getDirection(), rlOrigin.x, rlOrigin.y); // the points to rotate around (the center in my example, your left side for your problem)
+            g2.transform(trans);
+//            g2d.drawImage( image, sprite.x, sprite.y );  // the actual location of the sprite
+
+            g2.drawImage(rl.image, rlX, playerY + 16, rlWidth, rl.height, null);
+            g2.setTransform(backup);
+
+        }
+
 
         // Entities
         for (Object entity : game.entities) {

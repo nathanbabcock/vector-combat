@@ -4,6 +4,10 @@ import model.geometry.AABB;
 import model.geometry.Point2D;
 import model.geometry.Vector2D;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
@@ -13,8 +17,8 @@ import java.util.Vector;
 public class Game {
     public Player player;
     public List<Player> players;
-    public List<Object> entities;
-    public List<Object> garbage;
+    public List<Object> entities, garbage;
+    public HashMap<String, Sprite> sprites;
     public Map map;
 
     public static final float gravity = -250;
@@ -23,6 +27,8 @@ public class Game {
 
     public Game() {
         map = new Map();
+
+        setupSprites();
 
         // Spawn player
         player = new Player();
@@ -38,6 +44,19 @@ public class Game {
         garbage = new Vector<>();
     }
 
+    private void setupSprites() {
+        BufferedImage spriteSheet = null;
+        try {
+            spriteSheet = ImageIO.read(new File("res/spritesheet.png"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        sprites = new HashMap();
+        sprites.put("rocket_standing", new Sprite(spriteSheet, 0, 0, 24, 80));
+        sprites.put("rocket_walking", new Sprite(spriteSheet, 32, 0, 24, 80));
+        sprites.put("rocket_launcher", new Sprite(spriteSheet, 64, 0, 64, 24));
+    }
+
     public void update(float deltaTime) {
         // Debug
         time += deltaTime;
@@ -46,12 +65,21 @@ public class Game {
         // Dynamics
         movePlayers(deltaTime);
         moveEntities(deltaTime);
+        updateSprites(deltaTime);
 
         checkHealth();
         takeOutGarbage();
     }
 
     private void movePlayers(float deltaTime) {
+        // Apply walking velocity
+//        if(player.walkingLeft && ! player.walkingRight)
+//            player.velocity.x = -player.moveSpeed;
+//        else if (player.walkingRight && ! player.walkingLeft)
+//            player.velocity.x = player.moveSpeed;
+//        else
+//            player.vel
+
         for (Player player : players) {
             // Apply gravity
             player.velocity.add(player.acceleration.copy().scale(deltaTime));
@@ -120,6 +148,24 @@ public class Game {
                     }
                 }
             }
+        }
+    }
+
+    private void updateSprites(float deltaTime) {
+        for (Player player : players) {
+            if (player.walkingLeft || player.walkingRight) {
+                float spriteInterval = 0.25f;
+                if (player.spriteTime >= spriteInterval) {
+                    if (player.sprite == sprites.get("rocket_standing")) {
+                        player.sprite = sprites.get("rocket_walking");
+                    } else if (player.sprite == sprites.get("rocket_walking"))
+                        player.sprite = sprites.get("rocket_standing");
+                    player.spriteTime = 0;
+                }
+            } else {
+                player.sprite = sprites.get("rocket_standing");
+            }
+            player.spriteTime += deltaTime;
         }
     }
 

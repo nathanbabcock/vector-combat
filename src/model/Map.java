@@ -19,16 +19,16 @@ public class Map {
     public Map() {
         try {
 //            background = ImageIO.read(new File("res/simplemap.png"));
-
-            statics = new ArrayList<>();
-            statics.add(new AABB(0, 0, 2000, 64));
-            statics.add(new AABB(0, 128, 400, 40));
-            statics.add(new AABB(1600, 128, 400, 40));
-            statics.add(new AABB(600, 256, 400, 40));
-
-            statics.add(new AABB(0, 0, 40, 300));
         } catch (Exception e) {
             e.printStackTrace();
         }
+        statics = new ArrayList<>();
+        statics.add(new AABB(0, 0, 2000, 64));
+        statics.add(new AABB(0, 128, 400, 40));
+        statics.add(new AABB(1600, 128, 400, 40));
+        statics.add(new AABB(600, 256, 400, 40));
+
+        statics.add(new AABB(0, 0, 40, 300));
+
     }
 }

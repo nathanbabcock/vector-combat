@@ -37,6 +37,19 @@ public class Vector2D {
         return scale(ratio);
     }
 
+    public float getDirection() {
+        return (float) Math.atan(y / x);
+//        double theta = Math.atan(x/y);
+//
+//        if(x >= 0 && y < 0)
+//            theta += Math.toRadians(180);
+//        else if(x <= 0 && y < 0)
+//            theta += Math.toRadians(180);
+//
+//        return theta;
+
+    }
+
     @Override
     public String toString() {
         return "[" + x + ", " + y + "]";

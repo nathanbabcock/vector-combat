@@ -6,10 +6,7 @@ import view.Canvas;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 
 /**
  * Created by Nathan on 8/19/2015.
@@ -100,11 +97,12 @@ public class Play extends JFrame {
             public void actionPerformed(ActionEvent e) {
 //                System.out.println("Right pressed");
                 game.player.velocity.x = game.player.moveSpeed;
+                game.player.walkingRight = true;
 //                am.remove("rightPressed");
             }
         };
         am.put("rightPressed", rightPressed);
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, false), "rightPressed");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, false), "rightPressed");
 
         // RIGHT released
         Action rightReleased = new AbstractAction() {
@@ -112,11 +110,12 @@ public class Play extends JFrame {
             public void actionPerformed(ActionEvent e) {
 //                System.out.println("Right released");
                 game.player.velocity.x = 0f;
+                game.player.walkingRight = false;
 //                am.put("rightPressed", rightPressed);
             }
         };
         am.put("rightReleased", rightReleased);
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, true), "rightReleased");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, true), "rightReleased");
 
         // LEFT pressed
         Action leftPressed = new AbstractAction() {
@@ -124,11 +123,12 @@ public class Play extends JFrame {
             public void actionPerformed(ActionEvent e) {
 //                System.out.println("Left pressed");
                 game.player.velocity.x = -game.player.moveSpeed;
+                game.player.walkingLeft = true;
 //                am.remove("leftPressed");
             }
         };
         am.put("leftPressed", leftPressed);
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, false), "leftPressed");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0, false), "leftPressed");
 
         // LEFT released
         Action leftReleased = new AbstractAction() {
@@ -136,11 +136,12 @@ public class Play extends JFrame {
             public void actionPerformed(ActionEvent e) {
 //                System.out.println("Left released");
                 game.player.velocity.x = 0f;
+                game.player.walkingLeft = false;
 //                am.put("leftPressed", leftPressed);
             }
         };
         am.put("leftReleased", leftReleased);
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, true), "leftReleased");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0, true), "leftReleased");
 
         // SPACE pressed
         Action spacePressed = new AbstractAction() {
@@ -157,8 +158,9 @@ public class Play extends JFrame {
         canvas.addMouseListener(new MouseListener() {
             @Override
             public void mousePressed(MouseEvent e) {
-                Point xhair = e.getPoint();
-                game.shoot(new Point2D(xhair.x - canvas.cameraOffsetX, canvas.HEIGHT - canvas.cameraOffsetY - xhair.y));
+//                Point xhair = canvas.xhair;//e.getPoint();
+//                game.shoot(new Point2D(xhair.x - canvas.cameraOffsetX, canvas.HEIGHT - canvas.cameraOffsetY - xhair.y));
+                game.shoot(new Point2D(canvas.xhair.x, canvas.xhair.y));
             }
 
             @Override
@@ -175,6 +177,18 @@ public class Play extends JFrame {
 
             @Override
             public void mouseExited(MouseEvent e) {
+            }
+        });
+
+        canvas.addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                Point xhair = e.getPoint();
+                canvas.xhair = new Point2D(xhair.x - canvas.cameraOffsetX, canvas.HEIGHT - canvas.cameraOffsetY - xhair.y);
             }
         });
 
