@@ -148,13 +148,40 @@ public class Game {
                     for (Player player : players) {
                         float distance = player.position.distance(rocket.position);
                         if (distance <= Rocket.EXPLOSION_RADIUS) {
+                            // Knockback
                             Vector2D explosion = new Vector2D(player.getCenter().x - rocket.getCenter().x, player.getCenter().y - rocket.getCenter().y);
                             // TODO scale damage and knockback with distance
                             explosion.setMagnitude(300f);
                             player.velocity.add(explosion);
+                            // Damage
                             if (rocket.owner != player)
                                 player.damage(Rocket.DAMAGE);
                         }
+                    }
+
+                    // Particle effects
+                    final int AVG_PARTICLES = 20;
+                    final int AVG_SIZE = 10;
+                    final int MAX_DEVIATION = 5;
+                    final int AVG_VELOCITY = 200;
+
+                    Random r = new Random();
+                    for (int i = 0; i < AVG_PARTICLES; i++) {
+                        Particle particle = new Particle();
+                        particle.position = rocket.getCenter().copy();
+                        int sign;
+                        if (r.nextBoolean())
+                            sign = -1;
+                        else
+                            sign = 1;
+                        particle.size = AVG_SIZE + (r.nextInt(MAX_DEVIATION + 1) * sign);
+                        particle.color = new Color(0, 0, 0);
+                        particle.angle = (float) Math.toRadians(r.nextInt(360));
+                        particle.growth = 0;// -15; // - (r.nextInt(5) + 10);
+                        particle.rotation = (float) Math.toRadians(r.nextInt(361));
+                        particle.velocity = new Vector2D(r.nextInt(AVG_VELOCITY * 2) - AVG_VELOCITY, r.nextInt(AVG_VELOCITY * 2) - AVG_VELOCITY);
+                        particle.acceleration = new Vector2D(0, gravity);
+                        particles.add(particle);
                     }
                 }
             }
@@ -182,6 +209,11 @@ public class Game {
     private void updateParticles(float deltaTime) {
         // Update existing particles
         for (Particle particle : particles) {
+            if (particle.position.x > map.WIDTH || particle.position.y > map.HEIGHT) {
+                garbage.add(particle);
+                continue;
+            }
+
             particle.update(deltaTime);
             if (particle.size <= 0)
                 garbage.add(particle);

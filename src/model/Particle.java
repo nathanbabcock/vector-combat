@@ -20,6 +20,13 @@ public class Particle {
     }
 
     public void update(float deltaTime) {
+//        velocity = new Vector2D(0, 0);
+//        acceleration = new Vector2D(0, 0);
+        if (velocity != null && acceleration != null) {
+            velocity.add(acceleration.copy().scale(deltaTime));
+            position.displace(acceleration, velocity, deltaTime);
+        }
+
         size += deltaTime * growth;
         angle += deltaTime * rotation;
     }
