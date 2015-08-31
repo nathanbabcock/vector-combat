@@ -10,8 +10,6 @@ public class Circle2D {
     public Circle2D() {
     }
 
-    ;
-
     public Circle2D(Point2D center, float radius) {
         this.position = center;
         this.radius = radius;

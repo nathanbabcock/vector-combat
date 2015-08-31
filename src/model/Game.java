@@ -5,10 +5,12 @@ import model.geometry.Point2D;
 import model.geometry.Vector2D;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.Vector;
 
 /**
@@ -18,6 +20,7 @@ public class Game {
     public Player player;
     public List<Player> players;
     public List<Object> entities, garbage;
+    public List<Particle> particles;
     public HashMap<String, Sprite> sprites;
     public Map map;
 
@@ -42,6 +45,7 @@ public class Game {
 
         entities = new Vector<>();
         garbage = new Vector<>();
+        particles = new Vector<>();
     }
 
     private void setupSprites() {
@@ -66,6 +70,7 @@ public class Game {
         movePlayers(deltaTime);
         moveEntities(deltaTime);
         updateSprites(deltaTime);
+        updateParticles(deltaTime);
 
         checkHealth();
         takeOutGarbage();
@@ -113,6 +118,11 @@ public class Game {
         for (Object entity : entities) {
             if (entity instanceof Rocket) {
                 Rocket rocket = (Rocket) entity;
+
+                if (rocket.position.x > map.WIDTH || rocket.position.y > map.HEIGHT) {
+                    garbage.add(rocket);
+                    continue;
+                }
 
                 // Move rocket
                 rocket.position.displace(rocket.acceleration, rocket.velocity, deltaTime);
@@ -169,9 +179,48 @@ public class Game {
         }
     }
 
+    private void updateParticles(float deltaTime) {
+        // Update existing particles
+        for (Particle particle : particles) {
+            particle.update(deltaTime);
+            if (particle.size <= 0)
+                garbage.add(particle);
+        }
+
+        // Spawn new particles
+        for (Object entity : entities) {
+            if (entity instanceof Rocket) {
+                Rocket rocket = (Rocket) entity;
+
+                // Spawn particle trail
+                final int AVG_PARTICLES = 50;
+                final int AVG_SIZE = 15;
+                final int MAX_DEVIATION = 5;
+
+                float numParticles = AVG_PARTICLES * deltaTime;
+                Random r = new Random();
+                if (r.nextFloat() < numParticles) {
+                    Particle particle = new Smoke();
+                    particle.position = rocket.getCenter().copy();
+                    int sign;
+                    if (r.nextBoolean())
+                        sign = -1;
+                    else
+                        sign = 1;
+                    particle.size = AVG_SIZE + (r.nextInt(MAX_DEVIATION + 1) * sign);
+                    particle.color = new Color(255, 255, 0);
+                    particle.angle = (float) Math.toRadians(r.nextInt(360));
+                    particle.growth = -15; // - (r.nextInt(5) + 10);
+                    particle.rotation = (float) Math.toRadians(r.nextInt(361));
+                    particles.add(particle);
+                }
+            }
+        }
+    }
+
     private void takeOutGarbage() {
         for (Object trash : garbage) {
-            boolean b = entities.remove(trash) || players.remove(trash);
+            boolean b = entities.remove(trash) || players.remove(trash) || particles.remove(trash);
         }
     }
 

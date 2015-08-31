@@ -11,7 +11,7 @@ public class Rocket extends Circle2D {
     public Player owner;
     public boolean exploded;
 
-    public static final float RADIUS = 10;
+    public static final float RADIUS = 8;
     public static final float VELOCITY = 500;
     public static final float EXPLOSION_RADIUS = 100;
     public static final int DAMAGE = 60;

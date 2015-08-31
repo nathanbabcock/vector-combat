@@ -1,9 +1,6 @@
 package view;
 
-import model.Game;
-import model.Player;
-import model.Rocket;
-import model.Sprite;
+import model.*;
 import model.geometry.AABB;
 import model.geometry.Point2D;
 import model.geometry.Vector2D;
@@ -11,6 +8,7 @@ import model.geometry.Vector2D;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 
 /**
  * Created by Nathan on 8/19/2015.
@@ -89,10 +87,25 @@ public class Canvas extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
+        AffineTransform backup = g2.getTransform();
         super.paintComponent(g);
 
         calculateCameraOffset();
-//        System.out.println(cameraOffsetY);
+
+        // Particles
+        for (Particle particle : game.particles) {
+            g2.setColor(particle.color);
+
+//            AffineTransform trans = new AffineTransform();
+//            trans.rotate(particle.angle, particle.position.x, particle.position.y);
+
+            int x = (int) (cameraOffsetX + particle.position.x - particle.size / 2);
+            int y = (int) (HEIGHT - cameraOffsetY - (particle.position.y + particle.size / 2));
+            int size = (int) particle.size;
+            Rectangle2D rect = new Rectangle2D.Float(x, y, size, size);
+            AffineTransform at = AffineTransform.getRotateInstance(particle.angle, cameraOffsetX + particle.position.x, HEIGHT - cameraOffsetY - particle.position.y);
+            g2.fill(at.createTransformedShape(rect));
+        }
 
         // Background
 //        g2.drawImage(game.map.background, 0, 0, null);
@@ -132,7 +145,6 @@ public class Canvas extends JPanel {
 
             g2.drawImage(player.sprite.image, playerX, playerY, playerWidth, playerHeight, null);
 
-            AffineTransform backup = g2.getTransform();
             AffineTransform trans = new AffineTransform();
             trans.rotate(rlVector.getDirection(), rlOrigin.x, rlOrigin.y); // the points to rotate around (the center in my example, your left side for your problem)
             g2.transform(trans);
