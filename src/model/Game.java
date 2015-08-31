@@ -119,7 +119,7 @@ public class Game {
             if (entity instanceof Rocket) {
                 Rocket rocket = (Rocket) entity;
 
-                if (rocket.position.x > map.WIDTH || rocket.position.y > map.HEIGHT) {
+                if (rocket.position.x > map.WIDTH || rocket.position.y > map.HEIGHT || rocket.position.x < 0 || rocket.position.y < 0) {
                     garbage.add(rocket);
                     continue;
                 }
@@ -209,7 +209,7 @@ public class Game {
     private void updateParticles(float deltaTime) {
         // Update existing particles
         for (Particle particle : particles) {
-            if (particle.position.x > map.WIDTH || particle.position.y > map.HEIGHT) {
+            if (particle.position.x > map.WIDTH || particle.position.y > map.HEIGHT || particle.position.x < 0 || particle.position.y < 0) {
                 garbage.add(particle);
                 continue;
             }
