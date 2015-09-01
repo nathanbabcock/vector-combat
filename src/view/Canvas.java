@@ -26,7 +26,7 @@ public class Canvas extends JPanel {
     public int cameraOffsetX;
     public int cameraOffsetY;
 
-    public Point2D xhair_relative, xhair_absolute;
+    public Point2D xhair;
 
 /*    ArrayList<Float> positionGraph = new ArrayList();
     ArrayList<Float> velocityGraph = new ArrayList();
@@ -34,7 +34,7 @@ public class Canvas extends JPanel {
 
     public Canvas(Game game) {
         this.game = game;
-        xhair_relative = xhair_absolute = new Point2D(0, 0);
+        xhair = new Point2D(0, 0);
 
         cameraOffsetX = cameraOffsetY = 0;
 

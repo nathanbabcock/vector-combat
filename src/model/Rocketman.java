@@ -33,7 +33,7 @@ public class Rocketman extends Player {
     }
 
     @Override
-    public void shoot(Point2D xhair) {
+    public void shoot() {
         Rocket rocket = new Rocket(game, getCenter().x, getCenter().y, Rocket.RADIUS);
         rocket.owner = this;
         Point2D origin = getCenter();
@@ -61,9 +61,9 @@ public class Rocketman extends Player {
         int rlWidth = rl.width;
         int rlX = playerX - 8;
         Point2D rlOrigin = new Point2D(playerX + 12, playerY + 36);
-        Vector2D rlVector = new Vector2D(canvas.xhair_absolute.x - (getBottomLeft().x + 12), -canvas.xhair_absolute.y + (getBottomLeft().y + 36));
+        Vector2D rlVector = new Vector2D(xhair.x - (getBottomLeft().x + 12), -xhair.y + (getBottomLeft().y + 36));
 
-        if (canvas.xhair_absolute != null && canvas.xhair_absolute.x < getCenter().x) {
+        if (xhair.x < getCenter().x) {
             playerWidth *= -1;
             playerX += sprite.width;
 

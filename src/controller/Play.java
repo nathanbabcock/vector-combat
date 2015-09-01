@@ -62,7 +62,7 @@ public class Play extends JFrame {
 
             // update the game logic
             game.update(OPTIMAL_TIME / 1000000000f);
-            canvas.xhair_absolute = new Point2D(canvas.xhair_relative.x - canvas.cameraOffsetX, canvas.HEIGHT - canvas.cameraOffsetY - canvas.xhair_relative.y);
+            game.player.xhair = new Point2D(canvas.xhair.x - canvas.cameraOffsetX, canvas.HEIGHT - canvas.cameraOffsetY - canvas.xhair.y);
             canvas.repaint();
 
             // we want each frame to take 10 milliseconds, to do this
@@ -147,7 +147,7 @@ public class Play extends JFrame {
             public void mousePressed(MouseEvent e) {
 //                Point xhair = canvas.xhair;//e.getPoint();
 //                game.shoot(new Point2D(xhair.x - canvas.cameraOffsetX, canvas.HEIGHT - canvas.cameraOffsetY - xhair.y));
-                game.player.shoot(new Point2D(canvas.xhair_absolute.x, canvas.xhair_absolute.y));
+                game.player.shoot();
             }
 
             @Override
@@ -175,7 +175,7 @@ public class Play extends JFrame {
             @Override
             public void mouseMoved(MouseEvent e) {
                 Point xhair = e.getPoint();
-                canvas.xhair_relative = new Point2D(xhair.x, xhair.y);
+                canvas.xhair = new Point2D(xhair.x, xhair.y);
             }
         });
 

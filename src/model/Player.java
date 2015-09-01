@@ -18,11 +18,13 @@ abstract public class Player extends AABB implements Entity {
     public Game game;
 
     public Vector2D velocity, acceleration;
+    public Point2D xhair;
     public int health;
 
     // States, written to by controls and read from for sprites
     public boolean walkingLeft;
     public boolean walkingRight;
+    public boolean facingLeft;
     public boolean jumping;
     public boolean dead;
 
@@ -31,6 +33,7 @@ abstract public class Player extends AABB implements Entity {
 
     public Player(Game game) {
         this.game = game;
+        xhair = new Point2D(0, 0);
         velocity = new Vector2D(0, 0);
         acceleration = new Vector2D(0, 0);
         position = new Point2D(0, 0);
@@ -101,7 +104,7 @@ abstract public class Player extends AABB implements Entity {
 
     abstract public void updateSprite(float deltaTime);
 
-    abstract public void shoot(Point2D xhair);
+    abstract public void shoot();
 
     abstract public void draw(Canvas canvas, Graphics2D g2);
 
