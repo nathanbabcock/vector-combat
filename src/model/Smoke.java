@@ -6,9 +6,15 @@ import java.awt.*;
  * Created by Nathan on 8/30/2015.
  */
 public class Smoke extends Particle {
+    public Smoke(Game game) {
+        super(game);
+    }
+
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
+
+        // Color changing over time (yellow -> red -> black)
         int green = color.getGreen();
         int red = color.getRed();
         if (green > 0)

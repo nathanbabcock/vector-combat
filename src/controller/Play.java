@@ -95,10 +95,7 @@ public class Play extends JFrame {
         Action rightPressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                System.out.println("Right pressed");
-                game.player.velocity.x = game.player.moveSpeed;
                 game.player.walkingRight = true;
-//                am.remove("rightPressed");
             }
         };
         am.put("rightPressed", rightPressed);
@@ -108,10 +105,7 @@ public class Play extends JFrame {
         Action rightReleased = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                System.out.println("Right released");
-                game.player.velocity.x = 0f;
                 game.player.walkingRight = false;
-//                am.put("rightPressed", rightPressed);
             }
         };
         am.put("rightReleased", rightReleased);
@@ -121,10 +115,7 @@ public class Play extends JFrame {
         Action leftPressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                System.out.println("Left pressed");
-                game.player.velocity.x = -game.player.moveSpeed;
                 game.player.walkingLeft = true;
-//                am.remove("leftPressed");
             }
         };
         am.put("leftPressed", leftPressed);
@@ -134,10 +125,7 @@ public class Play extends JFrame {
         Action leftReleased = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                System.out.println("Left released");
-                game.player.velocity.x = 0f;
                 game.player.walkingLeft = false;
-//                am.put("leftPressed", leftPressed);
             }
         };
         am.put("leftReleased", leftReleased);
@@ -147,20 +135,28 @@ public class Play extends JFrame {
         Action spacePressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                System.out.println("Space pressed");
-                game.player.velocity.y = game.player.jumpSpeed;
-//                game.player.acceleration.y = game.gravity;
+                game.player.jumping = true;
             }
         };
         am.put("spacePressed", spacePressed);
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, false), "spacePressed");
+
+        // SPACE pressed
+        Action spaceReleased = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                game.player.jumping = false;
+            }
+        };
+        am.put("spaceReleased", spaceReleased);
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, true), "spaceReleased");
 
         canvas.addMouseListener(new MouseListener() {
             @Override
             public void mousePressed(MouseEvent e) {
 //                Point xhair = canvas.xhair;//e.getPoint();
 //                game.shoot(new Point2D(xhair.x - canvas.cameraOffsetX, canvas.HEIGHT - canvas.cameraOffsetY - xhair.y));
-                game.shoot(new Point2D(canvas.xhair.x, canvas.xhair.y));
+                game.player.shoot(new Point2D(canvas.xhair.x, canvas.xhair.y));
             }
 
             @Override
