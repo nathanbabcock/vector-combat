@@ -30,6 +30,7 @@ abstract public class Player extends AABB implements Entity {
     public boolean attacking;
     public boolean jumping;
     public boolean dead;
+    public boolean onGround;
 
     public Sprite sprite;
     public float spriteTime;
