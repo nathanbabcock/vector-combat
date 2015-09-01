@@ -3,6 +3,7 @@ package model;
 import model.geometry.AABB;
 import model.geometry.Circle2D;
 import model.geometry.Vector2D;
+import view.Canvas;
 
 import java.awt.*;
 import java.util.Random;
@@ -135,6 +136,15 @@ public class Rocket extends Circle2D implements Entity {
             particle.acceleration = new Vector2D(0, game.gravity);
             game.particles.add(particle);
         }
+    }
+
+    public void draw(Canvas canvas, Graphics2D g2) {
+        if (exploded) return;
+        g2.setColor(Color.red);
+        int x = (int) (getBottomLeft().x + canvas.cameraOffsetX);
+        int y = (int) (canvas.HEIGHT - canvas.cameraOffsetY - getBottomLeft().y - 2 * radius);
+        int size = (int) (2 * radius);
+        g2.fillOval(x, y, size, size);
     }
 
 }

@@ -26,20 +26,10 @@ public class Play extends JFrame {
         setSize(new Dimension(canvas.WIDTH, canvas.HEIGHT + 40));
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
-
-
-        // HERE ARE THE KEY BINDINGS
-        setupListeners();
-        // END OF KEY BINDINGS
-
-
         add(canvas);
         repaint();
 
-        // Listeners
-//        setupListeners();
-//        KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-//        manager.addKeyEventDispatcher(new MyDispatcher());
+        setupListeners();
 
         gameLoop();
     }
@@ -72,6 +62,7 @@ public class Play extends JFrame {
 
             // update the game logic
             game.update(OPTIMAL_TIME / 1000000000f);
+            canvas.xhair_absolute = new Point2D(canvas.xhair_relative.x - canvas.cameraOffsetX, canvas.HEIGHT - canvas.cameraOffsetY - canvas.xhair_relative.y);
             canvas.repaint();
 
             // we want each frame to take 10 milliseconds, to do this
@@ -156,7 +147,7 @@ public class Play extends JFrame {
             public void mousePressed(MouseEvent e) {
 //                Point xhair = canvas.xhair;//e.getPoint();
 //                game.shoot(new Point2D(xhair.x - canvas.cameraOffsetX, canvas.HEIGHT - canvas.cameraOffsetY - xhair.y));
-                game.player.shoot(new Point2D(canvas.xhair.x, canvas.xhair.y));
+                game.player.shoot(new Point2D(canvas.xhair_absolute.x, canvas.xhair_absolute.y));
             }
 
             @Override
@@ -184,31 +175,11 @@ public class Play extends JFrame {
             @Override
             public void mouseMoved(MouseEvent e) {
                 Point xhair = e.getPoint();
-                canvas.xhair = new Point2D(xhair.x - canvas.cameraOffsetX, canvas.HEIGHT - canvas.cameraOffsetY - xhair.y);
+                canvas.xhair_relative = new Point2D(xhair.x, xhair.y);
             }
         });
 
     }
-
-
-//    private class MyDispatcher implements KeyEventDispatcher {
-//        @Override
-//        public boolean dispatchKeyEvent(KeyEvent e) {
-//            int keyCode = e.getKeyCode();
-//            switch (keyCode) {
-//                case KeyEvent.VK_SPACE:
-////                    player.jump();
-//                    break;
-//                case KeyEvent.VK_LEFT:
-////                    game.player.moveingLeft = true;
-//                    break;
-//                case KeyEvent.VK_RIGHT:
-//                    game.player.moveRight();
-//                    break;
-//            }
-//            return true;
-//        }
-//    }
 
     public static void main(String[] args) {
         new Play();
