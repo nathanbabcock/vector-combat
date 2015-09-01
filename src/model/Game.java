@@ -31,7 +31,7 @@ public class Game {
         setupSprites();
 
         // Spawn player
-        player = new Rocketman(this);
+        player = new Soldier(this);
         player.position = new Point2D(400, 549);
         player.acceleration.y = gravity;
 
@@ -56,6 +56,10 @@ public class Game {
         sprites.put("rocket_standing", new Sprite(spriteSheet, 0, 0, 24, 80));
         sprites.put("rocket_walking", new Sprite(spriteSheet, 32, 0, 24, 80));
         sprites.put("rocket_launcher", new Sprite(spriteSheet, 64, 0, 64, 24));
+
+        sprites.put("soldier_standing", new Sprite(spriteSheet, 0, 216, 32, 80, -8, 0));
+        sprites.put("soldier_walking", new Sprite(spriteSheet, 40, 216, 32, 80, -8, 0));
+        sprites.put("soldier_gun", new Sprite(spriteSheet, 80, 216, 48, 24));
     }
 
     public void update(float deltaTime) {

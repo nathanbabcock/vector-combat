@@ -16,4 +16,10 @@ public class Sprite {
         offsetY = 0;
         image = spriteSheet.getSubimage(x, y, width, height);
     }
+
+    public Sprite(BufferedImage spriteSheet, int x, int y, int width, int height, int offsetX, int offsetY) {
+        this(spriteSheet, x, y, width, height);
+        this.offsetX = offsetX;
+        this.offsetY = offsetY;
+    }
 }
