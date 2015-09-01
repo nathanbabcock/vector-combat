@@ -56,6 +56,7 @@ public class AABB {
             return null;
 
         Collision collision = new Collision();
+        collision.collider = this;
         if (px < py) {
             float sx = Math.signum(dx);
             collision.delta = new Vector2D(px * sx, 0);

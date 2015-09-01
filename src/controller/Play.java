@@ -146,8 +146,9 @@ public class Play extends JFrame {
             @Override
             public void mousePressed(MouseEvent e) {
 //                Point xhair = canvas.xhair;//e.getPoint();
-//                game.shoot(new Point2D(xhair.x - canvas.cameraOffsetX, canvas.HEIGHT - canvas.cameraOffsetY - xhair.y));
-                game.player.shoot();
+//                game.attack(new Point2D(xhair.x - canvas.cameraOffsetX, canvas.HEIGHT - canvas.cameraOffsetY - xhair.y));
+//                game.player.attack();
+                game.player.attacking = true;
             }
 
             @Override
@@ -156,6 +157,7 @@ public class Play extends JFrame {
 
             @Override
             public void mouseReleased(MouseEvent e) {
+                game.player.attacking = false;
             }
 
             @Override
@@ -170,6 +172,8 @@ public class Play extends JFrame {
         canvas.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
+                Point xhair = e.getPoint();
+                canvas.xhair = new Point2D(xhair.x, xhair.y);
             }
 
             @Override

@@ -13,6 +13,8 @@ import java.awt.geom.AffineTransform;
 public class Soldier extends Player {
     public Soldier(Game game) {
         super(game);
+
+        attackInterval = 0.1f;
     }
 
     @Override
@@ -33,15 +35,20 @@ public class Soldier extends Player {
     }
 
     @Override
-    public void shoot() {
-        System.out.println("Pew pew");
-//        Rocket rocket = new Rocket(game, getCenter().x, getCenter().y, Rocket.RADIUS);
-//        rocket.owner = this;
-//        Point2D origin = getCenter();
-//        rocket.velocity = new Vector2D(xhair.x - origin.x, xhair.y - origin.y);
-//        rocket.velocity.setMagnitude(Rocket.VELOCITY);
-//        rocket.acceleration = new Vector2D(0, 0);
-//        game.entities.add(rocket);
+    public void attack(float deltaTime) {
+        if (currentAttackDelay > 0)
+            currentAttackDelay -= deltaTime;
+
+        if (!attacking || currentAttackDelay > 0)
+            return;
+
+        Bullet bullet = new Bullet(game, getCenter().x, getCenter().y, Bullet.SIZE);
+        Point2D origin = getCenter();
+        bullet.owner = this;
+        bullet.velocity = new Vector2D(xhair.x - origin.x, xhair.y - origin.y);
+        bullet.velocity.setMagnitude(Bullet.VELOCITY);
+        game.entities.add(bullet);
+        currentAttackDelay = attackInterval;
     }
 
     @Override

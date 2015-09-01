@@ -37,7 +37,7 @@ public class Game {
 
         players = new Vector<>();
         players.add(player);
-        players.add(new Rocketman(this));
+        players.add(new Soldier(this));
         players.get(1).position = new Point2D(400, 850);
 
         entities = new Vector<>();

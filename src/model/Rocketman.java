@@ -13,6 +13,7 @@ import java.awt.geom.AffineTransform;
 public class Rocketman extends Player {
     public Rocketman(Game game) {
         super(game);
+        attackInterval = 1.0f;
     }
 
     @Override
@@ -33,7 +34,13 @@ public class Rocketman extends Player {
     }
 
     @Override
-    public void shoot() {
+    public void attack(float deltaTime) {
+        if (currentAttackDelay > 0)
+            currentAttackDelay -= deltaTime;
+
+        if (!attacking || currentAttackDelay > 0)
+            return;
+
         Rocket rocket = new Rocket(game, getCenter().x, getCenter().y, Rocket.RADIUS);
         rocket.owner = this;
         Point2D origin = getCenter();
@@ -41,6 +48,7 @@ public class Rocketman extends Player {
         rocket.velocity.setMagnitude(Rocket.VELOCITY);
         rocket.acceleration = new Vector2D(0, 0);
         game.entities.add(rocket);
+        currentAttackDelay = attackInterval;
     }
 
     @Override

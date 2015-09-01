@@ -49,9 +49,7 @@ public class Canvas extends JPanel {
 
         calculateCameraOffset();
 
-        // Particles
-        for (Particle particle : game.particles)
-            particle.draw(this, g2);
+
 
         // Background
 //        g2.drawImage(game.map.background, 0, 0, null);
@@ -64,6 +62,10 @@ public class Canvas extends JPanel {
         // Players
         for (Player player : game.players)
             player.draw(this, g2);
+
+        // Particles
+        for (Particle particle : game.particles)
+            particle.draw(this, g2);
 
         // Entities
         for (Entity entity : game.entities)

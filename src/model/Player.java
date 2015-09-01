@@ -6,6 +6,7 @@ import model.geometry.Vector2D;
 import view.Canvas;
 
 import java.awt.*;
+import java.util.Random;
 
 /**
  * Created by Nathan on 8/19/2015.
@@ -14,17 +15,19 @@ abstract public class Player extends AABB implements Entity {
     // Constants
     public Float moveSpeed = 200f;
     public Float jumpSpeed = 100f;
+    public Float attackInterval = 1.0f;
 
     public Game game;
 
     public Vector2D velocity, acceleration;
     public Point2D xhair;
     public int health;
+    public float currentAttackDelay;
 
     // States, written to by controls and read from for sprites
     public boolean walkingLeft;
     public boolean walkingRight;
-    public boolean facingLeft;
+    public boolean attacking;
     public boolean jumping;
     public boolean dead;
 
@@ -47,6 +50,7 @@ abstract public class Player extends AABB implements Entity {
         updateSprite(deltaTime);
         checkCollisions();
         checkHealth();
+        attack(deltaTime);
     }
 
     public void applyDynamics(float deltaTime) {
@@ -102,9 +106,36 @@ abstract public class Player extends AABB implements Entity {
         }
     }
 
+    public void generateBloodParticles() {
+        // Particle effects
+        final int AVG_PARTICLES = 2;
+        final int AVG_SIZE = 5;
+        final int MAX_DEVIATION = 3;
+        final int AVG_VELOCITY = 100;
+
+        Random r = new Random();
+        for (int i = 0; i < AVG_PARTICLES; i++) {
+            Particle particle = new Particle(game);
+            particle.position = getCenter().copy();
+            int sign;
+            if (r.nextBoolean())
+                sign = -1;
+            else
+                sign = 1;
+            particle.size = AVG_SIZE + (r.nextInt(MAX_DEVIATION + 1) * sign);
+            particle.color = new Color(255, 0, 0);
+            particle.angle = (float) Math.toRadians(r.nextInt(360));
+            particle.growth = 0;// -15; // - (r.nextInt(5) + 10);
+            particle.rotation = (float) Math.toRadians(r.nextInt(361));
+            particle.velocity = new Vector2D(r.nextInt(AVG_VELOCITY * 2) - AVG_VELOCITY, r.nextInt(AVG_VELOCITY * 2) - AVG_VELOCITY);
+            particle.acceleration = new Vector2D(0, game.gravity);
+            game.particles.add(particle);
+        }
+    }
+
     abstract public void updateSprite(float deltaTime);
 
-    abstract public void shoot();
+    abstract public void attack(float deltaTime);
 
     abstract public void draw(Canvas canvas, Graphics2D g2);
 

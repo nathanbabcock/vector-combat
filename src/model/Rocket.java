@@ -27,6 +27,8 @@ public class Rocket extends Circle2D implements Entity {
         super(x, y, radius);
         this.game = game;
         exploded = false;
+        velocity = new Vector2D(0, 0);
+        acceleration = new Vector2D(0, 0);
     }
 
     public void update(float deltaTime) {

@@ -9,7 +9,5 @@ import model.geometry.Vector2D;
 public class Collision {
     public Vector2D delta, normal;
     public Point2D position;
-
-    public Collision() {
-    }
+    public Object collider;
 }
