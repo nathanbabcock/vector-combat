@@ -31,13 +31,13 @@ public class Game {
         setupSprites();
 
         // Spawn player
-        player = new Player(this);
+        player = new Rocketman(this);
         player.position = new Point2D(400, 549);
         player.acceleration.y = gravity;
 
         players = new Vector<>();
         players.add(player);
-        players.add(new Player(this));
+        players.add(new Rocketman(this));
         players.get(1).position = new Point2D(400, 850);
 
         entities = new Vector<>();
