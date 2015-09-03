@@ -14,7 +14,7 @@ import java.util.Random;
 abstract public class Player extends AABB implements Entity {
     // Constants
     public Float moveSpeed = 200f;
-    public Float jumpSpeed = 100f;
+    public Float jumpSpeed = 300f;
     public Float attackInterval = 1.0f;
 
     public Game game;
@@ -25,12 +25,7 @@ abstract public class Player extends AABB implements Entity {
     public float currentAttackDelay;
 
     // States, written to by controls and read from for sprites
-    public boolean walkingLeft;
-    public boolean walkingRight;
-    public boolean attacking;
-    public boolean jumping;
-    public boolean dead;
-    public boolean onGround;
+    public boolean walkingLeft, walkingRight, attacking, jumping, dead, onGround, wallLeft, wallRight;
 
     public Sprite sprite;
     public float spriteTime;
@@ -50,11 +45,15 @@ abstract public class Player extends AABB implements Entity {
         applyDynamics(deltaTime);
         updateSprite(deltaTime);
         checkCollisions();
+        jump();
         checkHealth();
         attack(deltaTime);
     }
 
     public void applyDynamics(float deltaTime) {
+        // Reset states
+        onGround = wallLeft = wallRight = false;
+
         // Apply gravity
         velocity.add(acceleration.copy().scale(deltaTime));
         acceleration.y = game.gravity;
@@ -65,6 +64,7 @@ abstract public class Player extends AABB implements Entity {
             velocity.add(new Vector2D(moveSpeed, 0));
         if (walkingLeft)
             velocity.add(new Vector2D(-moveSpeed, 0));
+
 
         // Move player
         position.displace(acceleration, velocity, deltaTime);
@@ -79,16 +79,28 @@ abstract public class Player extends AABB implements Entity {
         }
     }
 
+    private void jump() {
+        if (onGround && jumping)
+            velocity.add(new Vector2D(0, jumpSpeed));
+    }
+
     private void handleCollision(Collision collision) {
         if (Math.abs(collision.delta.x) > Math.abs(collision.delta.y)) {
             position.x += collision.delta.x;
             velocity.x = 0f;
             acceleration.x = 0f;
+
+            if (collision.delta.x > 0)
+                wallLeft = true;
+            else
+                wallRight = true;
+
         } else {
             position.y += collision.delta.y;
             velocity.y = 0f;
 
             if (collision.delta.y > 0) {
+                onGround = true;
                 acceleration.y = 0f;
                 velocity.x = 0f;
             }

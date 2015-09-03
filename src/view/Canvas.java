@@ -124,7 +124,6 @@ public class Canvas extends JPanel {
         }
 
         int bottom = (int) pos.y + cameraOffsetY;
-        System.out.println(bottom);
         if (bottom < cameraMarginY) { // In bottom margin
             cameraOffsetY += cameraMarginY - bottom;
             return;
