@@ -6,11 +6,14 @@ import view.Canvas;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.util.Random;
 
 /**
  * Created by Nathan on 8/31/2015.
  */
 public class Soldier extends Player {
+    public float jetpackVelocity = 50f; //150f;
+
     public Soldier(Game game) {
         super(game);
 
@@ -49,6 +52,50 @@ public class Soldier extends Player {
         bullet.velocity.setMagnitude(Bullet.VELOCITY);
         game.entities.add(bullet);
         currentAttackDelay = attackInterval;
+    }
+
+    @Override
+    public void jump(float deltaTime) {
+        super.jump(deltaTime);
+
+        if (!onGround && jumping) {
+            velocity.y = jumpVelocity;
+            generateParticleTrail(deltaTime);
+        }
+    }
+
+    private void generateParticleTrail(float deltaTime) {
+        final int AVG_PARTICLES = 30;
+        final int AVG_SIZE = 20;
+        final int MAX_DEVIATION = 5;
+
+        float numParticles = AVG_PARTICLES * deltaTime;
+        Random r = new Random();
+        if (r.nextFloat() < numParticles) {
+            Particle particle = new Fire(game);
+            particle.position = getJetpackOrigin();
+            int sign;
+            if (r.nextBoolean())
+                sign = -1;
+            else
+                sign = 1;
+            particle.size = AVG_SIZE + (r.nextInt(MAX_DEVIATION + 1) * sign);
+            particle.color = new Color(255, 255, 0);
+            particle.angle = (float) Math.toRadians(r.nextInt(360));
+            particle.growth = -15; // - (r.nextInt(5) + 10);
+            particle.rotation = (float) Math.toRadians(r.nextInt(361));
+            game.particles.add(particle);
+        }
+    }
+
+    private Point2D getJetpackOrigin() {
+        Point2D point = getBottomLeft().copy();
+        point.y += 40;
+        if (xhair.x < getCenter().x)
+            point.x += 28;
+        else
+            point.x -= 4;
+        return point;
     }
 
     @Override

@@ -14,7 +14,7 @@ import java.util.Random;
 abstract public class Player extends AABB implements Entity {
     // Constants
     public Float moveSpeed = 200f;
-    public Float jumpSpeed = 300f;
+    public Float jumpVelocity = 300f;
     public Float attackInterval = 1.0f;
 
     public Game game;
@@ -45,7 +45,7 @@ abstract public class Player extends AABB implements Entity {
         applyDynamics(deltaTime);
         updateSprite(deltaTime);
         checkCollisions();
-        jump();
+        jump(deltaTime);
         checkHealth();
         attack(deltaTime);
     }
@@ -79,9 +79,9 @@ abstract public class Player extends AABB implements Entity {
         }
     }
 
-    private void jump() {
+    public void jump(float deltaTime) {
         if (onGround && jumping)
-            velocity.add(new Vector2D(0, jumpSpeed));
+            velocity.add(new Vector2D(0, jumpVelocity));
     }
 
     private void handleCollision(Collision collision) {

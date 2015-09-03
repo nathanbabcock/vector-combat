@@ -31,7 +31,7 @@ public class Game {
         setupSprites();
 
         // Spawn player
-        player = new Rocketman(this);
+        player = new Soldier(this);
         player.position = new Point2D(400, 549);
         player.acceleration.y = gravity;
 

@@ -5,8 +5,8 @@ import java.awt.*;
 /**
  * Created by Nathan on 8/30/2015.
  */
-public class Smoke extends Particle {
-    public Smoke(Game game) {
+public class Fire extends Particle {
+    public Fire(Game game) {
         super(game);
     }
 

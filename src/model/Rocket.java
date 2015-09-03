@@ -55,7 +55,7 @@ public class Rocket extends Circle2D implements Entity {
         float numParticles = AVG_PARTICLES * deltaTime;
         Random r = new Random();
         if (r.nextFloat() < numParticles) {
-            Particle particle = new Smoke(game);
+            Particle particle = new Fire(game);
             particle.position = getCenter().copy();
             int sign;
             if (r.nextBoolean())
