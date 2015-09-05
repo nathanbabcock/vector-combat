@@ -103,7 +103,7 @@ public class Scout extends Player {
         }
 
         // Double jump
-        else if (!onGround && extraJump && jumpDelay <= 0) {
+        else if (!onGround && !wallLeft && !wallRight && extraJump && jumpDelay <= 0) {
             velocity.y = jumpVelocity;
             extraJump = false;
         }
