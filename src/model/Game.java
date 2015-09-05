@@ -31,7 +31,7 @@ public class Game {
         setupSprites();
 
         // Spawn player
-        player = new Soldier(this);
+        player = new Scout(this);
         player.position = new Point2D(400, 549);
         player.acceleration.y = gravity;
 
@@ -60,18 +60,23 @@ public class Game {
         sprites.put("soldier_standing", new Sprite(spriteSheet, 0, 216, 32, 80, -8, 0));
         sprites.put("soldier_walking", new Sprite(spriteSheet, 40, 216, 32, 80, -8, 0));
         sprites.put("soldier_gun", new Sprite(spriteSheet, 80, 216, 48, 24));
+
+        sprites.put("scout_standing", new Sprite(spriteSheet, 0, 304, 24, 80));
+        sprites.put("scout_walking", new Sprite(spriteSheet, 32, 304, 24, 80));
+        sprites.put("scout_walljump", new Sprite(spriteSheet, 64, 304, 40, 80));
+        sprites.put("scout_gun", new Sprite(spriteSheet, 112, 304, 48, 24));
     }
 
     public void update(float deltaTime) {
         // Debug
         time += deltaTime;
 //        System.out.println("t = " + time + ", pos = " + player.position + ", v = (" + player.velocity.x + ", " + player.velocity.y + "), a = (" + player.acceleration.x + ", " + player.acceleration.y + ")");
-        if (player.wallLeft)
-            System.out.println("Wall left");
-        if (player.wallRight)
-            System.out.println("Wall right");
-        if (player.onGround)
-            System.out.println("On ground");
+//        if (player.wallLeft)
+//            System.out.println("Wall left");
+//        if (player.wallRight)
+//            System.out.println("Wall right");
+//        if (player.onGround)
+//            System.out.println("On ground");
 
         // Players
         for (Player player : players) // Update players
