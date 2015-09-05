@@ -71,10 +71,6 @@ public class Game {
         // Debug
         time += deltaTime;
 //        System.out.println("t = " + time + ", pos = " + player.position + ", v = (" + player.velocity.x + ", " + player.velocity.y + "), a = (" + player.acceleration.x + ", " + player.acceleration.y + ")");
-        if (player.wallLeft)
-            System.out.println("Wall left");
-        if (player.wallRight)
-            System.out.println("Wall right");
 
         // Players
         for (Player player : players) // Update players
