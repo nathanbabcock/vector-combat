@@ -6,13 +6,15 @@ import view.Canvas;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.util.Random;
 
 /**
  * Created by Nathan on 8/31/2015.
  */
 public class Scout extends Player {
-    public float jetpackVelocity = 50f; //150f;
     public final float maxJumpDelay = 0.25f;
+    public final float wallVelocity = -50f;
+
     public boolean extraJump;
     public float jumpDelay;
 
@@ -29,6 +31,8 @@ public class Scout extends Player {
             sprite = game.sprites.get("scout_walljump");
         } else if (walkingLeft || walkingRight) {
             float spriteInterval = 0.25f;
+            if (sprite == game.sprites.get("scout_walljump"))
+                sprite = game.sprites.get("scout_standing");
             if (spriteTime >= spriteInterval) {
                 if (sprite == game.sprites.get("scout_standing")) {
                     sprite = game.sprites.get("scout_walking");
@@ -46,8 +50,15 @@ public class Scout extends Player {
     public void update(float deltaTime) {
         super.update(deltaTime);
 
+        // Reset double jump
         if (onGround || wallLeft || wallRight)
             extraJump = true;
+
+        // Stick to walls and slide down them
+        if ((wallLeft || wallRight) && velocity.y < 0) {
+            velocity.y = wallVelocity;
+            generateParticleTrail(deltaTime);
+        }
     }
 
     @Override
@@ -69,6 +80,7 @@ public class Scout extends Player {
 
     @Override
     public void jump(float deltaTime) {
+        // TODO refactor to avoid duplicate code
         if (jumpDelay > 0)
             jumpDelay -= deltaTime;
 
@@ -80,19 +92,6 @@ public class Scout extends Player {
             jumpDelay = maxJumpDelay;
         }
 
-        // Wall jump
-        else if (wallLeft) {
-            Vector2D wallJump = new Vector2D(1, 1);
-            wallJump.setMagnitude(jumpVelocity);
-            velocity.add(wallJump);
-            jumpDelay = maxJumpDelay;
-        } else if (wallRight) {
-            Vector2D wallJump = new Vector2D(1, 1);
-            wallJump.setMagnitude(jumpVelocity);
-            velocity.add(wallJump);
-            jumpDelay = maxJumpDelay;
-        }
-
         // Double jump
         else if (!onGround && extraJump && jumpDelay <= 0) {
             velocity.y = jumpVelocity;
@@ -100,28 +99,53 @@ public class Scout extends Player {
         }
     }
 
-    private void generateParticleTrail(float deltaTime) {
-/*        final int AVG_PARTICLES = 30;
-        final int AVG_SIZE = 20;
-        final int MAX_DEVIATION = 5;
+    @Override
+    public void move() {
+        // Wall jump
+        if (walkingRight && wallLeft) {
+            Vector2D wallJump = new Vector2D(1, 1);
+            wallJump.setMagnitude(jumpVelocity);
+            velocity = wallJump;
+            jumpDelay = maxJumpDelay;
+        } else if (walkingLeft && wallRight) {
+            Vector2D wallJump = new Vector2D(-1, 1);
+            wallJump.setMagnitude(jumpVelocity);
+            velocity = wallJump;
+            jumpDelay = maxJumpDelay;
+        } else {
+            super.move();
+        }
+    }
 
-        float numParticles = AVG_PARTICLES * deltaTime;
+    private void generateParticleTrail(float deltaTime) {
+        // TODO reduce particles
+
+        // Particle effects
+        final int AVG_PARTICLES = 1;
+        final int AVG_SIZE = 5;
+        final int MAX_DEVIATION = 3;
+        final int AVG_VELOCITY = 100;
+
         Random r = new Random();
-        if (r.nextFloat() < numParticles) {
-            Particle particle = new Fire(game);
-            particle.position = getJetpackOrigin();
+        for (int i = 0; i < AVG_PARTICLES; i++) {
+            Particle particle = new Particle(game);
+            particle.position = getBottomLeft().copy();
+            if (wallRight)
+                particle.position.x += width;
             int sign;
             if (r.nextBoolean())
                 sign = -1;
             else
                 sign = 1;
             particle.size = AVG_SIZE + (r.nextInt(MAX_DEVIATION + 1) * sign);
-            particle.color = new Color(255, 255, 0);
+            particle.color = new Color(0, 0, 0);
             particle.angle = (float) Math.toRadians(r.nextInt(360));
-            particle.growth = -15; // - (r.nextInt(5) + 10);
+            particle.growth = 0;// -15; // - (r.nextInt(5) + 10);
             particle.rotation = (float) Math.toRadians(r.nextInt(361));
+            particle.velocity = new Vector2D(r.nextInt(AVG_VELOCITY * 2) - AVG_VELOCITY, r.nextInt(AVG_VELOCITY * 2) - AVG_VELOCITY);
+            particle.acceleration = new Vector2D(0, game.gravity);
             game.particles.add(particle);
-        }*/
+        }
     }
 
     @Override
@@ -140,12 +164,27 @@ public class Scout extends Player {
         // Draw rocket
         Sprite sg = game.sprites.get("scout_gun");
         int sgWidth = sg.width;
-        int sgX = playerX + 8;
+        int sgX = playerX - sprite.offsetX + 8;
         int sgY = playerY + 24;
-        Point2D sgOrigin = new Point2D(playerX + 16, playerY + 36);
+        Point2D sgOrigin = new Point2D(playerX - sprite.offsetX + 16, playerY + 36);
         Vector2D sgVector = new Vector2D(xhair.x - (getBottomLeft().x + 12), -xhair.y + (getBottomLeft().y + 36));
 
-        if (xhair.x < getCenter().x) {
+        if (wallRight) {
+            playerWidth *= -1;
+            playerX += sprite.width - sprite.offsetX - 4;
+
+            if (xhair.x < getCenter().x) {
+                sgWidth *= -1;
+                sgX += 8;
+            }
+        } else if (wallLeft) {
+            sgX += 4;
+
+            if (xhair.x < getCenter().x) {
+                sgWidth *= -1;
+                sgX += 8;
+            }
+        } else if (xhair.x < getCenter().x) {
             playerWidth *= -1;
             playerX += sprite.width - sprite.offsetX;
 

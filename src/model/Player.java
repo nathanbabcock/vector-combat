@@ -43,45 +43,46 @@ abstract public class Player extends AABB implements Entity {
 
     public void update(float deltaTime) {
         applyDynamics(deltaTime);
-        updateSprite(deltaTime);
         checkCollisions();
         jump(deltaTime);
+        move();
         checkHealth();
         attack(deltaTime);
+        updateSprite(deltaTime);
     }
 
     public void applyDynamics(float deltaTime) {
-        // Reset states
-        onGround = wallLeft = wallRight = false;
-
         // Apply gravity
         velocity.add(acceleration.copy().scale(deltaTime));
         acceleration.y = game.gravity;
-
-        // Calculate actual velocity by applying controls
-        Vector2D velocity = this.velocity.copy();
-        if (walkingRight)
-            velocity.add(new Vector2D(moveSpeed, 0));
-        if (walkingLeft)
-            velocity.add(new Vector2D(-moveSpeed, 0));
-
 
         // Move player
         position.displace(acceleration, velocity, deltaTime);
     }
 
+    public void jump(float deltaTime) {
+        if (onGround && jumping)
+            velocity.add(new Vector2D(0, jumpVelocity));
+    }
+
+    public void move() {
+        // Calculate actual velocity by applying controls
+        if (walkingRight)
+            velocity.x = moveSpeed;
+        if (walkingLeft)
+            velocity.x = -moveSpeed;
+    }
+
     private void checkCollisions() {
+        // Reset states
+        onGround = wallLeft = wallRight = false;
+
         // Check collisions
         for (AABB box : game.map.statics) {
             Collision collision = collision(box);
             if (collision != null)
                 handleCollision(collision);
         }
-    }
-
-    public void jump(float deltaTime) {
-        if (onGround && jumping)
-            velocity.add(new Vector2D(0, jumpVelocity));
     }
 
     private void handleCollision(Collision collision) {

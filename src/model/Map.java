@@ -28,7 +28,8 @@ public class Map {
         statics.add(new AABB(1600, 128, 400, 40));
         statics.add(new AABB(600, 256, 400, 40));
 
-        statics.add(new AABB(0, 0, 40, 300));
+        statics.add(new AABB(0, 0, 40, 1000));
+        statics.add(new AABB(200, 400, 40, 1000));
 
     }
 }
