@@ -93,13 +93,13 @@ public class Rocket extends Circle2D implements Entity {
                     break;
             }
         }
-        if (collision != null) {
-            game.garbage.add(this);
+        if (collision != null)
             handleCollision(collision);
-        }
     }
 
     private void handleCollision(Collision collision) {
+        game.garbage.add(this);
+
         for (Player player : game.players) {
             float distance = player.position.distance(position);
             if (distance <= Rocket.EXPLOSION_RADIUS) {

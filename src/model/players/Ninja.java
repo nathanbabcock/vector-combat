@@ -1,14 +1,22 @@
 package model.players;
 
 import model.Game;
+import model.entities.Grapple;
+import model.entities.Rocket;
+import model.geometry.Vector2D;
 import view.Canvas;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
 
 /**
  * Created by Nathan on 8/31/2015.
  */
 public class Ninja extends Player {
+    public Grapple grapple;
+    public ArrayList<Point2D> grapplePoints;
+
     public Ninja(Game game) {
         super(game);
         attackInterval = 1.0f;
@@ -33,6 +41,29 @@ public class Ninja extends Player {
 
     @Override
     public void attack(float deltaTime) {
+
+    }
+
+    @Override
+    public void altAttack(float deltaTime) {
+        // Remove grapple when alt attack is released
+        if (!altAttacking) {
+            game.garbage.add(grapple);
+            grapple = null;
+            grapplePoints = null;
+            return;
+        }
+
+        // Spawn grapple entity for first time
+        if (grapple == null) {
+            grapple = new Grapple(game, getCenter().x, getCenter().y, Grapple.RADIUS);
+            grapple.owner = this;
+            model.geometry.Point2D origin = getCenter();
+            grapple.velocity = new Vector2D(xhair.x - origin.x, xhair.y - origin.y);
+            grapple.velocity.setMagnitude(Rocket.VELOCITY);
+            grapple.acceleration = new Vector2D(0, 0);
+            game.entities.add(grapple);
+        }
 
     }
 

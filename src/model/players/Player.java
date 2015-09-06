@@ -51,8 +51,9 @@ abstract public class Player extends AABB implements Entity {
         checkCollisions();
         jump(deltaTime);
         move();
-        checkHealth();
         attack(deltaTime);
+        altAttack(deltaTime);
+        checkHealth();
         updateSprite(deltaTime);
     }
 
@@ -155,6 +156,9 @@ abstract public class Player extends AABB implements Entity {
     abstract public void updateSprite(float deltaTime);
 
     abstract public void attack(float deltaTime);
+
+    public void altAttack(float deltaTime) {
+    } // Unused by default(?)
 
     abstract public void draw(Canvas canvas, Graphics2D g2);
 
