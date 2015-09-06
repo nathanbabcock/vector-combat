@@ -1,5 +1,8 @@
-package model;
+package model.players;
 
+import model.Game;
+import model.Sprite;
+import model.entities.Rocket;
 import model.geometry.Point2D;
 import model.geometry.Vector2D;
 import view.Canvas;

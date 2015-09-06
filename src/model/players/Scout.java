@@ -1,7 +1,11 @@
-package model;
+package model.players;
 
+import model.Game;
+import model.Sprite;
+import model.entities.Bullet;
 import model.geometry.Point2D;
 import model.geometry.Vector2D;
+import model.particles.Particle;
 import view.Canvas;
 
 import java.awt.*;

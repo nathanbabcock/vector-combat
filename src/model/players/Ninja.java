@@ -1,5 +1,6 @@
-package model;
+package model.players;
 
+import model.Game;
 import view.Canvas;
 
 import java.awt.*;

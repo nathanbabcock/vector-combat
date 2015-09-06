@@ -145,10 +145,10 @@ public class Play extends JFrame {
         canvas.addMouseListener(new MouseListener() {
             @Override
             public void mousePressed(MouseEvent e) {
-//                Point xhair = canvas.xhair;//e.getPoint();
-//                game.attack(new Point2D(xhair.x - canvas.cameraOffsetX, canvas.HEIGHT - canvas.cameraOffsetY - xhair.y));
-//                game.player.attack();
-                game.player.attacking = true;
+                if (SwingUtilities.isRightMouseButton(e))
+                    game.player.altAttacking = true;
+                else
+                    game.player.attacking = true;
             }
 
             @Override
@@ -157,7 +157,10 @@ public class Play extends JFrame {
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                game.player.attacking = false;
+                if (SwingUtilities.isRightMouseButton(e))
+                    game.player.altAttacking = false;
+                else
+                    game.player.attacking = false;
             }
 
             @Override

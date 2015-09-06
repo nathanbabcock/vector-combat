@@ -1,5 +1,6 @@
-package model;
+package model.particles;
 
+import model.Game;
 import model.geometry.Point2D;
 import model.geometry.Vector2D;
 import view.Canvas;

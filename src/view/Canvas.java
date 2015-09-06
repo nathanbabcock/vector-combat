@@ -1,11 +1,11 @@
 package view;
 
-import model.Entity;
 import model.Game;
-import model.Particle;
-import model.Player;
+import model.entities.Entity;
 import model.geometry.AABB;
 import model.geometry.Point2D;
+import model.particles.Particle;
+import model.players.Player;
 
 import javax.swing.*;
 import java.awt.*;

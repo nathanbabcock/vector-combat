@@ -1,4 +1,6 @@
-package model;
+package model.particles;
+
+import model.Game;
 
 import java.awt.*;
 

@@ -1,6 +1,11 @@
 package model;
 
+import model.entities.Entity;
 import model.geometry.Point2D;
+import model.particles.Particle;
+import model.players.Ninja;
+import model.players.Player;
+import model.players.Soldier;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

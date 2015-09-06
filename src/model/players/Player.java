@@ -1,8 +1,13 @@
-package model;
+package model.players;
 
+import model.Collision;
+import model.Game;
+import model.Sprite;
+import model.entities.Entity;
 import model.geometry.AABB;
 import model.geometry.Point2D;
 import model.geometry.Vector2D;
+import model.particles.Particle;
 import view.Canvas;
 
 import java.awt.*;
@@ -25,7 +30,7 @@ abstract public class Player extends AABB implements Entity {
     public float currentAttackDelay;
 
     // States, written to by controls and read from for sprites
-    public boolean walkingLeft, walkingRight, attacking, jumping, dead, onGround, wallLeft, wallRight;
+    public boolean walkingLeft, walkingRight, attacking, altAttacking, jumping, dead, onGround, wallLeft, wallRight;
 
     public Sprite sprite;
     public float spriteTime;
