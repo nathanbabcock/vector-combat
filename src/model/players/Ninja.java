@@ -3,11 +3,11 @@ package model.players;
 import model.Game;
 import model.entities.Grapple;
 import model.entities.Rocket;
+import model.geometry.Point2D;
 import model.geometry.Vector2D;
 import view.Canvas;
 
 import java.awt.*;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 /**
@@ -15,7 +15,8 @@ import java.util.ArrayList;
  */
 public class Ninja extends Player {
     public Grapple grapple;
-    public ArrayList<Point2D> grapplePoints;
+    public ArrayList<model.geometry.Point2D> grapplePoints;
+    public float angleVelocity;
 
     public Ninja(Game game) {
         super(game);
@@ -37,6 +38,32 @@ public class Ninja extends Player {
             sprite = game.sprites.get("ninja_standing");
         }
         spriteTime += deltaTime;
+    }
+
+    @Override
+    public void applyDynamics(float deltaTime) {
+
+        if (grapplePoints != null) {
+            // Apply gravity
+            velocity.add(acceleration.copy().scale(deltaTime));
+            acceleration.y = game.gravity;
+
+            // Pendulum motion
+            Point2D pivot = grapplePoints.get(grapplePoints.size() - 1);
+            Vector2D vel_tan = new Vector2D(pivot, getCenter());
+            vel_tan.setDirection((float) (vel_tan.getDirection() + Math.toRadians(90)));
+            vel_tan.setMagnitude(velocity.copy().scale(deltaTime).getMagnitude());
+            if (pivot.x < getCenter().x)
+                vel_tan.scale(-1);
+            position.translate(vel_tan);
+
+//            float length = vector.getMagnitude();
+//            float angle = vector.getDirection();
+//            float angleAccel = (float) (game.gravity / length * Math.sin(angle));
+//            angleVelocity += angleAccel * deltaTime;
+//            angle += angleVelocity * deltaTime;
+        } else
+            super.applyDynamics(deltaTime);
     }
 
     @Override

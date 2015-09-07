@@ -5,10 +5,12 @@ import model.Game;
 import model.geometry.AABB;
 import model.geometry.Circle2D;
 import model.geometry.Vector2D;
+import model.players.Ninja;
 import model.players.Player;
 import view.Canvas;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Created by Nathan on 8/25/2015.
@@ -67,6 +69,9 @@ public class Grapple extends Circle2D implements Entity {
     private void handleCollision(Collision collision) {
 //        game.garbage.add(this);
         velocity = new Vector2D(0, 0);
+        Ninja owner = (Ninja) this.owner;
+        owner.grapplePoints = new ArrayList();
+        owner.grapplePoints.add(position);
 
 //        for (Player player : game.players) {
 //            float distance = player.position.distance(position);

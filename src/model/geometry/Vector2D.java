@@ -11,6 +11,10 @@ public class Vector2D {
         this.y = y;
     }
 
+    public Vector2D(Point2D a, Point2D b) {
+        this(b.x - a.x, b.y - a.y);
+    }
+
     public Vector2D add(Vector2D other) {
         x += other.x;
         y += other.y;
@@ -32,9 +36,14 @@ public class Vector2D {
     }
 
     public Vector2D setMagnitude(Float magnitude) {
-        // TODO implement
         float ratio = magnitude / getMagnitude();
         return scale(ratio);
+    }
+
+    public void setDirection(float angle) {
+        float m = getMagnitude();
+        x = (float) (m * Math.cos(angle));
+        y = (float) (m * Math.sin(angle));
     }
 
     public float getDirection() {
@@ -47,7 +56,6 @@ public class Vector2D {
 //            theta += Math.toRadians(180);
 //
 //        return theta;
-
     }
 
     @Override
