@@ -21,11 +21,12 @@ public class Point2D {
         y += vector.y;
     }
 
-    public void displace(Vector2D acceleration, Vector2D velocity, float time) {
+    public Point2D displace(Vector2D acceleration, Vector2D velocity, float time) {
         float deltaX = (float) (0.5 * acceleration.x * Math.pow(time, 2) + velocity.x * time);
         float deltaY = (float) (0.5 * acceleration.y * Math.pow(time, 2) + velocity.y * time);
         x += deltaX;
         y += deltaY;
+        return this;
     }
 
     public float distance(Point2D other) {

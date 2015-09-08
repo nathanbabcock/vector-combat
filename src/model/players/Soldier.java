@@ -17,7 +17,7 @@ import java.util.Random;
  * Created by Nathan on 8/31/2015.
  */
 public class Soldier extends Player {
-    public float jetpackVelocity = 50f; //150f;
+    public float jetpackVelocity = 15f; //150f;
 
     public Soldier(Game game) {
         super(game);
@@ -119,6 +119,7 @@ public class Soldier extends Player {
         // Draw rocket
         Sprite mg = game.sprites.get("soldier_gun");
         int mgWidth = mg.width;
+        int mgHeight = mg.height;
         int mgX = playerX + 16;
         int mgY = playerY + 24;
         Point2D mgOrigin = new Point2D(playerX + 16, playerY + 36);
@@ -128,8 +129,10 @@ public class Soldier extends Player {
             playerWidth *= -1;
             playerX += sprite.width - sprite.offsetX;
 
-            mgWidth *= -1;
-            mgX += 8;
+//            mgWidth *= -1;
+            mgHeight *= -1;
+            mgY += 24;
+            mgX -= 8;
         }
 
         g2.drawImage(sprite.image, playerX, playerY, playerWidth, playerHeight, null);
@@ -139,7 +142,7 @@ public class Soldier extends Player {
         g2.transform(trans);
 //            g2d.drawImage( image, sprite.x, sprite.y );  // the actual location of the sprite
 
-        g2.drawImage(mg.image, mgX, mgY, mgWidth, mg.height, null);
+        g2.drawImage(mg.image, mgX, mgY, mgWidth, mgHeight, null);
         g2.setTransform(canvas.backup);
     }
 }
