@@ -42,20 +42,53 @@ public class Ninja extends Player {
 
     @Override
     public void applyDynamics(float deltaTime) {
+        // ERROR only occurs when pivot.x < player.x (grappling to left)
 
         if (grapplePoints != null) {
             // Apply gravity
-            velocity.add(acceleration.copy().scale(deltaTime));
+            Vector2D deltaV = acceleration.copy().scale(deltaTime);
+            velocity.add(deltaV);
+            float oldAngle = velocity.getDirection();
             acceleration.y = game.gravity;
+
+            // Reverse direction
 
             // Pendulum motion
             Point2D pivot = grapplePoints.get(grapplePoints.size() - 1);
-            Vector2D vel_tan = new Vector2D(pivot, getCenter());
-            vel_tan.setDirection((float) (vel_tan.getDirection() + Math.toRadians(90)));
-            vel_tan.setMagnitude(velocity.copy().scale(deltaTime).getMagnitude());
-            if (pivot.x < getCenter().x)
-                vel_tan.scale(-1);
-            position.translate(vel_tan);
+            Vector2D radius = new Vector2D(getCenter(), pivot);
+
+            float newAngle1 = (float) (radius.getDirection() + Math.toRadians(90));
+            float newAngle2 = (float) (newAngle1 + Math.toRadians(180));
+
+            double _360 = Math.toRadians(360);
+            double _0 = Math.toRadians(0);
+            while (oldAngle < _0) oldAngle += _360;
+            while (oldAngle > _360) oldAngle -= _360;
+            while (newAngle1 < _0) newAngle1 += _360;
+            while (newAngle1 > _360) newAngle1 -= _360;
+            while (newAngle2 < _0) newAngle2 += _360;
+            while (newAngle2 > _360) newAngle2 -= _360;
+
+//            System.out.println("Originally "+Math.toDegrees(oldAngle)+", now will be "+Math.toDegrees(newAngle1)+" or "+Math.toDegrees(newAngle2) + " from radius "+Math.toDegrees(radius.getDirection()));
+
+            float diff1 = Math.abs(newAngle1 - oldAngle);
+            float diff2 = Math.abs(newAngle2 - oldAngle);
+
+            System.out.println("radius: " + radius + " (" + Math.toDegrees(radius.getDirection()) + ")");
+
+            if (diff1 < diff2) {
+                velocity.setDirection(newAngle1);
+//                System.out.println("setting to "+Math.toDegrees(newAngle1));
+            } else {
+                velocity.setDirection(newAngle2);
+//                System.out.println("setting to " + Math.toDegrees(newAngle2));
+            }
+
+//            System.out.println("Result: "+velocity);
+//            System.out.println("Result: "+Math.toDegrees(velocity.getDirection()));
+
+            position.translate(velocity.copy().scale(deltaTime));
+
 
 //            float length = vector.getMagnitude();
 //            float angle = vector.getDirection();

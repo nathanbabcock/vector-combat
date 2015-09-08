@@ -80,8 +80,6 @@ public class Game {
         time += deltaTime;
 //        System.out.println("t = " + time + ", pos = " + player.position + ", v = (" + player.velocity.x + ", " + player.velocity.y + "), a = (" + player.acceleration.x + ", " + player.acceleration.y + ")");
 
-        System.out.println(player.altAttacking);
-
         // Players
         for (Player player : players) // Update players
             player.update(deltaTime);
