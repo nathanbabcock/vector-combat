@@ -75,13 +75,21 @@ public class Vector2D {
             else
                 return (float) Math.toRadians(270);
         }
+/*
+        // Handle horizontal
+        if(y == 0){
+            if(x > 0)
+                return (float) Math.toRadians(0);
+            else
+                return (float) Math.toRadians(180);
+        }*/
 
-        if (x >= 0 && y >= 0)
+        if (x > 0 && y >= 0)
             return (float) Math.atan(y / x);
         else if (x < 0 && y >= 0)
             return (float) (Math.toRadians(180) - Math.atan(Math.abs(y / x)));
         else if (x < 0 && y < 0)
-            return (float) (Math.toRadians(270) - Math.atan(Math.abs(y / x)));
+            return (float) (Math.toRadians(270) - Math.atan(Math.abs(x / y)));
         else
             return (float) (Math.toRadians(360) - Math.atan(Math.abs(y / x)));
     }

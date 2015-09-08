@@ -46,6 +46,7 @@ public class Ninja extends Player {
 
         if (grapplePoints != null) {
             // Apply gravity
+            float oldoldAngle = velocity.getDirection();
             Vector2D deltaV = acceleration.copy().scale(deltaTime);
             velocity.add(deltaV);
             float oldAngle = velocity.getDirection();
@@ -60,29 +61,10 @@ public class Ninja extends Player {
             float newAngle1 = (float) (radius.getDirection() + Math.toRadians(90));
             float newAngle2 = (float) (newAngle1 + Math.toRadians(180));
 
-            double _360 = Math.toRadians(360);
-            double _0 = Math.toRadians(0);
-            while (oldAngle < _0) oldAngle += _360;
-            while (oldAngle > _360) oldAngle -= _360;
-            while (newAngle1 < _0) newAngle1 += _360;
-            while (newAngle1 > _360) newAngle1 -= _360;
-            while (newAngle2 < _0) newAngle2 += _360;
-            while (newAngle2 > _360) newAngle2 -= _360;
+            //            System.out.println("radius: " + radius + " (" + Math.toDegrees(radius.getDirection()) + ")");
+            System.out.println("velocity: Originally " + velocity + "=" + Math.toDegrees(oldoldAngle) + ", now will be " + Math.toDegrees(newAngle1) + " or " + Math.toDegrees(newAngle2));
 
-//            System.out.println("Originally "+Math.toDegrees(oldAngle)+", now will be "+Math.toDegrees(newAngle1)+" or "+Math.toDegrees(newAngle2) + " from radius "+Math.toDegrees(radius.getDirection()));
-
-            float diff1 = Math.abs(newAngle1 - oldAngle);
-            float diff2 = Math.abs(newAngle2 - oldAngle);
-
-            System.out.println("radius: " + radius + " (" + Math.toDegrees(radius.getDirection()) + ")");
-
-            if (diff1 < diff2) {
-                velocity.setDirection(newAngle1);
-//                System.out.println("setting to "+Math.toDegrees(newAngle1));
-            } else {
-                velocity.setDirection(newAngle2);
-//                System.out.println("setting to " + Math.toDegrees(newAngle2));
-            }
+            velocity.setDirection(closerAngle(oldAngle, newAngle1, newAngle2));
 
 //            System.out.println("Result: "+velocity);
 //            System.out.println("Result: "+Math.toDegrees(velocity.getDirection()));
@@ -97,6 +79,48 @@ public class Ninja extends Player {
 //            angle += angleVelocity * deltaTime;
         } else
             super.applyDynamics(deltaTime);
+    }
+
+    private float closerAngle(float referenceAngle, float angle1, float angle2) {
+        /*double _360 = Math.toRadians(360);
+        double _0 = Math.toRadians(0);
+        while (referenceAngle < _0) referenceAngle += _360;
+        while (referenceAngle > _360) referenceAngle -= _360;
+        while (angle1 < _0) angle1 += _360;
+        while (angle1 > _360) angle1 -= _360;
+        while (angle2 < _0) angle2 += _360;
+        while (angle2 > _360) angle2 -= _360;
+
+//        if(angle1 < Math.toRadians(1))
+//            angle1 = Math.toRadians(360)
+
+        float diff1 = Math.abs(angle1 - referenceAngle);
+        float diff2 = Math.abs(angle2 - referenceAngle);
+
+
+        if (diff1 < diff2)
+            return angle1;
+        return angle2;*/
+
+
+//        double _360 = Math.toRadians(360);
+//        double _0 = Math.toRadians(0);
+//        while (referenceAngle < _0) referenceAngle += _360;
+//        while (referenceAngle > _360) referenceAngle -= _360;
+
+        // Get angle range relative to the reference angle (to handle the -360 = 0 = 360 circularity)
+        float _180 = (float) Math.toRadians(180);
+        while (angle1 < referenceAngle - _180) angle1 += _180;
+        while (angle1 > referenceAngle + _180) angle1 -= _180;
+        while (angle2 < referenceAngle - _180) angle2 += _180;
+        while (angle2 > referenceAngle + _180) angle2 -= _180;
+
+        float diff1 = Math.abs(angle1 - referenceAngle);
+        float diff2 = Math.abs(angle2 - referenceAngle);
+
+        if (diff1 < diff2)
+            return angle1;
+        return angle2;
     }
 
     @Override
