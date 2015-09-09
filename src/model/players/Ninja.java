@@ -25,7 +25,7 @@ public class Ninja extends Player {
 
     @Override
     public void updateSprite(float deltaTime) {
-        if (walkingLeft || walkingRight) {
+        if (movingLeft || movingRight) {
             float spriteInterval = 0.25f;
             if (spriteTime >= spriteInterval) {
                 if (sprite == game.sprites.get("ninja_standing")) {
@@ -43,12 +43,22 @@ public class Ninja extends Player {
     @Override
     public void applyDynamics(float deltaTime) {
         if (grapplePoints != null) {
+            Point2D pivot = grapplePoints.get(grapplePoints.size() - 1);
+            Vector2D radius = new Vector2D(getCenter(), pivot);
+
+            // Shorten or lengthen rope if necessary
+            if (movingDown || movingUp) {
+                Vector2D deltaRope = radius.copy().setMagnitude(moveSpeed).scale(deltaTime);
+                if (movingDown)
+                    deltaRope.scale(-1);
+                position.translate(deltaRope);
+            }
+
             // Apply gravity
             velocity.add(acceleration.copy().scale(deltaTime));
             acceleration.y = game.gravity;
 
-            Point2D pivot = grapplePoints.get(grapplePoints.size() - 1);
-            Vector2D radius = new Vector2D(getCenter(), pivot);
+
 
 /*            // Attempt to apply normal dynamics first
             Point2D newPos = position.copy().displace(acceleration, velocity, deltaTime);

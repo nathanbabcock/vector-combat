@@ -27,7 +27,7 @@ public class Soldier extends Player {
 
     @Override
     public void updateSprite(float deltaTime) {
-        if (walkingLeft || walkingRight) {
+        if (movingLeft || movingRight) {
             float spriteInterval = 0.25f;
             if (spriteTime >= spriteInterval) {
                 if (sprite == game.sprites.get("soldier_standing")) {
@@ -63,7 +63,7 @@ public class Soldier extends Player {
     public void jump(float deltaTime) {
         super.jump(deltaTime);
 
-        if (!onGround && jumping) {
+        if (!onGround && movingUp) {
             velocity.y = jetpackVelocity;
             generateParticleTrail(deltaTime);
         }

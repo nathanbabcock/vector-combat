@@ -21,7 +21,7 @@ public class Rocketman extends Player {
 
     @Override
     public void updateSprite(float deltaTime) {
-        if (walkingLeft || walkingRight) {
+        if (movingLeft || movingRight) {
             float spriteInterval = 0.25f;
             if (spriteTime >= spriteInterval) {
                 if (sprite == game.sprites.get("rocket_standing")) {

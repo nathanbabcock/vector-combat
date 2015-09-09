@@ -86,7 +86,7 @@ public class Play extends JFrame {
         Action rightPressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                game.player.walkingRight = true;
+                game.player.movingRight = true;
             }
         };
         am.put("rightPressed", rightPressed);
@@ -96,7 +96,7 @@ public class Play extends JFrame {
         Action rightReleased = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                game.player.walkingRight = false;
+                game.player.movingRight = false;
             }
         };
         am.put("rightReleased", rightReleased);
@@ -106,7 +106,7 @@ public class Play extends JFrame {
         Action leftPressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                game.player.walkingLeft = true;
+                game.player.movingLeft = true;
             }
         };
         am.put("leftPressed", leftPressed);
@@ -116,31 +116,51 @@ public class Play extends JFrame {
         Action leftReleased = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                game.player.walkingLeft = false;
+                game.player.movingLeft = false;
             }
         };
         am.put("leftReleased", leftReleased);
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0, true), "leftReleased");
 
-        // SPACE pressed
-        Action spacePressed = new AbstractAction() {
+        // UP pressed
+        Action upPressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                game.player.jumping = true;
+                game.player.movingUp = true;
             }
         };
-        am.put("spacePressed", spacePressed);
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, false), "spacePressed");
+        am.put("upPressed", upPressed);
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, false), "upPressed");
 
-        // SPACE pressed
-        Action spaceReleased = new AbstractAction() {
+        // UP released
+        Action upReleased = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                game.player.jumping = false;
+                game.player.movingUp = false;
             }
         };
-        am.put("spaceReleased", spaceReleased);
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, true), "spaceReleased");
+        am.put("upReleased", upReleased);
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, true), "upReleased");
+
+        // DOWN pressed
+        Action downPressed = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                game.player.movingDown = true;
+            }
+        };
+        am.put("downPressed", downPressed);
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, false), "downPressed");
+
+        // DOWN released
+        Action downReleased = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                game.player.movingDown = false;
+            }
+        };
+        am.put("downReleased", downReleased);
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, true), "downReleased");
 
         canvas.addMouseListener(new MouseListener() {
             @Override

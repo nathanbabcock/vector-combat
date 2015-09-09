@@ -30,7 +30,7 @@ abstract public class Player extends AABB implements Entity {
     public float currentAttackDelay;
 
     // States, written to by controls and read from for sprites
-    public boolean walkingLeft, walkingRight, attacking, altAttacking, jumping, dead, onGround, wallLeft, wallRight;
+    public boolean movingLeft, movingRight, movingUp, movingDown, attacking, altAttacking, dead, onGround, wallLeft, wallRight;
 
     public Sprite sprite;
     public float spriteTime;
@@ -67,15 +67,15 @@ abstract public class Player extends AABB implements Entity {
     }
 
     public void jump(float deltaTime) {
-        if (onGround && jumping)
+        if (onGround && movingUp)
             velocity.add(new Vector2D(0, jumpVelocity));
     }
 
     public void move() {
         // Calculate actual velocity by applying controls
-        if (walkingRight)
+        if (movingRight)
             velocity.x = moveSpeed;
-        if (walkingLeft)
+        if (movingLeft)
             velocity.x = -moveSpeed;
     }
 

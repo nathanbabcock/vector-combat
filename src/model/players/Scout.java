@@ -33,7 +33,7 @@ public class Scout extends Player {
     public void updateSprite(float deltaTime) {
         if (wallLeft || wallRight) {
             sprite = game.sprites.get("scout_walljump");
-        } else if (walkingLeft || walkingRight) {
+        } else if (movingLeft || movingRight) {
             float spriteInterval = 0.25f;
             if (sprite == game.sprites.get("scout_walljump"))
                 sprite = game.sprites.get("scout_standing");
@@ -98,7 +98,7 @@ public class Scout extends Player {
         if (jumpDelay > 0)
             jumpDelay -= deltaTime;
 
-        if (!jumping) return;
+        if (!movingUp) return;
 
         // Normal jump
         if (onGround) {
@@ -116,12 +116,12 @@ public class Scout extends Player {
     @Override
     public void move() {
         // Wall jump
-        if (walkingRight && wallLeft) {
+        if (movingRight && wallLeft) {
             Vector2D wallJump = new Vector2D(1, 1);
             wallJump.setMagnitude(jumpVelocity);
             velocity = wallJump;
             jumpDelay = maxJumpDelay;
-        } else if (walkingLeft && wallRight) {
+        } else if (movingLeft && wallRight) {
             Vector2D wallJump = new Vector2D(-1, 1);
             wallJump.setMagnitude(jumpVelocity);
             velocity = wallJump;
