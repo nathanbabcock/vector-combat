@@ -17,7 +17,7 @@ import java.util.Random;
  * Created by Nathan on 8/31/2015.
  */
 public class Soldier extends Player {
-    public float jetpackVelocity = 15f; //150f;
+    public float jetpackVelocity = 150f;
 
     public Soldier(Game game) {
         super(game);
@@ -64,7 +64,7 @@ public class Soldier extends Player {
         super.jump(deltaTime);
 
         if (!onGround && jumping) {
-            velocity.y = jumpVelocity;
+            velocity.y = jetpackVelocity;
             generateParticleTrail(deltaTime);
         }
     }

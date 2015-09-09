@@ -178,32 +178,38 @@ public class Scout extends Player {
         // Draw rocket
         Sprite sg = game.sprites.get("scout_gun");
         int sgWidth = sg.width;
+        int sgHeight = sg.height;
         int sgX = playerX - sprite.offsetX + 8;
         int sgY = playerY + 24;
         Point2D sgOrigin = new Point2D(playerX - sprite.offsetX + 16, playerY + 36);
         Vector2D sgVector = new Vector2D(xhair.x - (getBottomLeft().x + 12), -xhair.y + (getBottomLeft().y + 36));
 
+        // TODO refactor to avoid code duplication
         if (wallRight) {
             playerWidth *= -1;
             playerX += sprite.width - sprite.offsetX - 4;
 
             if (xhair.x < getCenter().x) {
-                sgWidth *= -1;
+                sgHeight *= -1;
+                sgY += 24;
                 sgX += 8;
             }
         } else if (wallLeft) {
             sgX += 4;
 
             if (xhair.x < getCenter().x) {
-                sgWidth *= -1;
+                sgHeight *= -1;
+                sgY += 24;
                 sgX += 8;
             }
         } else if (xhair.x < getCenter().x) {
             playerWidth *= -1;
             playerX += sprite.width - sprite.offsetX;
 
-            sgWidth *= -1;
+            sgHeight *= -1;
+            sgY += 24;
             sgX += 8;
+
         }
 
         g2.drawImage(sprite.image, playerX, playerY, playerWidth, playerHeight, null);
@@ -213,7 +219,7 @@ public class Scout extends Player {
         g2.transform(trans);
 //            g2d.drawImage( image, sprite.x, sprite.y );  // the actual location of the sprite
 
-        g2.drawImage(sg.image, sgX, sgY, sgWidth, sg.height, null);
+        g2.drawImage(sg.image, sgX, sgY, sgWidth, sgHeight, null);
         g2.setTransform(canvas.backup);
     }
 }

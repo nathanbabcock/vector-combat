@@ -70,7 +70,9 @@ public class Rocketman extends Player {
         // Draw rocket
         Sprite rl = game.sprites.get("rocket_launcher");
         int rlWidth = rl.width;
+        int rlHeight = rl.height;
         int rlX = playerX - 8;
+        int rlY = playerY + 16;
         Point2D rlOrigin = new Point2D(playerX + 12, playerY + 36);
         Vector2D rlVector = new Vector2D(xhair.x - (getBottomLeft().x + 12), -xhair.y + (getBottomLeft().y + 36));
 
@@ -78,8 +80,9 @@ public class Rocketman extends Player {
             playerWidth *= -1;
             playerX += sprite.width;
 
-            rlWidth *= -1;
-            rlX += 40;
+            rlHeight *= -1;
+//            rlX += 40;
+            rlY += 40;
         }
 
         g2.drawImage(sprite.image, playerX, playerY, playerWidth, playerHeight, null);
@@ -89,7 +92,7 @@ public class Rocketman extends Player {
         g2.transform(trans);
 //            g2d.drawImage( image, sprite.x, sprite.y );  // the actual location of the sprite
 
-        g2.drawImage(rl.image, rlX, playerY + 16, rlWidth, rl.height, null);
+        g2.drawImage(rl.image, rlX, rlY, rlWidth, rlHeight, null);
         g2.setTransform(canvas.backup);
     }
 }

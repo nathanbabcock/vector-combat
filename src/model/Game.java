@@ -4,7 +4,7 @@ import model.entities.Entity;
 import model.geometry.Point2D;
 import model.particles.Particle;
 import model.players.Player;
-import model.players.Soldier;
+import model.players.Scout;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -35,7 +35,7 @@ public class Game {
         setupSprites();
 
         // Spawn player
-        player = new Soldier(this);
+        player = new Scout(this);
         player.position = new Point2D(400, 549);
         player.acceleration.y = gravity;
 
