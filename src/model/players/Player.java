@@ -116,6 +116,7 @@ abstract public class Player extends AABB implements Entity {
 
     public void damage(int damage) {
         health -= damage;
+        generateBloodParticles();
         checkHealth();
     }
 
@@ -128,7 +129,7 @@ abstract public class Player extends AABB implements Entity {
 
     public void generateBloodParticles() {
         // Particle effects
-        final int AVG_PARTICLES = 2;
+        final int AVG_PARTICLES = 4;
         final int AVG_SIZE = 5;
         final int MAX_DEVIATION = 3;
         final int AVG_VELOCITY = 100;

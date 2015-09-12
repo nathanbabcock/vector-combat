@@ -80,9 +80,6 @@ public class Bullet extends AABB implements Entity {
             Vector2D knockback = new Vector2D(player.getCenter().x - getCenter().x, player.getCenter().y - getCenter().y);
             knockback.setMagnitude(40f);
             player.velocity.add(knockback);
-
-            // Particles
-            player.generateBloodParticles();
         } else {
             // Particles
             generateImpactParticles();

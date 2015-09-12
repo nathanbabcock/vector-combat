@@ -3,6 +3,7 @@ package model.players;
 import model.Game;
 import model.entities.Grapple;
 import model.entities.Rocket;
+import model.geometry.AABB;
 import model.geometry.Point2D;
 import model.geometry.Vector2D;
 import view.Canvas;
@@ -16,21 +17,43 @@ import java.util.ArrayList;
 public class Ninja extends Player {
     public Grapple grapple;
     public ArrayList<model.geometry.Point2D> grapplePoints;
-    public float angleVelocity;
+
+    public final int SWORD_DAMAGE = 50;
 
     public Ninja(Game game) {
         super(game);
-        attackInterval = 1.0f;
+        attackInterval = 0.3f;
     }
 
     @Override
     public void updateSprite(float deltaTime) {
-        if (movingLeft || movingRight) {
+        if (attacking && sprite != game.sprites.get("ninja_attack_1") && sprite != game.sprites.get("ninja_attack_2") && sprite != game.sprites.get("ninja_attack_3")) {
+            sprite = game.sprites.get("ninja_attack_1");
+            spriteTime = 0;
+        } else if (sprite == game.sprites.get("ninja_attack_1")) {
+            if (spriteTime >= 0.1f) {
+                sprite = game.sprites.get("ninja_attack_2");
+                spriteTime = 0;
+            }
+        } else if (sprite == game.sprites.get("ninja_attack_2")) {
+            if (spriteTime >= 0.05f) {
+                sprite = game.sprites.get("ninja_attack_3");
+                spriteTime = 0;
+            }
+        } else if (sprite == game.sprites.get("ninja_attack_3")) {
+            if (spriteTime >= 0.1f) {
+                if (attacking)
+                    sprite = game.sprites.get("ninja_attack_1");
+                else
+                    sprite = game.sprites.get("ninja_standing");
+                spriteTime = 0;
+            }
+        } else if (movingLeft || movingRight) {
             float spriteInterval = 0.25f;
             if (spriteTime >= spriteInterval) {
-                if (sprite == game.sprites.get("ninja_standing")) {
+                if (sprite == game.sprites.get("ninja_standing"))
                     sprite = game.sprites.get("ninja_walking");
-                } else if (sprite == game.sprites.get("ninja_walking"))
+                else if (sprite == game.sprites.get("ninja_walking"))
                     sprite = game.sprites.get("ninja_standing");
                 spriteTime = 0;
             }
@@ -64,7 +87,7 @@ public class Ninja extends Player {
             Point2D newPos = position.copy().displace(acceleration, velocity, deltaTime);
             if(newPos.distance(pivot) <= radius.getMagnitude()) {
                 position = newPos;
-                return;
+                return;a
             }*/
 
             // Pendulum motion
@@ -125,7 +148,22 @@ public class Ninja extends Player {
 
     @Override
     public void attack(float deltaTime) {
+        if (currentAttackDelay > 0)
+            currentAttackDelay -= deltaTime;
 
+        if (!attacking || currentAttackDelay > 0)
+            return;
+
+        AABB hitbox = new AABB(getBottomLeft().x, getBottomLeft().y + 40, 80, 80);
+        if (xhair.x < getCenter().x)
+            hitbox.position.x -= (80 - width);
+
+        for (Player player : game.players) {
+            if (player == this) continue;
+            if (player.collision(hitbox) != null)
+                player.damage(SWORD_DAMAGE);
+        }
+        currentAttackDelay = attackInterval;
     }
 
     @Override
@@ -172,7 +210,7 @@ public class Ninja extends Player {
 
         if (xhair.x < getCenter().x) {
             playerWidth *= -1;
-            playerX += sprite.width - 16;
+            playerX += width + sprite.offsetX - 0;
         }
 
         g2.drawImage(sprite.image, playerX, playerY, playerWidth, playerHeight, null);

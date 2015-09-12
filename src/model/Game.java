@@ -5,6 +5,7 @@ import model.geometry.Point2D;
 import model.particles.Particle;
 import model.players.Ninja;
 import model.players.Player;
+import model.players.Soldier;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -41,8 +42,8 @@ public class Game {
 
         players = new Vector<>();
         players.add(player);
-//        players.add(new Soldier(this));
-//        players.get(1).position = new Point2D(400, 850);
+        players.add(new Soldier(this));
+        players.get(1).position = new Point2D(400, 850);
 
         entities = new Vector<>();
         garbage = new Vector<>();
@@ -63,6 +64,9 @@ public class Game {
 
         sprites.put("ninja_standing", new Sprite(spriteSheet, 0, 112, 40, 96, 0, 16));
         sprites.put("ninja_walking", new Sprite(spriteSheet, 48, 112, 40, 96, 0, 16));
+        sprites.put("ninja_attack_1", new Sprite(spriteSheet, 96, 88, 24, 120, 0, 40));
+        sprites.put("ninja_attack_2", new Sprite(spriteSheet, 128, 112, 64, 96, 0, 16));
+        sprites.put("ninja_attack_3", new Sprite(spriteSheet, 200, 128, 80, 80, 0, 0));
 
         sprites.put("soldier_standing", new Sprite(spriteSheet, 0, 216, 32, 80, -8, 0));
         sprites.put("soldier_walking", new Sprite(spriteSheet, 40, 216, 32, 80, -8, 0));
