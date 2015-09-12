@@ -47,13 +47,14 @@ abstract public class Player extends AABB implements Entity {
     }
 
     public void update(float deltaTime) {
-        applyDynamics(deltaTime);
-        checkCollisions();
+
         jump(deltaTime);
         move(deltaTime);
         attack(deltaTime);
         altAttack(deltaTime);
         checkHealth();
+        applyDynamics(deltaTime);
+        checkCollisions();
         updateSprite(deltaTime);
     }
 

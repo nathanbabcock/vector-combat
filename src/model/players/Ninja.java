@@ -81,24 +81,35 @@ public class Ninja extends Player {
             velocity.add(acceleration.copy().scale(deltaTime));
             acceleration.y = game.gravity;
 
-
-
 /*            // Attempt to apply normal dynamics first
             Point2D newPos = position.copy().displace(acceleration, velocity, deltaTime);
             if(newPos.distance(pivot) <= radius.getMagnitude()) {
                 position = newPos;
-                return;a
+                return;
             }*/
 
             // Pendulum motion
             float oldAngle = velocity.getDirection();
             float newAngle1 = (float) (radius.getDirection() + Math.toRadians(90));
             float newAngle2 = (float) (newAngle1 + Math.toRadians(180));
-//            System.out.println("radius: " + radius + " (" + Math.toDegrees(radius.getDirection()) + ")");
-//            System.out.println("velocity: Originally " + velocity + "=" + Math.toDegrees(oldoldAngle) + ", now will be " + Math.toDegrees(newAngle1) + " or " + Math.toDegrees(newAngle2));
             velocity.setDirection(closerAngle(oldAngle, newAngle1, newAngle2));
-//            System.out.println("Result: "+velocity);
-//            System.out.println("Result: "+Math.toDegrees(velocity.getDirection()));
+
+/*            // Controls affect momentum
+            float deltaMagnitude = 0;
+            if (movingLeft && !movingRight) {
+                if (velocity.x < 0)
+                    deltaMagnitude = moveSpeed * deltaTime * 2;
+                else if (velocity.x > 0)
+                    deltaMagnitude = -moveSpeed * deltaTime * 2;
+            } else if (movingRight && !movingLeft) {
+                if (velocity.x < 0)
+                    deltaMagnitude = -moveSpeed * deltaTime * 2;
+                else if (velocity.x > 0)
+                    deltaMagnitude = moveSpeed * deltaTime * 2;
+            }
+            velocity.setMagnitude(velocity.getMagnitude() + deltaMagnitude);*/
+
+            // Finally apply velocity
             position.translate(velocity.copy().scale(deltaTime));
         } else
             super.applyDynamics(deltaTime);
