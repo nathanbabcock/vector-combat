@@ -1,9 +1,11 @@
 package model.geometry;
 
+import java.io.Serializable;
+
 /**
  * Created by Nathan on 8/20/2015.
  */
-public class Point2D {
+public class Point2D implements Serializable {
     public float x, y;
 
     public Point2D(int x, int y) {

@@ -1,11 +1,8 @@
 package model;
 
 import model.entities.Entity;
-import model.geometry.Point2D;
 import model.particles.Particle;
-import model.players.Ninja;
 import model.players.Player;
-import model.players.Soldier;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -19,7 +16,7 @@ import java.util.Vector;
  */
 public class Game {
     public Player player;
-    public List<Player> players;
+    public final List<Player> players;
     public List<Entity> entities;
     public List<Object> garbage;
     public List<Particle> particles;
@@ -35,15 +32,15 @@ public class Game {
 
         setupSprites();
 
-        // Spawn player
+/*        // Spawn player
         player = new Ninja(this);
         player.position = new Point2D(400, 549);
-        player.acceleration.y = gravity;
+        player.acceleration.y = gravity;*/
 
         players = new Vector<>();
-        players.add(player);
+/*        players.add(player);
         players.add(new Soldier(this));
-        players.get(1).position = new Point2D(400, 850);
+        players.get(1).position = new Point2D(400, 850);*/
 
         entities = new Vector<>();
         garbage = new Vector<>();

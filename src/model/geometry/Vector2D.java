@@ -1,9 +1,11 @@
 package model.geometry;
 
+import java.io.Serializable;
+
 /**
  * Created by Nathan on 8/20/2015.
  */
-public class Vector2D {
+public class Vector2D implements Serializable {
     public Float x, y;
 
     public Vector2D(float x, float y) {

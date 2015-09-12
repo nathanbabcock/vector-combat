@@ -11,29 +11,30 @@ import model.particles.Particle;
 import view.Canvas;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.util.Random;
 
 /**
  * Created by Nathan on 8/19/2015.
  */
-abstract public class Player extends AABB implements Entity {
+abstract public class Player extends AABB implements Entity, Serializable {
     // Constants
-    public Float moveSpeed = 200f;
-    public Float jumpVelocity = 300f;
-    public Float attackInterval = 1.0f;
+    public transient Float moveSpeed = 200f;
+    public transient Float jumpVelocity = 300f;
+    public transient Float attackInterval = 1.0f;
 
-    public Game game;
+    public transient Game game;
 
     public Vector2D velocity, acceleration;
     public Point2D xhair;
     public int health;
-    public float currentAttackDelay;
+    public transient float currentAttackDelay;
 
     // States, written to by controls and read from for sprites
     public boolean movingLeft, movingRight, movingUp, movingDown, attacking, altAttacking, dead, onGround, wallLeft, wallRight;
 
-    public Sprite sprite;
-    public float spriteTime;
+    public transient Sprite sprite;
+    public transient float spriteTime;
 
     public Player(Game game) {
         this.game = game;
