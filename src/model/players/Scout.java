@@ -108,13 +108,22 @@ public class Scout extends Player {
 
         // Double jump
         else if (!onGround && !wallLeft && !wallRight && extraJump && jumpDelay <= 0) {
-            velocity.y = jumpVelocity;
+            Vector2D jump;
+            if (movingLeft)
+                jump = new Vector2D(-1, 1);
+            else if (movingRight)
+                jump = new Vector2D(1, 1);
+            else
+                jump = new Vector2D(0, 1);
+            jump.setMagnitude(jumpVelocity);
+//            velocity.y = jumpVelocity;
+            velocity = jump;
             extraJump = false;
         }
     }
 
     @Override
-    public void move() {
+    public void move(float deltaTime) {
         // Wall jump
         if (movingRight && wallLeft) {
             Vector2D wallJump = new Vector2D(1, 1);
@@ -127,7 +136,7 @@ public class Scout extends Player {
             velocity = wallJump;
             jumpDelay = maxJumpDelay;
         } else {
-            super.move();
+            super.move(deltaTime);
         }
     }
 

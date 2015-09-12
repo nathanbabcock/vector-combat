@@ -50,7 +50,7 @@ abstract public class Player extends AABB implements Entity {
         applyDynamics(deltaTime);
         checkCollisions();
         jump(deltaTime);
-        move();
+        move(deltaTime);
         attack(deltaTime);
         altAttack(deltaTime);
         checkHealth();
@@ -71,12 +71,25 @@ abstract public class Player extends AABB implements Entity {
             velocity.add(new Vector2D(0, jumpVelocity));
     }
 
-    public void move() {
+    public void move(float deltaTime) {
         // Calculate actual velocity by applying controls
-        if (movingRight)
-            velocity.x = moveSpeed;
-        if (movingLeft)
-            velocity.x = -moveSpeed;
+        if (onGround) {
+            if (movingRight)
+                velocity.x = moveSpeed;
+            if (movingLeft)
+                velocity.x = -moveSpeed;
+        } else {
+            if (movingRight) {
+                if (velocity.x >= moveSpeed)
+                    return;
+                velocity.x += moveSpeed * deltaTime * 2.5f;
+            }
+            if (movingLeft) {
+                if (velocity.x <= -moveSpeed)
+                    return;
+                velocity.x -= moveSpeed * deltaTime * 2.5f;
+            }
+        }
     }
 
     private void checkCollisions() {

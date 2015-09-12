@@ -167,10 +167,10 @@ public class Ninja extends Player {
     }
 
     @Override
-    public void move() {
+    public void move(float deltaTime) {
         if (grapplePoints != null)
             return;
-        super.move();
+        super.move(deltaTime);
     }
 
     @Override
