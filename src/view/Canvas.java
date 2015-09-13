@@ -60,7 +60,7 @@ public class Canvas extends JPanel {
             g2.fillRect((int) b.getBottomLeft().x + cameraOffsetX, (int) (HEIGHT - cameraOffsetY - b.getBottomLeft().y - b.height), (int) (b.width), (int) (b.height));
 
         // Players
-        for (Player player : game.players)
+        for (Player player : game.players.values())
             player.draw(this, g2);
 
         // Particles
@@ -92,13 +92,15 @@ public class Canvas extends JPanel {
     }
 
     private void calculateCameraOffset() {
+        if (game.players.get(game.username) == null) return;
+
         // Horizontal
-        Point2D pos = game.player.getBottomLeft();
+        Point2D pos = game.players.get(game.username).getBottomLeft();
         if (pos.x < cameraMarginX) {
             cameraOffsetX = 0;
             return;
         }
-        if (pos.x + game.player.width > game.map.WIDTH - cameraMarginX) {
+        if (pos.x + game.players.get(game.username).width > game.map.WIDTH - cameraMarginX) {
             cameraOffsetX = WIDTH - game.map.WIDTH;
             return;
         }
@@ -107,8 +109,8 @@ public class Canvas extends JPanel {
         if (left < cameraMarginX) {
             cameraOffsetX += cameraMarginX - left;
             return;
-        } else if (left + game.player.width > WIDTH - cameraMarginX) {
-            cameraOffsetX -= (left + game.player.width) - (WIDTH - cameraMarginX);
+        } else if (left + game.players.get(game.username).width > WIDTH - cameraMarginX) {
+            cameraOffsetX -= (left + game.players.get(game.username).width) - (WIDTH - cameraMarginX);
             return;
         }
 
@@ -118,7 +120,7 @@ public class Canvas extends JPanel {
             cameraOffsetY = 0;
             return;
         }
-        if (pos.y + game.player.height > game.map.HEIGHT - cameraMarginX) { // Top of map
+        if (pos.y + game.players.get(game.username).height > game.map.HEIGHT - cameraMarginX) { // Top of map
             cameraOffsetY = HEIGHT - game.map.HEIGHT;
             return;
         }
@@ -127,8 +129,8 @@ public class Canvas extends JPanel {
         if (bottom < cameraMarginY) { // In bottom margin
             cameraOffsetY += cameraMarginY - bottom;
             return;
-        } else if (bottom + game.player.height > HEIGHT - cameraMarginY) { // In top margin
-            cameraOffsetY -= (bottom + game.player.height) - (HEIGHT - cameraMarginY);
+        } else if (bottom + game.players.get(game.username).height > HEIGHT - cameraMarginY) { // In top margin
+            cameraOffsetY -= (bottom + game.players.get(game.username).height) - (HEIGHT - cameraMarginY);
             return;
         }
     }

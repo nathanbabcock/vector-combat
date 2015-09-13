@@ -62,7 +62,7 @@ public class Play extends JFrame {
 
             // update the game logic
             game.update(OPTIMAL_TIME / 1000000000f);
-            game.player.xhair = new Point2D(canvas.xhair.x - canvas.cameraOffsetX, canvas.HEIGHT - canvas.cameraOffsetY - canvas.xhair.y);
+            game.players.get(game.username).xhair = new Point2D(canvas.xhair.x - canvas.cameraOffsetX, canvas.HEIGHT - canvas.cameraOffsetY - canvas.xhair.y);
             canvas.repaint();
 
             // we want each frame to take 10 milliseconds, to do this
@@ -86,7 +86,7 @@ public class Play extends JFrame {
         Action rightPressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                game.player.movingRight = true;
+                game.players.get(game.username).movingRight = true;
             }
         };
         am.put("rightPressed", rightPressed);
@@ -96,7 +96,7 @@ public class Play extends JFrame {
         Action rightReleased = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                game.player.movingRight = false;
+                game.players.get(game.username).movingRight = false;
             }
         };
         am.put("rightReleased", rightReleased);
@@ -106,7 +106,7 @@ public class Play extends JFrame {
         Action leftPressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                game.player.movingLeft = true;
+                game.players.get(game.username).movingLeft = true;
             }
         };
         am.put("leftPressed", leftPressed);
@@ -116,7 +116,7 @@ public class Play extends JFrame {
         Action leftReleased = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                game.player.movingLeft = false;
+                game.players.get(game.username).movingLeft = false;
             }
         };
         am.put("leftReleased", leftReleased);
@@ -126,7 +126,7 @@ public class Play extends JFrame {
         Action upPressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                game.player.movingUp = true;
+                game.players.get(game.username).movingUp = true;
             }
         };
         am.put("upPressed", upPressed);
@@ -136,7 +136,7 @@ public class Play extends JFrame {
         Action upReleased = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                game.player.movingUp = false;
+                game.players.get(game.username).movingUp = false;
             }
         };
         am.put("upReleased", upReleased);
@@ -146,7 +146,7 @@ public class Play extends JFrame {
         Action downPressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                game.player.movingDown = true;
+                game.players.get(game.username).movingDown = true;
             }
         };
         am.put("downPressed", downPressed);
@@ -156,7 +156,7 @@ public class Play extends JFrame {
         Action downReleased = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                game.player.movingDown = false;
+                game.players.get(game.username).movingDown = false;
             }
         };
         am.put("downReleased", downReleased);
@@ -166,9 +166,9 @@ public class Play extends JFrame {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (SwingUtilities.isRightMouseButton(e))
-                    game.player.altAttacking = true;
+                    game.players.get(game.username).altAttacking = true;
                 else
-                    game.player.attacking = true;
+                    game.players.get(game.username).attacking = true;
             }
 
             @Override
@@ -178,9 +178,9 @@ public class Play extends JFrame {
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (SwingUtilities.isRightMouseButton(e))
-                    game.player.altAttacking = false;
+                    game.players.get(game.username).altAttacking = false;
                 else
-                    game.player.attacking = false;
+                    game.players.get(game.username).attacking = false;
             }
 
             @Override

@@ -169,7 +169,7 @@ public class Ninja extends Player {
         if (xhair.x < getCenter().x)
             hitbox.position.x -= (80 - width);
 
-        for (Player player : game.players) {
+        for (Player player : game.players.values()) {
             if (player == this) continue;
             if (player.collision(hitbox) != null)
                 player.damage(SWORD_DAMAGE);

@@ -1,6 +1,8 @@
 package network;
 
 import model.Game;
+import model.geometry.Point2D;
+import model.players.Player;
 import model.players.Rocketman;
 
 import java.io.IOException;
@@ -71,7 +73,9 @@ public class Server {
                     new Thread(new ClientHandler(input)).start();
 
                     // spawn player
-                    game.players.add(new Rocketman(game));
+                    Player player = new Rocketman(game);
+                    player.position = new Point2D(400, 850);
+                    game.players.put(clientName, player);
 
                     // add a notification message to the chat log
 //                    addMessage(clientName + " connected");
@@ -144,7 +148,7 @@ public class Server {
             // send state to all clients
             for (ObjectOutputStream output : outputs.values()) {
                 try {
-                    output.writeObject(null); // fix this here
+                    output.writeObject(game);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

@@ -28,7 +28,7 @@ abstract public class Player extends AABB implements Entity, Serializable {
     public Vector2D velocity, acceleration;
     public Point2D xhair;
     public int health;
-    public transient float currentAttackDelay;
+    public float currentAttackDelay;
 
     // States, written to by controls and read from for sprites
     public boolean movingLeft, movingRight, movingUp, movingDown, attacking, altAttacking, dead, onGround, wallLeft, wallRight;

@@ -2,11 +2,12 @@ package model;
 
 import model.entities.Entity;
 import model.particles.Particle;
-import model.players.Player;
+import model.players.*;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
@@ -14,31 +15,28 @@ import java.util.Vector;
 /**
  * Created by Nathan on 8/19/2015.
  */
-public class Game {
-    public Player player;
-    public final List<Player> players;
-    public List<Entity> entities;
-    public List<Object> garbage;
-    public List<Particle> particles;
-    public HashMap<String, Sprite> sprites;
-    public Map map;
+public class Game implements Serializable {
+    public transient String username = "excalo";
+    public HashMap<String, Player> players;
+    public transient List<Entity> entities;
+    public transient List<Object> garbage;
+    public transient List<Particle> particles;
+    public transient HashMap<String, Sprite> sprites;
+    public transient Map map;
 
-    public static final float gravity = -400;
+    public transient static final float gravity = -400;
 
-    public float time = 0;
+    public transient float time = 0;
 
     public Game() {
         map = new Map();
 
         setupSprites();
 
-/*        // Spawn player
-        player = new Ninja(this);
-        player.position = new Point2D(400, 549);
-        player.acceleration.y = gravity;*/
+        // Spawn player
+        players = new HashMap<>();
 
-        players = new Vector<>();
-/*        players.add(player);
+        /*
         players.add(new Soldier(this));
         players.get(1).position = new Point2D(400, 850);*/
 
@@ -81,7 +79,7 @@ public class Game {
 //        System.out.println("t = " + time + ", pos = " + player.position + ", v = (" + player.velocity.x + ", " + player.velocity.y + "), a = (" + player.acceleration.x + ", " + player.acceleration.y + ")");
 
         // Players
-        for (Player player : players) // Update players
+        for (Player player : players.values()) // Update players
             player.update(deltaTime);
 
         // Entities
@@ -97,8 +95,34 @@ public class Game {
     }
 
     private void takeOutGarbage() {
-        for (Object trash : garbage) {
-            boolean b = entities.remove(trash) || players.remove(trash) || particles.remove(trash);
+        for (Object trash : garbage)
+            if (!(entities.remove(trash) || particles.remove(trash)))
+                players.remove(trash);
+    }
+
+
+    private Player playerFactory(Class playerClass) {
+        if (playerClass.equals(Rocketman.class))
+            return new Rocketman(this);
+        if (playerClass.equals(Ninja.class))
+            return new Ninja(this);
+        if (playerClass.equals(Soldier.class))
+            return new Soldier(this);
+        if (playerClass.equals(Scout.class))
+            return new Scout(this);
+        return null;
+    }
+
+    public void importGame(Game other) {
+        for (java.util.Map.Entry<String, Player> entry : other.players.entrySet()) {
+            Player player = players.get(entry.getKey());
+            if (player == null)
+                player = players.put(entry.getKey(), playerFactory(entry.getValue().getClass()));
+            player = players.get(entry.getKey());
+            player.velocity = entry.getValue().velocity;
+            player.position = entry.getValue().position;
+            player.xhair = entry.getValue().xhair;
+            //...
         }
     }
 

@@ -56,7 +56,7 @@ public class Bullet extends AABB implements Entity {
                 break;
         }
         if (collision == null) { // players
-            for (Player player : game.players) {
+            for (Player player : game.players.values()) {
                 if (player == owner) continue;
                 collision = player.collision(this);
                 if (collision != null)

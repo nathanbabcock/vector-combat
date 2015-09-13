@@ -54,7 +54,7 @@ public class Grapple extends Circle2D implements Entity {
                 break;
         }
         if (collision == null) { // players
-            for (Player player : game.players) {
+            for (Player player : game.players.values()) {
                 if (player == owner)
                     continue;
                 collision = player.collision(this);

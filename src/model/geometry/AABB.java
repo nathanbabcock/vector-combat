@@ -2,12 +2,14 @@ package model.geometry;
 
 import model.Collision;
 
+import java.io.Serializable;
+
 /**
  * Created by Nathan on 8/24/2015.
  * <p>
  * Represents an axis-aligned bounding box for collision detection. AABB is defined by a position point and 2 half-width vectors
  */
-public class AABB {
+public class AABB implements Serializable {
     public Point2D position;
     public float width, height;
 
