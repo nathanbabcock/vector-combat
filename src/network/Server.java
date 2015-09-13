@@ -5,7 +5,6 @@ import model.geometry.Point2D;
 import model.players.Player;
 import model.players.Rocketman;
 
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
@@ -160,8 +159,8 @@ public class Server {
                 // send state to all clients
                 for (ObjectOutputStream output : outputs.values()) {
                     try {
-                        output.writeObject(game);
-                    } catch (IOException e) {
+                        output.writeObject(ObjectCloner.deepCopy(game));
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
