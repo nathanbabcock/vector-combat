@@ -20,6 +20,7 @@ import java.net.SocketException;
 public class Client extends JFrame {
     Game game;
     String clientName;
+    InputState inputState;
     Socket server;
     ObjectOutputStream out;
     ObjectInputStream in;
@@ -33,6 +34,7 @@ public class Client extends JFrame {
         clientName = username;
         game = new Game();
         canvas = new Canvas(game, clientName);
+        inputState = new InputState();
 
         // Layout
         setSize(new Dimension(canvas.WIDTH, canvas.HEIGHT + 40));
@@ -112,16 +114,14 @@ public class Client extends JFrame {
             }
 
             // Update model
-//            game.update(OPTIMAL_TIME / 1000000000f);
-            if (game.players.get(clientName) != null && game.players.get(clientName).xhair != null)
-                game.players.get(clientName).xhair = new Point2D(canvas.xhair.x - canvas.cameraOffsetX, canvas.HEIGHT - canvas.cameraOffsetY - canvas.xhair.y);
+            game.update(OPTIMAL_TIME / 1000000000f);
+//            if (game.players.get(clientName) != null && game.players.get(clientName).xhair != null)
+            inputState.xhair = new Point2D(canvas.xhair.x - canvas.cameraOffsetX, canvas.HEIGHT - canvas.cameraOffsetY - canvas.xhair.y);
             canvas.repaint();
-            if (game.players.get(clientName) != null) {
-                try {
-                    out.writeObject(new InputState(game.players.get(clientName)));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            try {
+                out.writeObject(ObjectCloner.deepCopy(inputState));
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
             // we want each frame to take 10 milliseconds, to do this
@@ -145,7 +145,7 @@ public class Client extends JFrame {
         Action rightPressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                game.players.get(clientName).movingRight = true;
+                inputState.movingRight = true;
             }
         };
         am.put("rightPressed", rightPressed);
@@ -155,7 +155,7 @@ public class Client extends JFrame {
         Action rightReleased = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                game.players.get(clientName).movingRight = false;
+                inputState.movingRight = false;
             }
         };
         am.put("rightReleased", rightReleased);
@@ -165,7 +165,7 @@ public class Client extends JFrame {
         Action leftPressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                game.players.get(clientName).movingLeft = true;
+                inputState.movingLeft = true;
             }
         };
         am.put("leftPressed", leftPressed);
@@ -175,7 +175,7 @@ public class Client extends JFrame {
         Action leftReleased = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                game.players.get(clientName).movingLeft = false;
+                inputState.movingLeft = false;
             }
         };
         am.put("leftReleased", leftReleased);
@@ -185,7 +185,7 @@ public class Client extends JFrame {
         Action upPressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                game.players.get(clientName).movingUp = true;
+                inputState.movingUp = true;
             }
         };
         am.put("upPressed", upPressed);
@@ -195,7 +195,7 @@ public class Client extends JFrame {
         Action upReleased = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                game.players.get(clientName).movingUp = false;
+                inputState.movingUp = false;
             }
         };
         am.put("upReleased", upReleased);
@@ -205,7 +205,7 @@ public class Client extends JFrame {
         Action downPressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                game.players.get(clientName).movingDown = true;
+                inputState.movingDown = true;
             }
         };
         am.put("downPressed", downPressed);
@@ -215,7 +215,7 @@ public class Client extends JFrame {
         Action downReleased = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                game.players.get(clientName).movingDown = false;
+                inputState.movingDown = false;
             }
         };
         am.put("downReleased", downReleased);
@@ -225,9 +225,9 @@ public class Client extends JFrame {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (SwingUtilities.isRightMouseButton(e))
-                    game.players.get(clientName).altAttacking = true;
+                    inputState.altAttacking = true;
                 else
-                    game.players.get(clientName).attacking = true;
+                    inputState.attacking = true;
             }
 
             @Override
@@ -237,9 +237,9 @@ public class Client extends JFrame {
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (SwingUtilities.isRightMouseButton(e))
-                    game.players.get(clientName).altAttacking = false;
+                    inputState.altAttacking = false;
                 else
-                    game.players.get(clientName).attacking = false;
+                    inputState.attacking = false;
             }
 
             @Override

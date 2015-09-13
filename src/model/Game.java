@@ -112,12 +112,24 @@ public class Game implements Serializable {
     public void importGame(Game other) {
         for (java.util.Map.Entry<String, Player> entry : other.players.entrySet()) {
             Player player = players.get(entry.getKey());
+            Player otherPlayer = entry.getValue();
             if (player == null)
-                player = players.put(entry.getKey(), playerFactory(entry.getValue().getClass()));
+                player = players.put(entry.getKey(), playerFactory(otherPlayer.getClass()));
             player = players.get(entry.getKey());
-            player.velocity = entry.getValue().velocity;
-            player.position = entry.getValue().position;
-            player.xhair = entry.getValue().xhair;
+            player.velocity = otherPlayer.velocity;
+            player.position = otherPlayer.position;
+            player.xhair = otherPlayer.xhair;
+
+            player.movingLeft = otherPlayer.movingLeft;
+            player.movingRight = otherPlayer.movingRight;
+            player.movingUp = otherPlayer.movingUp;
+            player.movingDown = otherPlayer.movingDown;
+            player.attacking = otherPlayer.attacking;
+            player.altAttacking = otherPlayer.altAttacking;
+            player.onGround = otherPlayer.onGround;
+            player.wallLeft = otherPlayer.wallLeft;
+            player.wallRight = otherPlayer.wallRight;
+
             //...
         }
     }
