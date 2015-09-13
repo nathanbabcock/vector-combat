@@ -32,8 +32,7 @@ public class Client extends JFrame {
     public Client(String host, int port, String username) {
         clientName = username;
         game = new Game();
-        game.username = username;
-        canvas = new Canvas(game);
+        canvas = new Canvas(game, clientName);
 
         // Layout
         setSize(new Dimension(canvas.WIDTH, canvas.HEIGHT + 40));
@@ -68,6 +67,7 @@ public class Client extends JFrame {
                 public void windowClosing(WindowEvent arg0) {
                     try {
                         out.writeObject(null);
+                        out.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -90,7 +90,7 @@ public class Client extends JFrame {
         final int TARGET_FPS = 60;
         final long OPTIMAL_TIME = 1000000000 / TARGET_FPS;
 
-        while (true) {
+        while (!server.isClosed()) {
             // work out how long its been since the last update, this
             // will be used to calculate how far the entities should
             // move this loop
@@ -112,7 +112,7 @@ public class Client extends JFrame {
             }
 
             // Update model
-            game.update(OPTIMAL_TIME / 1000000000f);
+//            game.update(OPTIMAL_TIME / 1000000000f);
             if (game.players.get(clientName) != null && game.players.get(clientName).xhair != null)
                 game.players.get(clientName).xhair = new Point2D(canvas.xhair.x - canvas.cameraOffsetX, canvas.HEIGHT - canvas.cameraOffsetY - canvas.xhair.y);
             canvas.repaint();
@@ -225,9 +225,9 @@ public class Client extends JFrame {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (SwingUtilities.isRightMouseButton(e))
-                    game.players.get(game.username).altAttacking = true;
+                    game.players.get(clientName).altAttacking = true;
                 else
-                    game.players.get(game.username).attacking = true;
+                    game.players.get(clientName).attacking = true;
             }
 
             @Override
@@ -237,9 +237,9 @@ public class Client extends JFrame {
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (SwingUtilities.isRightMouseButton(e))
-                    game.players.get(game.username).altAttacking = false;
+                    game.players.get(clientName).altAttacking = false;
                 else
-                    game.players.get(game.username).attacking = false;
+                    game.players.get(clientName).attacking = false;
             }
 
             @Override

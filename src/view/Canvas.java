@@ -16,6 +16,7 @@ import java.awt.geom.AffineTransform;
  */
 public class Canvas extends JPanel {
     private Game game;
+    String clientName;
 
     public AffineTransform backup;
 
@@ -32,8 +33,9 @@ public class Canvas extends JPanel {
     ArrayList<Float> velocityGraph = new ArrayList();
     ArrayList<Float> accelerationGraph = new ArrayList();*/
 
-    public Canvas(Game game) {
+    public Canvas(Game game, String clientName) {
         this.game = game;
+        this.clientName = clientName;
         xhair = new Point2D(0, 0);
 
         cameraOffsetX = cameraOffsetY = 0;
@@ -92,15 +94,15 @@ public class Canvas extends JPanel {
     }
 
     private void calculateCameraOffset() {
-        if (game.players.get(game.username) == null) return;
+        if (game.players.get(clientName) == null) return;
 
         // Horizontal
-        Point2D pos = game.players.get(game.username).getBottomLeft();
+        Point2D pos = game.players.get(clientName).getBottomLeft();
         if (pos.x < cameraMarginX) {
             cameraOffsetX = 0;
             return;
         }
-        if (pos.x + game.players.get(game.username).width > game.map.WIDTH - cameraMarginX) {
+        if (pos.x + game.players.get(clientName).width > game.map.WIDTH - cameraMarginX) {
             cameraOffsetX = WIDTH - game.map.WIDTH;
             return;
         }
@@ -109,8 +111,8 @@ public class Canvas extends JPanel {
         if (left < cameraMarginX) {
             cameraOffsetX += cameraMarginX - left;
             return;
-        } else if (left + game.players.get(game.username).width > WIDTH - cameraMarginX) {
-            cameraOffsetX -= (left + game.players.get(game.username).width) - (WIDTH - cameraMarginX);
+        } else if (left + game.players.get(clientName).width > WIDTH - cameraMarginX) {
+            cameraOffsetX -= (left + game.players.get(clientName).width) - (WIDTH - cameraMarginX);
             return;
         }
 
@@ -120,7 +122,7 @@ public class Canvas extends JPanel {
             cameraOffsetY = 0;
             return;
         }
-        if (pos.y + game.players.get(game.username).height > game.map.HEIGHT - cameraMarginX) { // Top of map
+        if (pos.y + game.players.get(clientName).height > game.map.HEIGHT - cameraMarginX) { // Top of map
             cameraOffsetY = HEIGHT - game.map.HEIGHT;
             return;
         }
@@ -129,8 +131,8 @@ public class Canvas extends JPanel {
         if (bottom < cameraMarginY) { // In bottom margin
             cameraOffsetY += cameraMarginY - bottom;
             return;
-        } else if (bottom + game.players.get(game.username).height > HEIGHT - cameraMarginY) { // In top margin
-            cameraOffsetY -= (bottom + game.players.get(game.username).height) - (HEIGHT - cameraMarginY);
+        } else if (bottom + game.players.get(clientName).height > HEIGHT - cameraMarginY) { // In top margin
+            cameraOffsetY -= (bottom + game.players.get(clientName).height) - (HEIGHT - cameraMarginY);
             return;
         }
     }

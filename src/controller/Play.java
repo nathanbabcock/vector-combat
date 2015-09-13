@@ -1,18 +1,14 @@
 package controller;
 
-import model.Game;
-import model.geometry.Point2D;
-import view.Canvas;
-
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
 
 /**
  * Created by Nathan on 8/19/2015.
+ *
+ * DEPRECATED
  */
 public class Play extends JFrame {
-    Game game;
+    /*Game game;
     Canvas canvas;
 
     long lastFpsTime;
@@ -210,5 +206,5 @@ public class Play extends JFrame {
 
     public static void main(String[] args) {
         new Play();
-    }
+    }*/
 }

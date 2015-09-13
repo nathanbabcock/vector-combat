@@ -16,7 +16,6 @@ import java.util.Vector;
  * Created by Nathan on 8/19/2015.
  */
 public class Game implements Serializable {
-    public transient String username = "excalo";
     public HashMap<String, Player> players;
     public transient List<Entity> entities;
     public transient List<Object> garbage;

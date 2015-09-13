@@ -46,10 +46,10 @@ abstract public class Player extends AABB implements Entity, Serializable {
         width = 24;
         height = 80;
         health = 200;
+        updateSprite(0);
     }
 
     public void update(float deltaTime) {
-
         jump(deltaTime);
         move(deltaTime);
         attack(deltaTime);
