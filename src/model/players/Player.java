@@ -8,6 +8,7 @@ import model.geometry.AABB;
 import model.geometry.Point2D;
 import model.geometry.Vector2D;
 import model.particles.Particle;
+import network.InputState;
 import view.Canvas;
 
 import java.awt.*;
@@ -167,6 +168,16 @@ abstract public class Player extends AABB implements Entity, Serializable {
             particle.acceleration = new Vector2D(0, game.gravity);
             game.particles.add(particle);
         }
+    }
+
+    public void importState(InputState state) {
+        movingLeft = state.movingLeft;
+        movingRight = state.movingRight;
+        movingDown = state.movingDown;
+        movingUp = state.movingUp;
+        attacking = state.attacking;
+        altAttacking = state.altAttacking;
+        xhair = state.xhair;
     }
 
     abstract public void updateSprite(float deltaTime);

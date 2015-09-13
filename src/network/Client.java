@@ -111,11 +111,18 @@ public class Client extends JFrame {
                 fps = 0;
             }
 
-            // update the game logic
+            // Update model
             game.update(OPTIMAL_TIME / 1000000000f);
             if (game.players.get(clientName) != null && game.players.get(clientName).xhair != null)
                 game.players.get(clientName).xhair = new Point2D(canvas.xhair.x - canvas.cameraOffsetX, canvas.HEIGHT - canvas.cameraOffsetY - canvas.xhair.y);
             canvas.repaint();
+            if (game.players.get(clientName) != null) {
+                try {
+                    out.writeObject(new InputState(game.players.get(clientName)));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
 
             // we want each frame to take 10 milliseconds, to do this
             // we've recorded when we started the frame. We add 10 milliseconds

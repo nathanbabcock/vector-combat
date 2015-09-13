@@ -108,8 +108,10 @@ public class Server {
                         outputs.remove(clientName);
                         input.close();
                         return;
-                    }
-                    System.out.println(received);
+                    } else if (received instanceof InputState) {
+                        game.players.get(clientName).importState((InputState) received);
+                    } else
+                        System.out.println(received);
                    /* // read a command from the client, execute on the server
                     Command<Server> command = (Command<Server>)input.readObject();
                     command.execute(Server.this);

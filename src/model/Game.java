@@ -35,10 +35,7 @@ public class Game implements Serializable {
 
         // Spawn player
         players = new HashMap<>();
-
-        /*
-        players.add(new Soldier(this));
-        players.get(1).position = new Point2D(400, 850);*/
+//        players.put(username, new Ninja(this));
 
         entities = new Vector<>();
         garbage = new Vector<>();
