@@ -70,7 +70,7 @@ public class Server {
                     outputs.put(clientName, output);
 
                     // spawn a thread to handle communication with this client
-                    new Thread(new ClientHandler(input)).start();
+                    new Thread(new ClientHandler(input, clientName)).start();
 
                     // spawn player
                     Player player = new Rocketman(game);
@@ -91,16 +91,25 @@ public class Server {
      */
     private class ClientHandler implements Runnable {
         private ObjectInputStream input; // the input stream from the client
+        private String clientName;
 
-        public ClientHandler(ObjectInputStream input) {
+        public ClientHandler(ObjectInputStream input, String clientName) {
             this.input = input;
+            this.clientName = clientName;
         }
 
         @SuppressWarnings("unchecked")
         public void run() {
             try {
                 while (true) {
-                    System.out.println(input.readObject());
+                    Object received = input.readObject();
+                    if (received == null) {
+                        System.out.println(clientName + " disconnected from the server");
+                        outputs.remove(clientName);
+                        input.close();
+                        return;
+                    }
+                    System.out.println(received);
                    /* // read a command from the client, execute on the server
                     Command<Server> command = (Command<Server>)input.readObject();
                     command.execute(Server.this);

@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.EOFException;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -62,12 +63,16 @@ public class Client extends JFrame {
                 }
             }
 
-/*            // add a listener that sends a disconnect command to when closing
-            this.addWindowListener(new WindowAdapter(){
+            // add a listener that sends a disconnect command to when closing
+            addWindowListener(new WindowAdapter() {
                 public void windowClosing(WindowEvent arg0) {
-                    close();
+                    try {
+                        out.writeObject(null);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-            });*/
+            });
 
             // start a thread for handling server events
             new Thread(new ServerHandler()).start();
