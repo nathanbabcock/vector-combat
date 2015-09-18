@@ -10,6 +10,7 @@ import view.Canvas;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Created by Nathan on 8/31/2015.
@@ -202,7 +203,7 @@ public class Ninja extends Player {
             grapple.velocity = new Vector2D(xhair.x - origin.x, xhair.y - origin.y);
             grapple.velocity.setMagnitude(Rocket.VELOCITY);
             grapple.acceleration = new Vector2D(0, 0);
-            game.entities.add(grapple);
+            game.entities.put(UUID.randomUUID().toString(), grapple);
         }
 
     }

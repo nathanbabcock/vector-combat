@@ -9,6 +9,7 @@ import view.Canvas;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.util.UUID;
 
 /**
  * Created by Nathan on 8/31/2015.
@@ -50,7 +51,7 @@ public class Rocketman extends Player {
         rocket.velocity = new Vector2D(xhair.x - origin.x, xhair.y - origin.y);
         rocket.velocity.setMagnitude(Rocket.VELOCITY);
         rocket.acceleration = new Vector2D(0, 0);
-        game.entities.add(rocket);
+        game.entities.put(UUID.randomUUID().toString(), rocket);
         currentAttackDelay = attackInterval;
     }
 

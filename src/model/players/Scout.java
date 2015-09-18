@@ -11,6 +11,7 @@ import view.Canvas;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * Created by Nathan on 8/31/2015.
@@ -87,7 +88,7 @@ public class Scout extends Player {
             bullet.velocity.setMagnitude(PELLET_VELOCITY);
             bullet.velocity.x += r.nextInt((int) ((MAX_SPREAD * 2 + 1) - MAX_SPREAD));
             bullet.velocity.y += r.nextInt((int) ((MAX_SPREAD * 2 + 1) - MAX_SPREAD));
-            game.entities.add(bullet);
+            game.entities.put(UUID.randomUUID().toString(), bullet);
         }
         currentAttackDelay = attackInterval;
     }

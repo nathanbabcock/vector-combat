@@ -1,9 +1,11 @@
 package model.geometry;
 
+import java.io.Serializable;
+
 /**
  * Created by Nathan on 8/25/2015.
  */
-public class Circle2D {
+public class Circle2D implements Serializable {
     public Point2D position;
     public float radius;
 

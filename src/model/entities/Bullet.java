@@ -9,19 +9,20 @@ import model.players.Player;
 import view.Canvas;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.util.Random;
 
 /**
  * Created by Nathan on 8/25/2015.
  */
-public class Bullet extends AABB implements Entity {
-    public Game game;
+public class Bullet extends AABB implements Entity, Serializable {
+    public transient Game game;
     public Player owner;
     public Vector2D velocity, acceleration;
 
-    public static final float SIZE = 8;
-    public static final float VELOCITY = 1000;
-    public static final int DAMAGE = 10;
+    public transient static final float SIZE = 8;
+    public transient static final float VELOCITY = 1000;
+    public transient static final int DAMAGE = 10;
 
     public Bullet(Game game, float x, float y, float size) {
 //        super(x, y, radius);

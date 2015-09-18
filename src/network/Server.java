@@ -3,7 +3,7 @@ package network;
 import model.Game;
 import model.geometry.Point2D;
 import model.players.Player;
-import model.players.Rocketman;
+import model.players.Soldier;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -72,7 +72,7 @@ public class Server {
                     new Thread(new ClientHandler(input, clientName)).start();
 
                     // spawn player
-                    Player player = new Rocketman(game);
+                    Player player = new Soldier(game);
                     player.position = new Point2D(400, 850);
                     game.players.put(clientName, player);
 

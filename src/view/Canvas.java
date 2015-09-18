@@ -70,7 +70,7 @@ public class Canvas extends JPanel {
             particle.draw(this, g2);
 
         // Entities
-        for (Entity entity : game.entities)
+        for (Entity entity : game.entities.values())
             entity.draw(this, g2);
 
        /* // Physics graphs

@@ -17,7 +17,8 @@ import java.util.Vector;
  */
 public class Game implements Serializable {
     public HashMap<String, Player> players;
-    public transient List<Entity> entities;
+    public HashMap<String, Entity> entities;
+
     public transient List<Object> garbage;
     public transient List<Particle> particles;
     public transient HashMap<String, Sprite> sprites;
@@ -33,12 +34,12 @@ public class Game implements Serializable {
         setupSprites();
 
         // Spawn player
-        players = new HashMap<>();
+        players = new HashMap();
 //        players.put(username, new Ninja(this));
 
-        entities = new Vector<>();
-        garbage = new Vector<>();
-        particles = new Vector<>();
+        entities = new HashMap();
+        garbage = new Vector();
+        particles = new Vector();
     }
 
     private void setupSprites() {
@@ -79,7 +80,7 @@ public class Game implements Serializable {
             player.update(deltaTime);
 
         // Entities
-        for (Entity entity : entities)
+        for (Entity entity : entities.values())
             entity.update(deltaTime);
 
         // Particles
@@ -91,11 +92,10 @@ public class Game implements Serializable {
     }
 
     private void takeOutGarbage() {
-        for (Object trash : garbage)
-            if (!(entities.remove(trash) || particles.remove(trash)))
-                players.remove(trash);
+        for (Object trash : garbage) {
+            boolean b = players.values().remove(trash) || entities.values().remove(trash) || particles.remove(trash);
+        }
     }
-
 
     private Player playerFactory(Class playerClass) {
         if (playerClass.equals(Rocketman.class))
@@ -132,6 +132,18 @@ public class Game implements Serializable {
 
             //...
         }
+
+//        for (java.util.Map.Entry<String, Entity> entry : other.entities.entrySet()) {
+//            Entity entity = entities.get(entry.getKey());
+//            Entity otherEntity = entry.getValue();
+//            if (entity == null)
+//                entity = entities.put(entry.getKey(), entity);
+////            entity = entities.get(entry.getKey());
+//            entity.velocity = otherEntity.velocity;
+//            entity.position = otherEntity.position;
+//            //...
+//        }
+        entities = other.entities;
     }
 
 }

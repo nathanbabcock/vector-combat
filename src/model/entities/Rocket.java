@@ -11,22 +11,23 @@ import model.players.Player;
 import view.Canvas;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.util.Random;
 
 /**
  * Created by Nathan on 8/25/2015.
  */
-public class Rocket extends Circle2D implements Entity {
-    public Game game;
+public class Rocket extends Circle2D implements Entity, Serializable {
+    public transient Game game;
 
     public Vector2D velocity, acceleration;
-    public Player owner;
+    public Player owner; // TODO handle dis shet
     public boolean exploded;
 
-    public static final float RADIUS = 8;
-    public static final float VELOCITY = 500;
-    public static final float EXPLOSION_RADIUS = 100;
-    public static final int DAMAGE = 60;
+    public transient static final float RADIUS = 8;
+    public transient static final float VELOCITY = 500;
+    public transient static final float EXPLOSION_RADIUS = 100;
+    public transient static final int DAMAGE = 60;
 
     public Rocket(Game game, float x, float y, float radius) {
         super(x, y, radius);

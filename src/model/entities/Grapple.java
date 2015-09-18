@@ -10,19 +10,20 @@ import model.players.Player;
 import view.Canvas;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Nathan on 8/25/2015.
  */
-public class Grapple extends Circle2D implements Entity {
-    public Game game;
+public class Grapple extends Circle2D implements Entity, Serializable {
+    public transient Game game;
 
     public Vector2D velocity, acceleration;
     public Player owner;
 
-    public static final float RADIUS = 6;
-    public static final float VELOCITY = 500;
+    public transient static final float RADIUS = 6;
+    public transient static final float VELOCITY = 500;
 
     public Grapple(Game game, float x, float y, float radius) {
         super(x, y, radius);
