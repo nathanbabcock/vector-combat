@@ -168,11 +168,11 @@ public class Ninja extends Player {
 
         AABB hitbox = new AABB(getBottomLeft().x, getBottomLeft().y + 40, 80, 80);
         if (xhair.x < getCenter().x)
-            hitbox.position.x -= (80 - width);
+            position.x -= (80 - width);
 
         for (Player player : game.players.values()) {
             if (player == this) continue;
-            if (player.collision(hitbox) != null)
+            if (player.hitbox.collision(hitbox) != null)
                 player.damage(SWORD_DAMAGE);
         }
         currentAttackDelay = attackInterval;

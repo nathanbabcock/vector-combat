@@ -10,47 +10,40 @@ import model.players.Player;
 import view.Canvas;
 
 import java.awt.*;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Nathan on 8/25/2015.
  */
-public class Grapple extends Circle2D implements Entity, Serializable {
-    public transient Game game;
-
-    public Vector2D velocity, acceleration;
+public class Grapple extends Entity<Circle2D> {
     public Player owner;
 
     public transient static final float RADIUS = 6;
     public transient static final float VELOCITY = 500;
 
     public Grapple(Game game, float x, float y, float radius) {
-        super(x, y, radius);
-        this.game = game;
-        velocity = new Vector2D(0, 0);
-        acceleration = new Vector2D(0, 0);
+        super(game, new Circle2D(x, y, radius));
     }
 
     public void update(float deltaTime) {
         // Remove if necessary
-        if (position.x > game.map.WIDTH || position.y > game.map.HEIGHT || position.x < 0 || position.y < 0) {
+        if (getCenter().x > game.map.WIDTH || getCenter().y > game.map.HEIGHT || getCenter().x < 0 || getCenter().y < 0) {
             game.garbage.add(this);
             return;
         }
 
         // Move rocket
-        position.displace(acceleration, velocity, deltaTime);
+        hitbox.position.displace(acceleration, velocity, deltaTime);
 
         // Check collisions
         checkCollisions();
     }
 
-    private void checkCollisions() {
+    public void checkCollisions() {
         // Check collisions
         Collision collision = null;
         for (AABB box : game.map.statics) { // Walls
-            collision = box.collision(this);
+            collision = box.collision(hitbox);
             if (collision != null)
                 break;
         }
@@ -58,7 +51,7 @@ public class Grapple extends Circle2D implements Entity, Serializable {
             for (Player player : game.players.values()) {
                 if (player == owner)
                     continue;
-                collision = player.collision(this);
+                collision = player.hitbox.collision(hitbox);
                 if (collision != null)
                     break;
             }
@@ -67,12 +60,12 @@ public class Grapple extends Circle2D implements Entity, Serializable {
             handleCollision(collision);
     }
 
-    private void handleCollision(Collision collision) {
+    public void handleCollision(Collision collision) {
 //        game.garbage.add(this);
         velocity = new Vector2D(0, 0);
         Ninja owner = (Ninja) this.owner;
         owner.grapplePoints = new ArrayList();
-        owner.grapplePoints.add(position);
+        owner.grapplePoints.add(getCenter());
 
 //        for (Player player : game.players) {
 //            float distance = player.position.distance(position);
@@ -95,8 +88,8 @@ public class Grapple extends Circle2D implements Entity, Serializable {
     public void draw(Canvas canvas, Graphics2D g2) {
         g2.setColor(Color.black);
         int x = (int) (getBottomLeft().x + canvas.cameraOffsetX);
-        int y = (int) (canvas.HEIGHT - canvas.cameraOffsetY - getBottomLeft().y - 2 * radius);
-        int size = (int) (2 * radius);
+        int y = (int) (canvas.HEIGHT - canvas.cameraOffsetY - getBottomLeft().y - 2 * hitbox.radius);
+        int size = (int) (2 * hitbox.radius);
         g2.fillOval(x, y, size, size);
         g2.drawLine((int) owner.getCenter().x + canvas.cameraOffsetX, (int) (canvas.HEIGHT - canvas.cameraOffsetY - owner.getCenter().y), (int) getCenter().x + canvas.cameraOffsetX, (int) (canvas.HEIGHT - canvas.cameraOffsetY - getCenter().y));
     }

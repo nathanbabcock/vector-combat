@@ -17,10 +17,7 @@ import java.util.Random;
 /**
  * Created by Nathan on 8/25/2015.
  */
-public class Rocket extends Circle2D implements Entity, Serializable {
-    public transient Game game;
-
-    public Vector2D velocity, acceleration;
+public class Rocket extends Entity<Circle2D> implements Serializable {
     public Player owner; // TODO handle dis shet
     public boolean exploded;
 
@@ -30,27 +27,13 @@ public class Rocket extends Circle2D implements Entity, Serializable {
     public transient static final int DAMAGE = 60;
 
     public Rocket(Game game, float x, float y, float radius) {
-        super(x, y, radius);
-        this.game = game;
+        super(game, new Circle2D(x, y, radius));
         exploded = false;
-        velocity = new Vector2D(0, 0);
-        acceleration = new Vector2D(0, 0);
     }
 
     public void update(float deltaTime) {
-        // Remove if necessary
-        if (position.x > game.map.WIDTH || position.y > game.map.HEIGHT || position.x < 0 || position.y < 0) {
-            game.garbage.add(this);
-            return;
-        }
-
-        // Move rocket
-        position.displace(acceleration, velocity, deltaTime);
-
+        super.update(deltaTime);
         generateParticleTrail(deltaTime);
-
-        // Check collisions
-        checkCollisions();
     }
 
     private void generateParticleTrail(float deltaTime) {
@@ -77,11 +60,11 @@ public class Rocket extends Circle2D implements Entity, Serializable {
         }
     }
 
-    private void checkCollisions() {
+    public void checkCollisions() {
         // Check collisions
         Collision collision = null;
         for (AABB box : game.map.statics) { // Walls
-            collision = box.collision(this);
+            collision = box.collision(hitbox);
             if (collision != null)
                 break;
         }
@@ -89,7 +72,7 @@ public class Rocket extends Circle2D implements Entity, Serializable {
             for (Player player : game.players.values()) {
                 if (player == owner)
                     continue;
-                collision = player.collision(this);
+                collision = player.hitbox.collision(hitbox);
                 if (collision != null)
                     break;
             }
@@ -98,11 +81,11 @@ public class Rocket extends Circle2D implements Entity, Serializable {
             handleCollision(collision);
     }
 
-    private void handleCollision(Collision collision) {
+    public void handleCollision(Collision collision) {
         game.garbage.add(this);
 
         for (Player player : game.players.values()) {
-            float distance = player.position.distance(position);
+            float distance = player.hitbox.position.distance(getCenter());
             if (distance <= Rocket.EXPLOSION_RADIUS) {
                 // Knockback
                 Vector2D explosion = new Vector2D(player.getCenter().x - getCenter().x, player.getCenter().y - getCenter().y);
@@ -150,8 +133,8 @@ public class Rocket extends Circle2D implements Entity, Serializable {
         if (exploded) return;
         g2.setColor(Color.red);
         int x = (int) (getBottomLeft().x + canvas.cameraOffsetX);
-        int y = (int) (canvas.HEIGHT - canvas.cameraOffsetY - getBottomLeft().y - 2 * radius);
-        int size = (int) (2 * radius);
+        int y = (int) (canvas.HEIGHT - canvas.cameraOffsetY - getBottomLeft().y - 2 * hitbox.radius);
+        int size = (int) (2 * hitbox.radius);
         g2.fillOval(x, y, size, size);
     }
 

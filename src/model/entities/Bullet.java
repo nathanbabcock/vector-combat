@@ -15,51 +15,29 @@ import java.util.Random;
 /**
  * Created by Nathan on 8/25/2015.
  */
-public class Bullet extends AABB implements Entity, Serializable {
-    public transient Game game;
+public class Bullet extends Entity<AABB> implements Serializable {
     public Player owner;
-    public Vector2D velocity, acceleration;
 
     public transient static final float SIZE = 8;
     public transient static final float VELOCITY = 1000;
     public transient static final int DAMAGE = 10;
 
     public Bullet(Game game, float x, float y, float size) {
-//        super(x, y, radius);
-        super(x, y, size, size);
-        this.game = game;
-        velocity = new Vector2D(0, 0);
-        acceleration = new Vector2D(0, 0);
+        super(game, new AABB(x, y, size, size));
     }
 
-    public void update(float deltaTime) {
-        // Remove if necessary
-        if (position.x > game.map.WIDTH || position.y > game.map.HEIGHT || position.x < 0 || position.y < 0) {
-            game.garbage.add(this);
-            return;
-        }
-
-        // Move
-        position.displace(acceleration, velocity, deltaTime);
-
-//        generateParticleTrail(deltaTime);
-
-        // Check collisions
-        checkCollisions();
-    }
-
-    private void checkCollisions() {
+    public void checkCollisions() {
         // Check collisions
         Collision collision = null;
         for (AABB box : game.map.statics) { // Walls
-            collision = box.collision(this);
+            collision = box.collision(hitbox);
             if (collision != null)
                 break;
         }
         if (collision == null) { // players
             for (Player player : game.players.values()) {
                 if (player == owner) continue;
-                collision = player.collision(this);
+                collision = player.hitbox.collision(hitbox);
                 if (collision != null)
                     break;
             }
@@ -68,9 +46,8 @@ public class Bullet extends AABB implements Entity, Serializable {
             handleCollision(collision);
     }
 
-    private void handleCollision(Collision collision) {
+    public void handleCollision(Collision collision) {
         game.garbage.add(this);
-
 
         if (collision.collider instanceof Player) {
             // Damage
@@ -133,8 +110,8 @@ public class Bullet extends AABB implements Entity, Serializable {
     public void draw(Canvas canvas, Graphics2D g2) {
         g2.setColor(Color.black);
         int x = (int) (getBottomLeft().x + canvas.cameraOffsetX);
-        int y = (int) (canvas.HEIGHT - canvas.cameraOffsetY - getBottomLeft().y - width);
-        int size = (int) (width);
+        int y = (int) (canvas.HEIGHT - canvas.cameraOffsetY - getBottomLeft().y - hitbox.width);
+        int size = (int) (hitbox.width);
         g2.fillRect(x, y, size, size);
     }
 

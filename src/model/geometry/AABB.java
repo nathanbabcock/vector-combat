@@ -9,12 +9,8 @@ import java.io.Serializable;
  * <p>
  * Represents an axis-aligned bounding box for collision detection. AABB is defined by a position point and 2 half-width vectors
  */
-public class AABB implements Serializable {
-    public Point2D position;
+public class AABB extends Shape2D implements Serializable {
     public float width, height;
-
-    public AABB() {
-    }
 
     public AABB(Point2D position, float width, float height) {
         this.width = width;

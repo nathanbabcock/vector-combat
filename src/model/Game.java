@@ -117,7 +117,7 @@ public class Game implements Serializable {
                 player = players.put(entry.getKey(), playerFactory(otherPlayer.getClass()));
             player = players.get(entry.getKey());
             player.velocity = otherPlayer.velocity;
-            player.position = otherPlayer.position;
+            player.hitbox.position = otherPlayer.hitbox.position;
             player.xhair = otherPlayer.xhair;
 
             player.movingLeft = otherPlayer.movingLeft;

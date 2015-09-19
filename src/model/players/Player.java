@@ -18,15 +18,12 @@ import java.util.Random;
 /**
  * Created by Nathan on 8/19/2015.
  */
-abstract public class Player extends AABB implements Entity, Serializable {
+abstract public class Player extends Entity<AABB> implements Serializable {
     // Constants
     public transient Float moveSpeed = 200f;
     public transient Float jumpVelocity = 300f;
     public transient Float attackInterval = 1.0f;
 
-    public transient Game game;
-
-    public Vector2D velocity, acceleration;
     public Point2D xhair;
     public int health;
     public float currentAttackDelay;
@@ -37,18 +34,22 @@ abstract public class Player extends AABB implements Entity, Serializable {
     public transient Sprite sprite;
     public transient float spriteTime;
 
+    // Final variables from Shape2D
+    public final Point2D position;
+    public final float width, height;
+
+
     public Player(Game game) {
-        this.game = game;
+        super(game, new AABB(0, 0, 24, 80));
+        position = hitbox.position;
+        width = hitbox.width;
+        height = hitbox.height;
         xhair = new Point2D(0, 0);
-        velocity = new Vector2D(0, 0);
-        acceleration = new Vector2D(0, 0);
-        position = new Point2D(0, 0);
-        width = 24;
-        height = 80;
         health = 200;
         updateSprite(0);
     }
 
+    @Override
     public void update(float deltaTime) {
         jump(deltaTime);
         move(deltaTime);
@@ -66,7 +67,7 @@ abstract public class Player extends AABB implements Entity, Serializable {
         acceleration.y = game.gravity;
 
         // Move player
-        position.displace(acceleration, velocity, deltaTime);
+        hitbox.position.displace(acceleration, velocity, deltaTime);
     }
 
     public void jump(float deltaTime) {
@@ -95,21 +96,21 @@ abstract public class Player extends AABB implements Entity, Serializable {
         }
     }
 
-    private void checkCollisions() {
+    public void checkCollisions() {
         // Reset states
         onGround = wallLeft = wallRight = false;
 
         // Check collisions
         for (AABB box : game.map.statics) {
-            Collision collision = collision(box);
+            Collision collision = hitbox.collision(box);
             if (collision != null)
                 handleCollision(collision);
         }
     }
 
-    private void handleCollision(Collision collision) {
+    public void handleCollision(Collision collision) {
         if (Math.abs(collision.delta.x) > Math.abs(collision.delta.y)) {
-            position.x += collision.delta.x;
+            hitbox.position.x += collision.delta.x;
             velocity.x = 0f;
             acceleration.x = 0f;
 
@@ -119,7 +120,7 @@ abstract public class Player extends AABB implements Entity, Serializable {
                 wallRight = true;
 
         } else {
-            position.y += collision.delta.y;
+            hitbox.position.y += collision.delta.y;
             velocity.y = 0f;
 
             if (collision.delta.y > 0) {

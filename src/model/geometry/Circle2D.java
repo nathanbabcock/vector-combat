@@ -5,12 +5,8 @@ import java.io.Serializable;
 /**
  * Created by Nathan on 8/25/2015.
  */
-public class Circle2D implements Serializable {
-    public Point2D position;
+public class Circle2D extends Shape2D implements Serializable {
     public float radius;
-
-    public Circle2D() {
-    }
 
     public Circle2D(Point2D center, float radius) {
         this.position = center;

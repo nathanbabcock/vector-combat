@@ -73,7 +73,7 @@ public class Server {
 
                     // spawn player
                     Player player = new Soldier(game);
-                    player.position = new Point2D(400, 850);
+                    player.hitbox.position = new Point2D(400, 850);
                     game.players.put(clientName, player);
 
                     // add a notification message to the chat log
