@@ -93,6 +93,12 @@ public class Game implements Serializable {
 
     private void takeOutGarbage() {
         for (Object trash : garbage) {
+            /*boolean b;
+            if (trash instanceof String) {
+                String key = (String) trash;
+                b = players.remove(key) != null || entities.remove(key) != null;
+            } else
+                */
             boolean b = players.values().remove(trash) || entities.values().remove(trash) || particles.remove(trash);
         }
     }
@@ -109,17 +115,23 @@ public class Game implements Serializable {
         return null;
     }
 
+    // TODO someday optimize this, as well as the weight of the gamestate other being passed over network
     public void importGame(Game other) {
+        // Add/merge (players)
+        HashMap<String, Player> newPlayers = new HashMap();
         for (java.util.Map.Entry<String, Player> entry : other.players.entrySet()) {
-            Player player = players.get(entry.getKey());
+            String key = entry.getKey();
+            if (players.containsKey(key))
+                newPlayers.put(key, players.get(key));
+            else
+                newPlayers.put(key, playerFactory(entry.getValue().getClass()));
+            Player player = newPlayers.get(key);
             Player otherPlayer = entry.getValue();
-            if (player == null)
-                player = players.put(entry.getKey(), playerFactory(otherPlayer.getClass()));
-            player = players.get(entry.getKey());
-            player.velocity = otherPlayer.velocity;
-            player.hitbox.position = otherPlayer.hitbox.position;
-            player.xhair = otherPlayer.xhair;
 
+            player.velocity = otherPlayer.velocity;
+            player.hitbox = otherPlayer.hitbox;
+            player.xhair = otherPlayer.xhair;
+            player.health = otherPlayer.health;
             player.movingLeft = otherPlayer.movingLeft;
             player.movingRight = otherPlayer.movingRight;
             player.movingUp = otherPlayer.movingUp;
@@ -129,21 +141,26 @@ public class Game implements Serializable {
             player.onGround = otherPlayer.onGround;
             player.wallLeft = otherPlayer.wallLeft;
             player.wallRight = otherPlayer.wallRight;
-
-            //...
+            player.game = this;
         }
+        players = newPlayers;
 
-//        for (java.util.Map.Entry<String, Entity> entry : other.entities.entrySet()) {
-//            Entity entity = entities.get(entry.getKey());
-//            Entity otherEntity = entry.getValue();
-//            if (entity == null)
-//                entity = entities.put(entry.getKey(), entity);
-////            entity = entities.get(entry.getKey());
-//            entity.velocity = otherEntity.velocity;
-//            entity.position = otherEntity.position;
-//            //...
-//        }
-        entities = other.entities;
+        // Add/merge (entity)
+        HashMap<String, Entity> newEntities = new HashMap();
+        for (java.util.Map.Entry<String, Entity> entry : other.entities.entrySet()) {
+            String key = entry.getKey();
+            if (entities.containsKey(key))
+                newEntities.put(key, entities.get(key));
+            else
+                newEntities.put(key, entry.getValue());
+            Entity newEntity = newEntities.get(key);
+            Entity otherEntity = entry.getValue();
+
+            newEntity.velocity = otherEntity.velocity;
+            newEntity.hitbox = otherEntity.hitbox;
+            newEntity.game = this;
+        }
+        entities = newEntities;
     }
 
 }
