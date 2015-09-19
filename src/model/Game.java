@@ -141,6 +141,7 @@ public class Game implements Serializable {
             player.onGround = otherPlayer.onGround;
             player.wallLeft = otherPlayer.wallLeft;
             player.wallRight = otherPlayer.wallRight;
+            player.team = otherPlayer.team;
             player.game = this;
         }
         players = newPlayers;

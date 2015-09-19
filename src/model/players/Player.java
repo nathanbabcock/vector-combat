@@ -24,6 +24,7 @@ abstract public class Player extends Entity<AABB> implements Serializable {
     public transient Float jumpVelocity = 300f;
     public transient Float attackInterval = 1.0f;
 
+    public Team team;
     public Point2D xhair;
     public int health;
     public float currentAttackDelay;
@@ -37,7 +38,6 @@ abstract public class Player extends Entity<AABB> implements Serializable {
     // Final variables from Shape2D
     public final Point2D position;
     public final float width, height;
-
 
     public Player(Game game) {
         super(game, new AABB(0, 0, 24, 80));
@@ -189,5 +189,24 @@ abstract public class Player extends Entity<AABB> implements Serializable {
     } // Unused by default(?)
 
     abstract public void draw(Canvas canvas, Graphics2D g2);
+
+    public void draw(Canvas canvas, Graphics2D g2, String clientName) {
+        // Draw client name
+        int playerX = (int) getBottomLeft().x + canvas.cameraOffsetX;
+        int playerY = (int) (canvas.HEIGHT - canvas.cameraOffsetY - getBottomLeft().y - height);
+        int playerWidth = sprite.width;
+        int playerHeight = sprite.height;
+        final int fontSize = 12;
+        g2.setFont(new Font("Lucida Sans", Font.PLAIN, fontSize));
+        if (team == Team.BLU)
+            g2.setColor(Color.BLUE);
+        else if (team == Team.RED)
+            g2.setColor(Color.RED);
+        else
+            g2.setColor(Color.BLACK);
+        int estWidth = clientName.length() * fontSize;
+        g2.drawString(clientName, playerX + playerWidth - (estWidth / 2), playerY - fontSize);
+        draw(canvas, g2);
+    }
 
 }

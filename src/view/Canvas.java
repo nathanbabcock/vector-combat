@@ -10,13 +10,14 @@ import model.players.Player;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.util.Map;
 
 /**
  * Created by Nathan on 8/19/2015.
  */
 public class Canvas extends JPanel {
     private Game game;
-    String clientName;
+    public String clientName;
 
     public AffineTransform backup;
 
@@ -51,8 +52,6 @@ public class Canvas extends JPanel {
 
         calculateCameraOffset();
 
-
-
         // Background
 //        g2.drawImage(game.map.background, 0, 0, null);
 
@@ -62,8 +61,8 @@ public class Canvas extends JPanel {
             g2.fillRect((int) b.getBottomLeft().x + cameraOffsetX, (int) (HEIGHT - cameraOffsetY - b.getBottomLeft().y - b.height), (int) (b.width), (int) (b.height));
 
         // Players
-        for (Player player : game.players.values())
-            player.draw(this, g2);
+        for (Map.Entry<String, Player> entry : game.players.entrySet())
+            entry.getValue().draw(this, g2, entry.getKey());
 
         // Particles
         for (Particle particle : game.particles)
@@ -72,6 +71,9 @@ public class Canvas extends JPanel {
         // Entities
         for (Entity entity : game.entities.values())
             entity.draw(this, g2);
+
+        // UI
+        drawUI(g2);
 
        /* // Physics graphs
         positionGraph.add(HEIGHT - player.y);
@@ -91,6 +93,26 @@ public class Canvas extends JPanel {
     /* // Draw origin
         g2.setColor(Color.RED);
         g2.drawRect(0, HEIGHT - 1, 1, 1);*/
+    }
+
+    private void drawUI(Graphics2D g2) {
+        // Health
+        int health;
+        try {
+            health = game.players.get(clientName).health;
+        } catch (NullPointerException e) {
+            health = 0;
+        }
+        g2.setFont(new Font("Lucida Sans", Font.BOLD, 50));
+        if (health > 150)
+            g2.setColor(Color.GREEN);
+        else if (health > 100)
+            g2.setColor(Color.YELLOW);
+        else if (health > 50)
+            g2.setColor(Color.ORANGE);
+        else
+            g2.setColor(Color.RED);
+        g2.drawString(health + "", WIDTH - 150, HEIGHT - 40);
     }
 
     private void calculateCameraOffset() {

@@ -61,6 +61,7 @@ public class Client extends JFrame {
                 } else {
                     System.out.println("Server denied connection; duplicate username " + clientName);
                     clientName = JOptionPane.showInputDialog("A player with that username is already connected to the server.\nPlease choose a different user name:");
+                    canvas.clientName = clientName;
                 }
             }
 
@@ -114,7 +115,7 @@ public class Client extends JFrame {
             }
 
             // Update model
-            game.update(OPTIMAL_TIME / 1000000000f);
+//            game.update(OPTIMAL_TIME / 1000000000f);
 //            if (game.players.get(clientName) != null && game.players.get(clientName).xhair != null)
             inputState.xhair = new Point2D(canvas.xhair.x - canvas.cameraOffsetX, canvas.HEIGHT - canvas.cameraOffsetY - canvas.xhair.y);
             canvas.repaint();

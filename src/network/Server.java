@@ -4,6 +4,7 @@ import model.Game;
 import model.geometry.Point2D;
 import model.players.Player;
 import model.players.Soldier;
+import model.players.Team;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -74,6 +75,7 @@ public class Server {
                     // spawn player
                     Player player = new Soldier(game);
                     player.hitbox.position = new Point2D(400, 850);
+                    player.team = Team.BLU;
                     game.players.put(clientName, player);
 
                     // add a notification message to the chat log
