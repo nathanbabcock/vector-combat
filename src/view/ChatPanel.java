@@ -33,7 +33,7 @@ public class ChatPanel extends JPanel {
         chatPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         // Text Area
-        textArea = new JTextArea("excalo: GLHF NOOBS\nDankJr: Lel\nNobato: Get rekd fagit");
+        textArea = new JTextArea(/*"excalo: GLHF NOOBS\nDankJr: Lel\nNobato: Get rekd fagit"*/);
         textArea.setColumns(25);
         textArea.setLineWrap(true);
         textArea.setOpaque(false);
@@ -48,7 +48,7 @@ public class ChatPanel extends JPanel {
         textField.setOpaque(false);
         textField.setFont(new Font("Lucida Sans", Font.PLAIN, 12));
         textField.setBorder(null);
-//        textField.setVisible(false);
+        textField.setVisible(false);
         chatPanel.add(textField);
 
         chatContainer.add(chatPanel, BorderLayout.WEST);

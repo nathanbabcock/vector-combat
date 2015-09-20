@@ -10,7 +10,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Nathan on 9/12/2015.
@@ -21,9 +23,11 @@ public class Server {
     Game game;
     long lastFpsTime;
     int fps;
+    List<ChatMessage> newMsgs;
 
     public Server(int port) {
         outputs = new HashMap();
+        newMsgs = new ArrayList();
 
         try {
             // start a new server on port 9001
@@ -78,8 +82,8 @@ public class Server {
                     player.team = Team.BLU;
                     game.players.put(clientName, player);
 
-                    // add a notification message to the chat log
-//                    addMessage(clientName + " connected");
+
+                    System.out.println(clientName + " connected");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -105,12 +109,17 @@ public class Server {
                 while (true) {
                     Object received = input.readObject();
                     if (received == null) {
-                        System.out.println(clientName + " disconnected from the server");
+                        System.out.println(clientName + " disconnected");
                         outputs.remove(clientName);
                         input.close();
                         return;
                     } else if (received instanceof InputState) {
                         game.players.get(clientName).importState((InputState) received);
+                    } else if (received instanceof ChatMessage) {
+                        ChatMessage msg = (ChatMessage) received;
+                        System.out.println(msg.player + ": " + msg.content);
+                        game.chat.add(msg);
+                        newMsgs.add(msg);
                     } else
                         System.out.println(received);
                    /* // read a command from the client, execute on the server
@@ -165,7 +174,15 @@ public class Server {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    for (ChatMessage msg : newMsgs) {
+                        try {
+                            output.writeObject(msg);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
+                newMsgs = new ArrayList();
 
                 // we want each frame to take 10 milliseconds, to do this
                 // we've recorded when we started the frame. We add 10 milliseconds
@@ -173,7 +190,7 @@ public class Server {
                 // us our final value to wait for
                 // remember this is in ms, whereas our lastLoopTime etc. vars are in ns.
                 try {
-                    Thread.sleep((lastLoopTime - System.nanoTime() + OPTIMAL_TIME) / 1000000);
+                    Thread.sleep(Math.max(0, (lastLoopTime - System.nanoTime() + OPTIMAL_TIME) / 1000000));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

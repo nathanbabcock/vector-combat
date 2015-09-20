@@ -4,7 +4,6 @@ import model.geometry.Point2D;
 import model.players.Player;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 /**
  * Created by Nathan on 9/12/2015.
@@ -12,11 +11,9 @@ import java.util.ArrayList;
 public class InputState implements Serializable {
     public boolean movingLeft, movingRight, movingUp, movingDown, attacking, altAttacking;
     public Point2D xhair;
-    public ArrayList<ChatMessage> messages;
 
     InputState() {
         xhair = new Point2D(0, 0);
-        messages = new ArrayList<>();
     }
 
     InputState(Player player) {

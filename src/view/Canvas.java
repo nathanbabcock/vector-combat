@@ -26,7 +26,6 @@ public class Canvas extends JPanel {
     public int cameraOffsetY;
 
     public ChatPanel chatPanel;
-    public int messageMode;
 
     public Point2D xhair;
 
@@ -38,7 +37,6 @@ public class Canvas extends JPanel {
         this.game = game;
         this.clientName = clientName;
         xhair = new Point2D(0, 0);
-        messageMode = 0;
 
         cameraOffsetX = cameraOffsetY = 0;
 

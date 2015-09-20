@@ -3,6 +3,7 @@ package model;
 import model.entities.Entity;
 import model.particles.Particle;
 import model.players.*;
+import network.ChatMessage;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -21,6 +22,7 @@ public class Game implements Serializable {
 
     public transient List<Object> garbage;
     public transient List<Particle> particles;
+    public transient List<ChatMessage> chat;
     public transient HashMap<String, Sprite> sprites;
     public transient Map map;
 
@@ -30,16 +32,13 @@ public class Game implements Serializable {
 
     public Game() {
         map = new Map();
-
         setupSprites();
 
-        // Spawn player
         players = new HashMap();
-//        players.put(username, new Ninja(this));
-
         entities = new HashMap();
         garbage = new Vector();
         particles = new Vector();
+        chat = new Vector();
     }
 
     private void setupSprites() {

@@ -3,7 +3,6 @@ package network;
 import model.Game;
 import model.geometry.Point2D;
 import view.Canvas;
-import view.UI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,6 +13,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Random;
 
 /**
  * Created by Nathan on 9/12/2015.
@@ -26,7 +26,8 @@ public class Client extends JFrame {
     ObjectOutputStream out;
     ObjectInputStream in;
     Canvas canvas;
-    UI ui;
+    int messageMode;
+    boolean menuOpen;
 
     final int pref_width = 800;
     final int pref_height = 600;
@@ -39,6 +40,8 @@ public class Client extends JFrame {
         clientName = username;
         game = new Game();
         inputState = new InputState();
+        messageMode = 0;
+        menuOpen = false;
 
         layoutGUI();
         connectToServer(host, port);
@@ -125,7 +128,6 @@ public class Client extends JFrame {
 
             // Update model
 //            game.update(OPTIMAL_TIME / 1000000000f);
-//            if (game.players.get(clientName) != null && game.players.get(clientName).xhair != null)
             inputState.xhair = new Point2D(canvas.xhair.x - canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - canvas.xhair.y);
             repaint();
             try {
@@ -140,7 +142,7 @@ public class Client extends JFrame {
             // us our final value to wait for
             // remember this is in ms, whereas our lastLoopTime etc. vars are in ns.
             try {
-                Thread.sleep((lastLoopTime - System.nanoTime() + OPTIMAL_TIME) / 1000000);
+                Thread.sleep(Math.max(0, (lastLoopTime - System.nanoTime() + OPTIMAL_TIME) / 1000000));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -155,7 +157,7 @@ public class Client extends JFrame {
         Action rightPressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (canvas.messageMode != 0) return;
+                if (messageMode != 0 || menuOpen) return;
                 inputState.movingRight = true;
             }
         };
@@ -176,7 +178,7 @@ public class Client extends JFrame {
         Action leftPressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (canvas.messageMode != 0) return;
+                if (messageMode != 0 || menuOpen) return;
                 inputState.movingLeft = true;
             }
         };
@@ -197,7 +199,7 @@ public class Client extends JFrame {
         Action upPressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (canvas.messageMode != 0) return;
+                if (messageMode != 0 || menuOpen) return;
                 inputState.movingUp = true;
             }
         };
@@ -218,7 +220,7 @@ public class Client extends JFrame {
         Action downPressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (canvas.messageMode != 0) return;
+                if (messageMode != 0 || menuOpen) return;
                 inputState.movingDown = true;
             }
         };
@@ -229,7 +231,7 @@ public class Client extends JFrame {
         Action downReleased = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (canvas.messageMode != 0) return;
+                if (messageMode != 0 || menuOpen) return;
                 inputState.movingDown = false;
             }
         };
@@ -240,29 +242,35 @@ public class Client extends JFrame {
         Action enterPressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (canvas.messageMode != 0) {
-                    String message = canvas.chatPanel.textField.getText();
-                    if (!message.equals("")) {
-                        System.out.println(clientName + ": " + message);
-                        canvas.chatPanel.textField.setText("");
-//                        inputState.messages.add(new ChatMessage(clientName, message, game.players.get(clientName).team));
-                    }
-                    canvas.messageMode = 0;
-                    canvas.chatPanel.textField.setVisible(false);
-                } else {
-                    canvas.messageMode = 1;
-                    canvas.chatPanel.textField.setVisible(true);
-                    canvas.chatPanel.textField.grabFocus();
-                }
+                if (menuOpen) return;
+                if (messageMode != 0)
+                    sendChat();
+                else
+                    showChat();
             }
         };
         am.put("enterPressed", enterPressed);
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), "enterPressed");
 
+        // ESC pressed
+        Action escPressed = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (messageMode != 0)
+                    hideChat();
+                else if (menuOpen)
+                    hideMenu();
+                else
+                    showMenu();
+            }
+        };
+        am.put("escPressed", escPressed);
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, false), "escPressed");
+
         canvas.addMouseListener(new MouseListener() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if (canvas.messageMode != 0) return;
+                if (messageMode != 0 || menuOpen) return;
                 if (SwingUtilities.isRightMouseButton(e))
                     inputState.altAttacking = true;
                 else
@@ -293,19 +301,61 @@ public class Client extends JFrame {
         canvas.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                if (canvas.messageMode != 0) return;
+                if (messageMode != 0 || menuOpen) return;
                 Point xhair = e.getPoint();
                 canvas.xhair = new Point2D(xhair.x, xhair.y);
             }
 
             @Override
             public void mouseMoved(MouseEvent e) {
-                if (canvas.messageMode != 0) return;
+                if (messageMode != 0 || menuOpen) return;
                 Point xhair = e.getPoint();
                 canvas.xhair = new Point2D(xhair.x, xhair.y);
             }
         });
 
+    }
+
+    private void sendChat() {
+        String message = canvas.chatPanel.textField.getText();
+        if (!message.equals("")) {
+            try {
+                out.writeObject(new ChatMessage(clientName, message, game.players.get(clientName).team, messageMode == 2));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        hideChat();
+    }
+
+    private void hideChat() {
+        messageMode = 0;
+        canvas.chatPanel.textField.setText("");
+        canvas.chatPanel.textField.setVisible(false);
+    }
+
+    private void showChat() {
+        messageMode = 1;
+        canvas.chatPanel.textField.setVisible(true);
+        canvas.chatPanel.textField.grabFocus();
+    }
+
+    private void refreshChat() {
+        String chatText = "";
+        for (ChatMessage msg : game.chat) {
+            chatText += "\n" + msg.player + ": " + msg.content;
+        }
+        canvas.chatPanel.textArea.setText(chatText);
+    }
+
+    private void showMenu() {
+        System.out.println("Menu opened");
+        menuOpen = true;
+    }
+
+    private void hideMenu() {
+        System.out.println("Menu closed");
+        menuOpen = false;
     }
 
     /**
@@ -320,8 +370,12 @@ public class Client extends JFrame {
                 while (true) {
                     Object received = in.readObject();
                     if (received instanceof Game)
-//                        System.out.println(game);
                         game.importGame((Game) received);
+                    else if (received instanceof ChatMessage) {
+                        game.chat.add((ChatMessage) received);
+                        refreshChat();
+                    } else
+                        System.out.println(received);
                 }
             } catch (SocketException | EOFException e) {
                 return; // "gracefully" terminate after disconnect
@@ -332,6 +386,6 @@ public class Client extends JFrame {
     }
 
     public static void main(String[] args) {
-        new Client("localhost", 9001, "excalo");
+        new Client("localhost", 9001, new Random().nextInt(1000) + "");
     }
 }
