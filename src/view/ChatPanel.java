@@ -1,9 +1,8 @@
 package view;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * This class encapsulates the NRC chat components. It writes out commands to the server in response to user input
@@ -12,74 +11,47 @@ import java.awt.event.ActionListener;
  * @author Nathan
  */
 public class ChatPanel extends JPanel {
-    private static final long serialVersionUID = 7686336736079994065L;
+    public JTextArea textArea; // chat log displayed here
+    public JTextField textField; // field where user enters text
 
-    private JTextArea textArea; // chat log displayed here
-    private JTextField textField; // field where user enters text
-
-    private class EnterListener implements ActionListener {
-        public void actionPerformed(ActionEvent arg0) {
-            String message = textField.getText();
-            if (!message.equals(""))
-                System.out.println("sendin mesgage");
-            textField.setText("");
-        }
-    }
-
-    /**
-     * Constructs a new ChatPanel for given username, using the given OutputStream
-     */
     public ChatPanel() {
-        textArea = new JTextArea();
+        setLayout(new BorderLayout());
+        setOpaque(false);
+
+        // Container
+        JPanel chatContainer = new JPanel();
+        chatContainer.setLayout(new BorderLayout());
+        chatContainer.setOpaque(false);
+        chatContainer.setBackground(Color.BLUE);
+
+        // Chat Panel
+        JPanel chatPanel = new JPanel();
+        chatPanel.setOpaque(false);
+        chatPanel.setBackground(Color.RED);
+        chatPanel.setSize(new Dimension(getWidth() / 2, getHeight() / 2));
+        chatPanel.setLayout(new BoxLayout(chatPanel, BoxLayout.PAGE_AXIS));
+        chatPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+        // Text Area
+        textArea = new JTextArea("excalo: GLHF NOOBS\nDankJr: Lel\nNobato: Get rekd fagit");
+        textArea.setColumns(25);
+        textArea.setLineWrap(true);
+        textArea.setOpaque(false);
+        textArea.setFont(new Font("Lucida Sans", Font.PLAIN, 12));
         textArea.setEditable(false);
+        textArea.setFocusable(false);
+        chatPanel.add(textArea);
 
-		/* Setup the GUI */
-        this.setLayout(new BorderLayout());
-        this.setPreferredSize(new Dimension(800, 150));
-
-        // create gui components
+        // Text Field
         textField = new JTextField();
-        JButton enterButton = new JButton("Send");
+        textField.setColumns(25);
+        textField.setOpaque(false);
+        textField.setFont(new Font("Lucida Sans", Font.PLAIN, 12));
+        textField.setBorder(null);
+//        textField.setVisible(false);
+        chatPanel.add(textField);
 
-        textField.setPreferredSize(new Dimension(600, 40));
-        enterButton.setPreferredSize(new Dimension(100, 40));
-
-        // add button and field to a lower panel
-        JPanel bottomPanel = new JPanel();
-        bottomPanel.add(textField);
-        bottomPanel.add(enterButton);
-
-        // add text area and lower panel
-        this.add(new JScrollPane(textArea), BorderLayout.CENTER);
-        this.add(bottomPanel, BorderLayout.SOUTH);
-
-        // create a listener for writing messages to server
-        ActionListener listener = new EnterListener();
-
-        // attach listener to field & button
-        textField.addActionListener(listener);
-        enterButton.addActionListener(listener);
+        chatContainer.add(chatPanel, BorderLayout.WEST);
+        add(chatContainer, BorderLayout.SOUTH);
     }
 }
-
-
-/*package view;
-
-import javax.swing.*;
-
-public class ChatPanel extends JPanel {
-    public JTextArea text;
-    public JTextField field;
-
-    public ChatPanel(){
-//        setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        text = new JTextArea();
-        text.setText("Hello world");
-
-        field = new JTextField();
-        add(text);
-        add(field);
-
-        setVisible();
-    }
-}*/

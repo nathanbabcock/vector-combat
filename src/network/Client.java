@@ -155,6 +155,7 @@ public class Client extends JFrame {
         Action rightPressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (canvas.messageMode != 0) return;
                 inputState.movingRight = true;
             }
         };
@@ -175,6 +176,7 @@ public class Client extends JFrame {
         Action leftPressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (canvas.messageMode != 0) return;
                 inputState.movingLeft = true;
             }
         };
@@ -195,6 +197,7 @@ public class Client extends JFrame {
         Action upPressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (canvas.messageMode != 0) return;
                 inputState.movingUp = true;
             }
         };
@@ -215,6 +218,7 @@ public class Client extends JFrame {
         Action downPressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (canvas.messageMode != 0) return;
                 inputState.movingDown = true;
             }
         };
@@ -225,15 +229,40 @@ public class Client extends JFrame {
         Action downReleased = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (canvas.messageMode != 0) return;
                 inputState.movingDown = false;
             }
         };
         am.put("downReleased", downReleased);
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, true), "downReleased");
 
+        // ENTER pressed
+        Action enterPressed = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (canvas.messageMode != 0) {
+                    String message = canvas.chatPanel.textField.getText();
+                    if (!message.equals("")) {
+                        System.out.println(clientName + ": " + message);
+                        canvas.chatPanel.textField.setText("");
+//                        inputState.messages.add(new ChatMessage(clientName, message, game.players.get(clientName).team));
+                    }
+                    canvas.messageMode = 0;
+                    canvas.chatPanel.textField.setVisible(false);
+                } else {
+                    canvas.messageMode = 1;
+                    canvas.chatPanel.textField.setVisible(true);
+                    canvas.chatPanel.textField.grabFocus();
+                }
+            }
+        };
+        am.put("enterPressed", enterPressed);
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), "enterPressed");
+
         canvas.addMouseListener(new MouseListener() {
             @Override
             public void mousePressed(MouseEvent e) {
+                if (canvas.messageMode != 0) return;
                 if (SwingUtilities.isRightMouseButton(e))
                     inputState.altAttacking = true;
                 else
@@ -264,12 +293,14 @@ public class Client extends JFrame {
         canvas.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
+                if (canvas.messageMode != 0) return;
                 Point xhair = e.getPoint();
                 canvas.xhair = new Point2D(xhair.x, xhair.y);
             }
 
             @Override
             public void mouseMoved(MouseEvent e) {
+                if (canvas.messageMode != 0) return;
                 Point xhair = e.getPoint();
                 canvas.xhair = new Point2D(xhair.x, xhair.y);
             }
