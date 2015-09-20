@@ -91,7 +91,7 @@ public class Grapple extends Entity<Circle2D> {
         int y = (int) (canvas.HEIGHT - canvas.cameraOffsetY - getBottomLeft().y - 2 * hitbox.radius);
         int size = (int) (2 * hitbox.radius);
         g2.fillOval(x, y, size, size);
-        g2.drawLine((int) owner.getCenter().x + canvas.cameraOffsetX, (int) (canvas.HEIGHT - canvas.cameraOffsetY - owner.getCenter().y), (int) getCenter().x + canvas.cameraOffsetX, (int) (canvas.HEIGHT - canvas.cameraOffsetY - getCenter().y));
+        g2.drawLine((int) owner.getCenter().x + canvas.cameraOffsetX, (int) (canvas.getHeight() - canvas.cameraOffsetY - owner.getCenter().y), (int) getCenter().x + canvas.cameraOffsetX, (int) (canvas.getHeight() - canvas.cameraOffsetY - getCenter().y));
     }
 
 }

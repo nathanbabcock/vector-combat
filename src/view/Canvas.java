@@ -20,9 +20,6 @@ public class Canvas extends JPanel {
     public String clientName;
 
     public AffineTransform backup;
-
-    public final int WIDTH = 800;
-    public final int HEIGHT = 600;
     public final int cameraMarginX = 250;
     public final int cameraMarginY = 250;
     public int cameraOffsetX;
@@ -41,7 +38,16 @@ public class Canvas extends JPanel {
 
         cameraOffsetX = cameraOffsetY = 0;
 
-        setSize(new Dimension(WIDTH, HEIGHT));
+        layoutUI();
+    }
+
+    private void layoutUI() {
+        setLayout(null);
+
+        JTextArea chatPanel = new JTextArea("hello world!");
+        chatPanel.setBackground(Color.RED);
+        chatPanel.setBounds(0, getHeight() / 2, getWidth() / 2, getHeight() / 2);
+        add(chatPanel, 0);
     }
 
     @Override
@@ -58,7 +64,7 @@ public class Canvas extends JPanel {
         // Boundaries
         g2.setColor(Color.black);
         for (AABB b : game.map.statics)
-            g2.fillRect((int) b.getBottomLeft().x + cameraOffsetX, (int) (HEIGHT - cameraOffsetY - b.getBottomLeft().y - b.height), (int) (b.width), (int) (b.height));
+            g2.fillRect((int) b.getBottomLeft().x + cameraOffsetX, (int) (getHeight() - cameraOffsetY - b.getBottomLeft().y - b.height), (int) (b.width), (int) (b.height));
 
         // Players
         for (Map.Entry<String, Player> entry : game.players.entrySet())
@@ -112,11 +118,17 @@ public class Canvas extends JPanel {
             g2.setColor(Color.ORANGE);
         else
             g2.setColor(Color.RED);
-        g2.drawString(health + "", WIDTH - 150, HEIGHT - 40);
+        g2.drawString(health + "", getWidth() - 150, getHeight() - 40);
     }
 
     private void calculateCameraOffset() {
         if (game.players.get(clientName) == null) return;
+
+        Player player = game.players.get(clientName);
+        cameraOffsetX = (int) (-player.getCenter().x + ((getWidth() / 2) - (player.width / 2)));
+        cameraOffsetY = (int) (-player.getCenter().y + ((getHeight() / 2) - (player.height / 2)));
+
+/*
 
         // Horizontal
         Point2D pos = game.players.get(clientName).getBottomLeft();
@@ -125,7 +137,7 @@ public class Canvas extends JPanel {
             return;
         }
         if (pos.x + game.players.get(clientName).width > game.map.WIDTH - cameraMarginX) {
-            cameraOffsetX = WIDTH - game.map.WIDTH;
+            cameraOffsetX = getWidth() - game.map.WIDTH;
             return;
         }
 
@@ -133,8 +145,8 @@ public class Canvas extends JPanel {
         if (left < cameraMarginX) {
             cameraOffsetX += cameraMarginX - left;
             return;
-        } else if (left + game.players.get(clientName).width > WIDTH - cameraMarginX) {
-            cameraOffsetX -= (left + game.players.get(clientName).width) - (WIDTH - cameraMarginX);
+        } else if (left + game.players.get(clientName).width > getWidth() - cameraMarginX) {
+            cameraOffsetX -= (left + game.players.get(clientName).width) - (getWidth() - cameraMarginX);
             return;
         }
 
@@ -145,7 +157,7 @@ public class Canvas extends JPanel {
             return;
         }
         if (pos.y + game.players.get(clientName).height > game.map.HEIGHT - cameraMarginX) { // Top of map
-            cameraOffsetY = HEIGHT - game.map.HEIGHT;
+            cameraOffsetY = getHeight() - game.map.HEIGHT;
             return;
         }
 
@@ -153,9 +165,11 @@ public class Canvas extends JPanel {
         if (bottom < cameraMarginY) { // In bottom margin
             cameraOffsetY += cameraMarginY - bottom;
             return;
-        } else if (bottom + game.players.get(clientName).height > HEIGHT - cameraMarginY) { // In top margin
-            cameraOffsetY -= (bottom + game.players.get(clientName).height) - (HEIGHT - cameraMarginY);
+        } else if (bottom + game.players.get(clientName).height > getHeight() - cameraMarginY) { // In top margin
+            cameraOffsetY -= (bottom + game.players.get(clientName).height) - (getHeight() - cameraMarginY);
             return;
         }
+*/
+
     }
 }

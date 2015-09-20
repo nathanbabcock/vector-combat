@@ -133,7 +133,7 @@ public class Rocket extends Entity<Circle2D> implements Serializable {
         if (exploded) return;
         g2.setColor(Color.red);
         int x = (int) (getBottomLeft().x + canvas.cameraOffsetX);
-        int y = (int) (canvas.HEIGHT - canvas.cameraOffsetY - getBottomLeft().y - 2 * hitbox.radius);
+        int y = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - 2 * hitbox.radius);
         int size = (int) (2 * hitbox.radius);
         g2.fillOval(x, y, size, size);
     }

@@ -3,6 +3,7 @@ package network;
 import model.Game;
 import model.geometry.Point2D;
 import view.Canvas;
+import view.UI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,6 +26,10 @@ public class Client extends JFrame {
     ObjectOutputStream out;
     ObjectInputStream in;
     Canvas canvas;
+    UI ui;
+
+    final int pref_width = 800;
+    final int pref_height = 600;
 
     long lastFpsTime;
     public int fps;
@@ -33,19 +38,39 @@ public class Client extends JFrame {
     public Client(String host, int port, String username) {
         clientName = username;
         game = new Game();
-        canvas = new Canvas(game, clientName);
         inputState = new InputState();
 
+        layoutGUI();
+        connectToServer(host, port);
+        setupListeners();
+        gameLoop();
+    }
+
+    private void layoutGUI() {
         // Layout
-        setSize(new Dimension(canvas.WIDTH, canvas.HEIGHT + 40));
+        setSize(pref_width, pref_height);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        // Container
+        JLayeredPane container = new JLayeredPane();
+        container.setLayout(new BorderLayout());
+
+        canvas = new Canvas(game, clientName);
+        container.add(canvas);
+
+        JTextArea chatPanel = new JTextArea("hello world!");
+        chatPanel.setBackground(Color.RED);
+        chatPanel.setBounds(canvas.getX(), canvas.getY() + canvas.getHeight() / 2, canvas.getWidth() / 2, canvas.getHeight() / 2);
+//        container.add(chatPanel);
+
+//        ui = new UI(game, clientName);
+//        container.add(ui, JLayeredPane.PALETTE_LAYER);
+
+        setContentPane(container);
         setVisible(true);
-        add(canvas);
-        repaint();
+    }
 
-//        if (host == null || port == null || clientName == null)
-//            return;
-
+    private void connectToServer(String host, int port) {
         try {
             // Open a connection to the server
             server = new Socket(host, port);
@@ -83,12 +108,9 @@ public class Client extends JFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        setupListeners();
-        gameLoop();
     }
 
-    public void gameLoop() {
+    private void gameLoop() {
         long lastLoopTime = System.nanoTime();
         final int TARGET_FPS = 60;
         final long OPTIMAL_TIME = 1000000000 / TARGET_FPS;
@@ -109,7 +131,7 @@ public class Client extends JFrame {
             // update our FPS counter if a second has passed since
             // we last recorded
             if (lastFpsTime >= 1000000000) {
-                System.out.println("FPS: " + fps);
+//                System.out.println("FPS: " + fps);
                 lastFpsTime = 0;
                 fps = 0;
             }
@@ -117,8 +139,8 @@ public class Client extends JFrame {
             // Update model
 //            game.update(OPTIMAL_TIME / 1000000000f);
 //            if (game.players.get(clientName) != null && game.players.get(clientName).xhair != null)
-            inputState.xhair = new Point2D(canvas.xhair.x - canvas.cameraOffsetX, canvas.HEIGHT - canvas.cameraOffsetY - canvas.xhair.y);
-            canvas.repaint();
+            inputState.xhair = new Point2D(canvas.xhair.x - canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - canvas.xhair.y);
+            repaint();
             try {
                 out.writeObject(ObjectCloner.deepCopy(inputState));
             } catch (Exception e) {

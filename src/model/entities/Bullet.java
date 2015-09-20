@@ -112,7 +112,7 @@ public class Bullet extends Entity<AABB> implements Serializable {
     public void draw(Canvas canvas, Graphics2D g2) {
         g2.setColor(Color.black);
         int x = (int) (getBottomLeft().x + canvas.cameraOffsetX);
-        int y = (int) (canvas.HEIGHT - canvas.cameraOffsetY - getBottomLeft().y - hitbox.width);
+        int y = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - hitbox.width);
         int size = (int) (hitbox.width);
         g2.fillRect(x, y, size, size);
     }

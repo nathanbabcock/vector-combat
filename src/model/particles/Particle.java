@@ -54,9 +54,9 @@ public class Particle {
 //            trans.rotate(particle.angle, particle.position.x, particle.position.y);
 
         int x = (int) (canvas.cameraOffsetX + position.x - size / 2);
-        int y = (int) (canvas.HEIGHT - canvas.cameraOffsetY - (position.y + size / 2));
+        int y = (int) (canvas.getHeight() - canvas.cameraOffsetY - (position.y + size / 2));
         Rectangle2D rect = new Rectangle2D.Float(x, y, size, size);
-        AffineTransform at = AffineTransform.getRotateInstance(angle, canvas.cameraOffsetX + position.x, canvas.HEIGHT - canvas.cameraOffsetY - position.y);
+        AffineTransform at = AffineTransform.getRotateInstance(angle, canvas.cameraOffsetX + position.x, canvas.getHeight() - canvas.cameraOffsetY - position.y);
         g2.fill(at.createTransformedShape(rect));
     }
 }
