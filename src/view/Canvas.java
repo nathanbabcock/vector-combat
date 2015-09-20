@@ -8,6 +8,7 @@ import model.particles.Particle;
 import model.players.Player;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.util.Map;
@@ -38,19 +39,46 @@ public class Canvas extends JPanel {
 
         cameraOffsetX = cameraOffsetY = 0;
 
-//        layoutUI();
+        layoutUI();
     }
 
     private void layoutUI() {
         setLayout(new BorderLayout());
-//
+
+        // Container
+        JPanel chatContainer = new JPanel();
+        chatContainer.setLayout(new BorderLayout());
+        chatContainer.setOpaque(false);
+        chatContainer.setBackground(Color.BLUE);
+
+        // Chat Panel
         JPanel chatPanel = new JPanel();
+        chatPanel.setOpaque(false);
+        chatPanel.setBackground(Color.RED);
         chatPanel.setSize(new Dimension(getWidth() / 2, getHeight() / 2));
-        JTextArea textArea = new JTextArea("Hello world");
-        JTextField textField = new JTextField();
+        chatPanel.setLayout(new BoxLayout(chatPanel, BoxLayout.PAGE_AXIS));
+        chatPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+        // Text Area
+        JTextArea textArea = new JTextArea("excalo: GLHF NOOBS\nDankJr: Lel\nNobato: Get rekd fagit");
+        textArea.setColumns(25);
+        textArea.setLineWrap(true);
+        textArea.setOpaque(false);
+        textArea.setFont(new Font("Lucida Sans", Font.PLAIN, 12));
+        textArea.setEditable(false);
+        textArea.setFocusable(false);
         chatPanel.add(textArea);
+
+        // Text Field
+        JTextField textField = new JTextField();
+        textField.setColumns(25);
+        textField.setOpaque(false);
+        textField.setFont(new Font("Lucida Sans", Font.PLAIN, 12));
+        textField.setBorder(null);
         chatPanel.add(textField);
-        add(chatPanel, BorderLayout.SOUTH);
+
+        chatContainer.add(chatPanel, BorderLayout.WEST);
+        add(chatContainer, BorderLayout.SOUTH);
     }
 
     @Override
