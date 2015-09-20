@@ -38,16 +38,19 @@ public class Canvas extends JPanel {
 
         cameraOffsetX = cameraOffsetY = 0;
 
-        layoutUI();
+//        layoutUI();
     }
 
     private void layoutUI() {
-        setLayout(null);
-
-        JTextArea chatPanel = new JTextArea("hello world!");
-        chatPanel.setBackground(Color.RED);
-        chatPanel.setBounds(0, getHeight() / 2, getWidth() / 2, getHeight() / 2);
-        add(chatPanel, 0);
+        setLayout(new BorderLayout());
+//
+        JPanel chatPanel = new JPanel();
+        chatPanel.setSize(new Dimension(getWidth() / 2, getHeight() / 2));
+        JTextArea textArea = new JTextArea("Hello world");
+        JTextField textField = new JTextField();
+        chatPanel.add(textArea);
+        chatPanel.add(textField);
+        add(chatPanel, BorderLayout.SOUTH);
     }
 
     @Override

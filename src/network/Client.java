@@ -51,22 +51,9 @@ public class Client extends JFrame {
         setSize(pref_width, pref_height);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        // Container
-        JLayeredPane container = new JLayeredPane();
-        container.setLayout(new BorderLayout());
-
         canvas = new Canvas(game, clientName);
-        container.add(canvas);
+        add(canvas);
 
-        JTextArea chatPanel = new JTextArea("hello world!");
-        chatPanel.setBackground(Color.RED);
-        chatPanel.setBounds(canvas.getX(), canvas.getY() + canvas.getHeight() / 2, canvas.getWidth() / 2, canvas.getHeight() / 2);
-//        container.add(chatPanel);
-
-//        ui = new UI(game, clientName);
-//        container.add(ui, JLayeredPane.PALETTE_LAYER);
-
-        setContentPane(container);
         setVisible(true);
     }
 
