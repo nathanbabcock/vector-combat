@@ -185,7 +185,8 @@ public class Client extends JFrame {
             }
 
             // Update model
-//            game.update(OPTIMAL_TIME / 1000000000f);
+            game.update(OPTIMAL_TIME / 1000000000f);
+            updateUI();
             inputState.xhair = new Point2D(canvas.xhair.x - canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - canvas.xhair.y);
             repaint();
             try {
@@ -416,6 +417,25 @@ public class Client extends JFrame {
     private void hideMenu() {
         System.out.println("Menu closed");
         menuOpen = false;
+    }
+
+    private void updateUI() {
+        // Health
+        int hp;
+        try {
+            hp = game.players.get(clientName).health;
+        } catch (NullPointerException e) {
+            hp = 0;
+        }
+        if (hp > 150)
+            health.setForeground(Color.GREEN);
+        else if (hp > 100)
+            health.setForeground(Color.YELLOW);
+        else if (hp > 50)
+            health.setForeground(Color.ORANGE);
+        else
+            health.setForeground(Color.RED);
+        health.setText(hp + "");
     }
 
     /**

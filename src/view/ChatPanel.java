@@ -33,7 +33,7 @@ public class ChatPanel extends JPanel {
         chatPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         // Text Area
-        textArea = new JTextArea(/*"excalo: GLHF NOOBS\nDankJr: Lel"*/);
+        textArea = new JTextArea(/*"excalo: GLHF NOOBS\nDankJr: Lel\n"*/);
         textArea.setColumns(25);
         textArea.setLineWrap(true);
         textArea.setOpaque(false);
