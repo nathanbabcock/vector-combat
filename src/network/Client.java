@@ -3,6 +3,7 @@ package network;
 import model.Game;
 import model.geometry.Point2D;
 import view.Canvas;
+import view.ChatPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,12 +30,21 @@ public class Client extends JFrame {
     int messageMode;
     boolean menuOpen;
 
-    final int pref_width = 800;
-    final int pref_height = 600;
+    static final int PREF_WIDTH = 800;
+    static final int PREF_HEIGHT = 600;
+
+    static final Integer LAYER_CANVAS = new Integer(0);
+    static final Integer LAYER_HUD = new Integer(1);
+    static final Integer LAYER_CHAT = new Integer(2);
+    static final Integer LAYER_OVERLAY = new Integer(3);
 
     long lastFpsTime;
     public int fps;
 
+    Insets insets;
+    JLayeredPane lp;
+    JTextArea health;
+    ChatPanel chat;
 
     public Client(String host, int port, String username) {
         clientName = username;
@@ -43,21 +53,69 @@ public class Client extends JFrame {
         messageMode = 0;
         menuOpen = false;
 
-        layoutGUI();
+        initGUI();
         connectToServer(host, port);
         setupListeners();
         gameLoop();
     }
 
-    private void layoutGUI() {
-        // Layout
-        setSize(pref_width, pref_height);
+    private void initGUI() {
+        setSize(PREF_WIDTH, PREF_HEIGHT);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-        canvas = new Canvas(game, clientName);
-        add(canvas);
-
         setVisible(true);
+        setSize(PREF_WIDTH, PREF_HEIGHT);
+
+        insets = getInsets();
+        lp = getLayeredPane();
+
+        // Game rendering canvas
+        canvas = new Canvas(game, clientName);
+        lp.add(canvas, LAYER_CANVAS);
+
+        health = new JTextArea("200");
+        health.setForeground(Color.GREEN);
+        health.setFont(new Font("Lucida Sans", Font.BOLD, 50));
+        health.setOpaque(false);
+        health.setEditable(false);
+        health.setFocusable(false);
+        lp.add(health, LAYER_HUD);
+
+        chat = new ChatPanel();
+        lp.add(chat, LAYER_CHAT);
+
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                super.componentResized(e);
+                layoutGUI();
+            }
+        });
+
+        layoutGUI();
+    }
+
+    public int getRealWidth() {
+        return getWidth() - insets.right - insets.left;
+    }
+
+    public int getRealHeight() {
+        return getHeight() - insets.top - insets.bottom;
+    }
+
+    private void layoutGUI() {
+        canvas.setBounds(0, 0, getRealWidth(), getRealHeight());
+
+        float chatWidth_relative = 0.50f;
+        float chatHeight_relative = 0.50f;
+        int chatWidth_absolute = (int) (chatWidth_relative * getRealWidth());
+        int chatHeight_absolute = (int) (chatHeight_relative * getRealHeight());
+        chat.setBounds(0, getRealHeight() - chatHeight_absolute, chatWidth_absolute, chatHeight_absolute);
+
+        int hpWidth = 110;
+        int hpHeight = 60;
+        health.setBounds(getRealWidth() - hpWidth, getRealHeight() - hpHeight, hpWidth, hpHeight);
+
+        revalidate();
     }
 
     private void connectToServer(String host, int port) {
@@ -317,7 +375,7 @@ public class Client extends JFrame {
     }
 
     private void sendChat() {
-        String message = canvas.chatPanel.textField.getText();
+        String message = chat.textField.getText();
         if (!message.equals("")) {
             try {
                 out.writeObject(new ChatMessage(clientName, message, game.players.get(clientName).team, messageMode == 2));
@@ -330,14 +388,16 @@ public class Client extends JFrame {
 
     private void hideChat() {
         messageMode = 0;
-        canvas.chatPanel.textField.setText("");
-        canvas.chatPanel.textField.setVisible(false);
+        chat.textField.setText("");
+        chat.textField.setVisible(false);
+        chat.revalidate();
     }
 
     private void showChat() {
         messageMode = 1;
-        canvas.chatPanel.textField.setVisible(true);
-        canvas.chatPanel.textField.grabFocus();
+        chat.textField.setVisible(true);
+        chat.textField.grabFocus();
+        chat.revalidate();
     }
 
     private void refreshChat() {
@@ -345,7 +405,7 @@ public class Client extends JFrame {
         for (ChatMessage msg : game.chat) {
             chatText += "\n" + msg.player + ": " + msg.content;
         }
-        canvas.chatPanel.textArea.setText(chatText);
+        chat.textArea.setText(chatText);
     }
 
     private void showMenu() {

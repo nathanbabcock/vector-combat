@@ -25,7 +25,7 @@ public class Canvas extends JPanel {
     public int cameraOffsetX;
     public int cameraOffsetY;
 
-    public ChatPanel chatPanel;
+//    public ChatPanel chatPanel;
 
     public Point2D xhair;
 
@@ -40,14 +40,14 @@ public class Canvas extends JPanel {
 
         cameraOffsetX = cameraOffsetY = 0;
 
-        layoutUI();
+//        layoutUI();
     }
 
-    private void layoutUI() {
-        setLayout(new BorderLayout());
-        chatPanel = new ChatPanel();
-        add(chatPanel);
-    }
+//    private void layoutUI() {
+//        setLayout(new BorderLayout());
+//        chatPanel = new ChatPanel();
+//        add(chatPanel);
+//    }
 
     @Override
     public void paintComponent(Graphics g) {
@@ -78,7 +78,7 @@ public class Canvas extends JPanel {
             entity.draw(this, g2);
 
         // UI
-        drawUI(g2);
+//        drawUI(g2);
 
        /* // Physics graphs
         positionGraph.add(HEIGHT - player.y);
