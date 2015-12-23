@@ -28,6 +28,8 @@ abstract public class Player extends Entity<AABB> implements Serializable {
     public Point2D xhair;
     public int health;
     public float currentAttackDelay;
+    public int kills;
+    public int deaths;
 
     // States, written to by controls and read from for sprites
     public boolean movingLeft, movingRight, movingUp, movingDown, attacking, altAttacking, dead, onGround, wallLeft, wallRight;
@@ -46,6 +48,8 @@ abstract public class Player extends Entity<AABB> implements Serializable {
         height = hitbox.height;
         xhair = new Point2D(0, 0);
         health = 200;
+        kills = 0;
+        deaths = 0;
         updateSprite(0);
     }
 

@@ -335,7 +335,7 @@ public class Client extends JFrame {
         Action tabPressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("TAB PRUSSED");
+//                System.out.println("TAB PRUSSED");
                 scores.open();
             }
         };
@@ -346,7 +346,7 @@ public class Client extends JFrame {
         Action tabReleased = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("TAB RELOOSED");
+//                System.out.println("TAB RELOOSED");
                 scores.close();
             }
         };
