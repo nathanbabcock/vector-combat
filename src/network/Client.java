@@ -4,6 +4,8 @@ import model.Game;
 import model.geometry.Point2D;
 import view.Canvas;
 import view.ChatPanel;
+import view.MenuPanel;
+import view.ScorePanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,6 +31,7 @@ public class Client extends JFrame {
     Canvas canvas;
     int messageMode;
     boolean menuOpen;
+    boolean scoresOpen;
 
     static final int PREF_WIDTH = 800;
     static final int PREF_HEIGHT = 600;
@@ -45,6 +48,8 @@ public class Client extends JFrame {
     JLayeredPane lp;
     JTextArea health;
     ChatPanel chat;
+    ScorePanel scores;
+    MenuPanel menu;
 
     public Client(String host, int port, String username) {
         clientName = username;
@@ -52,6 +57,7 @@ public class Client extends JFrame {
         inputState = new InputState();
         messageMode = 0;
         menuOpen = false;
+        scoresOpen = false;
 
         initGUI();
         connectToServer(host, port);
@@ -64,6 +70,7 @@ public class Client extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
         setSize(PREF_WIDTH, PREF_HEIGHT);
+        setFocusTraversalKeysEnabled(false);
 
         insets = getInsets();
         lp = getLayeredPane();
@@ -72,6 +79,7 @@ public class Client extends JFrame {
         canvas = new Canvas(game, clientName);
         lp.add(canvas, LAYER_CANVAS);
 
+        // Health HUD
         health = new JTextArea("200");
         health.setForeground(Color.GREEN);
         health.setFont(new Font("Lucida Sans", Font.BOLD, 50));
@@ -80,8 +88,13 @@ public class Client extends JFrame {
         health.setFocusable(false);
         lp.add(health, LAYER_HUD);
 
+        // Chat
         chat = new ChatPanel();
         lp.add(chat, LAYER_CHAT);
+
+        // Scores
+        scores = new ScorePanel(game);
+        lp.add(scores, LAYER_OVERLAY);
 
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -105,15 +118,22 @@ public class Client extends JFrame {
     private void layoutGUI() {
         canvas.setBounds(0, 0, getRealWidth(), getRealHeight());
 
-        float chatWidth_relative = 0.50f;
-        float chatHeight_relative = 0.50f;
-        int chatWidth_absolute = (int) (chatWidth_relative * getRealWidth());
-        int chatHeight_absolute = (int) (chatHeight_relative * getRealHeight());
-        chat.setBounds(0, getRealHeight() - chatHeight_absolute, chatWidth_absolute, chatHeight_absolute);
+        int realWidth = getRealWidth();
+        int realHeight = getRealHeight();
 
-        int hpWidth = 110;
-        int hpHeight = 60;
-        health.setBounds(getRealWidth() - hpWidth, getRealHeight() - hpHeight, hpWidth, hpHeight);
+        final float chatWidth_relative = 0.50f;
+        final float chatHeight_relative = 0.50f;
+        final int chatWidth_absolute = (int) (chatWidth_relative * realWidth);
+        final int chatHeight_absolute = (int) (chatHeight_relative * realHeight);
+        chat.setBounds(0, realHeight - chatHeight_absolute, chatWidth_absolute, chatHeight_absolute);
+
+        final int hpWidth = 110;
+        final int hpHeight = 60;
+        health.setBounds(realWidth - hpWidth, realHeight - hpHeight, hpWidth, hpHeight);
+
+        final int scoresWidth = 500;
+        final int scoresHeight = 400;
+        scores.setBounds((int) ((realWidth - scoresWidth) / 2f), (int) ((realHeight - scoresHeight) / 2f), scoresWidth, scoresHeight);
 
         revalidate();
     }
@@ -311,6 +331,29 @@ public class Client extends JFrame {
         am.put("enterPressed", enterPressed);
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), "enterPressed");
 
+        // TAB pressed
+        Action tabPressed = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("TAB PRUSSED");
+                scores.open();
+            }
+        };
+        am.put("tabPressed", tabPressed);
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0, false), "tabPressed");
+
+        // TAB released
+        Action tabReleased = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("TAB RELOOSED");
+                scores.close();
+            }
+        };
+        am.put("tabReleased", tabReleased);
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0, true), "tabReleased");
+
+
         // ESC pressed
         Action escPressed = new AbstractAction() {
             @Override
@@ -412,6 +455,8 @@ public class Client extends JFrame {
     private void showMenu() {
         System.out.println("Menu opened");
         menuOpen = true;
+        if (scores.open)
+            scores.close();
     }
 
     private void hideMenu() {

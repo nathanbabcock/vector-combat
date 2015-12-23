@@ -49,6 +49,7 @@ public class ChatPanel extends JPanel {
         textField.setFont(new Font("Lucida Sans", Font.PLAIN, 12));
         textField.setBorder(null);
         textField.setVisible(false);
+        textField.setFocusTraversalKeysEnabled(false);
         chatPanel.add(textField);
 
         chatContainer.add(chatPanel, BorderLayout.WEST);
