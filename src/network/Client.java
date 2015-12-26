@@ -3,7 +3,6 @@ package network;
 import model.Game;
 import model.geometry.Point2D;
 import model.players.Player;
-import model.players.Soldier;
 import view.Canvas;
 import view.ChatPanel;
 import view.MenuPanel;
@@ -370,9 +369,9 @@ public class Client extends JFrame {
                     menu.close();
                     Player player = game.players.get(clientName);
 //                    System.out.println(player.team+", "+menu.teamSelector.selectedTeam);
-                    if (player.team != menu.teamSelector.selectedTeam) {
+                    if (player.team != menu.teamSelector.selectedTeam || player.getClass() != menu.classSelector.selectedClass) {
                         try {
-                            out.writeObject(new SpawnParams(menu.teamSelector.selectedTeam, Soldier.class));
+                            out.writeObject(new SpawnParams(menu.teamSelector.selectedTeam, menu.classSelector.selectedClass));
                         } catch (Exception err) {
                             err.printStackTrace();
                         }
