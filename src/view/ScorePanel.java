@@ -122,7 +122,7 @@ public class ScorePanel extends JPanel {
             row.name.setText(name);
             row.kills.setText(player.kills + "");
             row.deaths.setText(player.deaths + "");
-            if (player.team == Team.BLU)
+            if (player.team == Team.BLUE)
                 blue.players.add(row);
             else
                 red.players.add(row);

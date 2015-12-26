@@ -2,6 +2,8 @@ package network;
 
 import model.Game;
 import model.geometry.Point2D;
+import model.players.Player;
+import model.players.Soldier;
 import view.Canvas;
 import view.ChatPanel;
 import view.MenuPanel;
@@ -30,8 +32,6 @@ public class Client extends JFrame {
     ObjectInputStream in;
     Canvas canvas;
     int messageMode;
-    boolean menuOpen;
-    boolean scoresOpen;
 
     static final int PREF_WIDTH = 800;
     static final int PREF_HEIGHT = 600;
@@ -56,8 +56,6 @@ public class Client extends JFrame {
         game = new Game();
         inputState = new InputState();
         messageMode = 0;
-        menuOpen = false;
-        scoresOpen = false;
 
         initGUI();
         connectToServer(host, port);
@@ -95,6 +93,10 @@ public class Client extends JFrame {
         // Scores
         scores = new ScorePanel(game);
         lp.add(scores, LAYER_OVERLAY);
+
+        // Menu
+        menu = new MenuPanel();
+        lp.add(menu, LAYER_OVERLAY);
 
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -134,6 +136,10 @@ public class Client extends JFrame {
         final int scoresWidth = 500;
         final int scoresHeight = 400;
         scores.setBounds((int) ((realWidth - scoresWidth) / 2f), (int) ((realHeight - scoresHeight) / 2f), scoresWidth, scoresHeight);
+
+        final int menuWidth = 500;
+        final int menuHeight = 300;
+        menu.setBounds((int) ((realWidth - menuWidth) / 2f), (int) ((realHeight - menuHeight) / 2f), menuWidth, menuHeight);
 
         revalidate();
     }
@@ -236,7 +242,7 @@ public class Client extends JFrame {
         Action rightPressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (messageMode != 0 || menuOpen) return;
+                if (messageMode != 0 || menu.open) return;
                 inputState.movingRight = true;
             }
         };
@@ -257,7 +263,7 @@ public class Client extends JFrame {
         Action leftPressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (messageMode != 0 || menuOpen) return;
+                if (messageMode != 0 || menu.open) return;
                 inputState.movingLeft = true;
             }
         };
@@ -278,7 +284,7 @@ public class Client extends JFrame {
         Action upPressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (messageMode != 0 || menuOpen) return;
+                if (messageMode != 0 || menu.open) return;
                 inputState.movingUp = true;
             }
         };
@@ -299,7 +305,7 @@ public class Client extends JFrame {
         Action downPressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (messageMode != 0 || menuOpen) return;
+                if (messageMode != 0 || menu.open) return;
                 inputState.movingDown = true;
             }
         };
@@ -310,7 +316,7 @@ public class Client extends JFrame {
         Action downReleased = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (messageMode != 0 || menuOpen) return;
+                if (messageMode != 0 || menu.open) return;
                 inputState.movingDown = false;
             }
         };
@@ -321,7 +327,7 @@ public class Client extends JFrame {
         Action enterPressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (menuOpen) return;
+                if (menu.open) return;
                 if (messageMode != 0)
                     sendChat();
                 else
@@ -335,7 +341,7 @@ public class Client extends JFrame {
         Action tabPressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                System.out.println("TAB PRUSSED");
+                if (messageMode != 0 || menu.open) return;
                 scores.open();
             }
         };
@@ -346,7 +352,7 @@ public class Client extends JFrame {
         Action tabReleased = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                System.out.println("TAB RELOOSED");
+                if (messageMode != 0 || menu.open) return;
                 scores.close();
             }
         };
@@ -360,10 +366,22 @@ public class Client extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if (messageMode != 0)
                     hideChat();
-                else if (menuOpen)
-                    hideMenu();
-                else
-                    showMenu();
+                else if (menu.open) {
+                    menu.close();
+                    Player player = game.players.get(clientName);
+//                    System.out.println(player.team+", "+menu.teamSelector.selectedTeam);
+                    if (player.team != menu.teamSelector.selectedTeam) {
+                        try {
+                            out.writeObject(new SpawnParams(menu.teamSelector.selectedTeam, Soldier.class));
+                        } catch (Exception err) {
+                            err.printStackTrace();
+                        }
+                    }
+                } else {
+                    if (scores.open)
+                        scores.close();
+                    menu.open();
+                }
             }
         };
         am.put("escPressed", escPressed);
@@ -372,7 +390,7 @@ public class Client extends JFrame {
         canvas.addMouseListener(new MouseListener() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if (messageMode != 0 || menuOpen) return;
+                if (messageMode != 0 || menu.open) return;
                 if (SwingUtilities.isRightMouseButton(e))
                     inputState.altAttacking = true;
                 else
@@ -403,14 +421,14 @@ public class Client extends JFrame {
         canvas.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                if (messageMode != 0 || menuOpen) return;
+                if (messageMode != 0 || menu.open) return;
                 Point xhair = e.getPoint();
                 canvas.xhair = new Point2D(xhair.x, xhair.y);
             }
 
             @Override
             public void mouseMoved(MouseEvent e) {
-                if (messageMode != 0 || menuOpen) return;
+                if (messageMode != 0 || menu.open) return;
                 Point xhair = e.getPoint();
                 canvas.xhair = new Point2D(xhair.x, xhair.y);
             }
@@ -450,18 +468,6 @@ public class Client extends JFrame {
             chatText += "\n" + msg.player + ": " + msg.content;
         }
         chat.textArea.setText(chatText);
-    }
-
-    private void showMenu() {
-        System.out.println("Menu opened");
-        menuOpen = true;
-        if (scores.open)
-            scores.close();
-    }
-
-    private void hideMenu() {
-        System.out.println("Menu closed");
-        menuOpen = false;
     }
 
     private void updateUI() {

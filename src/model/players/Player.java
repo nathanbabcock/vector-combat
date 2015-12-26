@@ -43,7 +43,7 @@ abstract public class Player extends Entity<AABB> implements Serializable {
 
     public Player(Game game) {
         super(game, new AABB(0, 0, 24, 80));
-        position = hitbox.position;
+        position = hitbox.position = new Point2D(400, 850);
         width = hitbox.width;
         height = hitbox.height;
         xhair = new Point2D(0, 0);
@@ -202,7 +202,7 @@ abstract public class Player extends Entity<AABB> implements Serializable {
         int playerHeight = sprite.height;
         final int fontSize = 12;
         g2.setFont(new Font("Lucida Sans", Font.PLAIN, fontSize));
-        if (team == Team.BLU)
+        if (team == Team.BLUE)
             g2.setColor(Color.BLUE);
         else if (team == Team.RED)
             g2.setColor(Color.RED);

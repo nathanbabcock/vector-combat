@@ -4,6 +4,7 @@ import model.entities.Entity;
 import model.particles.Particle;
 import model.players.*;
 import network.ChatMessage;
+import network.SpawnParams;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -120,7 +121,7 @@ public class Game implements Serializable {
         HashMap<String, Player> newPlayers = new HashMap();
         for (java.util.Map.Entry<String, Player> entry : other.players.entrySet()) {
             String key = entry.getKey();
-            if (players.containsKey(key))
+            if (players.containsKey(key) && players.get(key).getClass() == entry.getValue().getClass())
                 newPlayers.put(key, players.get(key));
             else
                 newPlayers.put(key, playerFactory(entry.getValue().getClass()));
@@ -161,6 +162,16 @@ public class Game implements Serializable {
             newEntity.game = this;
         }
         entities = newEntities;
+    }
+
+    public void importSpawnParams(String clientName, SpawnParams params) {
+        Player player = players.get(clientName);
+        if (player.team != params.team)
+            player.team = params.team;
+        if (player.getClass() != params.charClass) {
+            players.remove(clientName);
+            players.put(clientName, playerFactory(params.charClass));
+        }
     }
 
 }
