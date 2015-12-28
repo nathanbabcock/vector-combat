@@ -130,11 +130,8 @@ public class Game implements Serializable {
             Player otherPlayer = entry.getValue();
             if (players.containsKey(clientName) && players.get(clientName).charClass == otherPlayer.charClass)
                 newPlayers.put(clientName, players.get(clientName));
-            else {
+            else
                 newPlayers.put(clientName, otherPlayer);
-                if (otherPlayer.character != null)
-                    newPlayers.get(clientName).character = charFactory(otherPlayer.charClass);
-            }
 
             Player player = newPlayers.get(clientName);
             player.clientName = otherPlayer.clientName;
@@ -143,8 +140,16 @@ public class Game implements Serializable {
             player.respawnTime = otherPlayer.respawnTime;
             player.team = otherPlayer.team;
 
+            Character oldCharacter = null;
+            if (players.get(clientName) != null)
+                oldCharacter = players.get(clientName).character;
             Character otherCharacter = otherPlayer.character;
-            if (otherCharacter == null) continue;
+            if (otherCharacter == null) {
+                player.character = null;
+                continue;
+            } else if (oldCharacter == null || oldCharacter.getClass() != otherCharacter.getClass()) {
+                player.character = charFactory(otherPlayer.charClass);
+            }
             player.character.velocity = otherCharacter.velocity;
             player.character.acceleration = otherCharacter.acceleration;
             player.character.hitbox = otherCharacter.hitbox;

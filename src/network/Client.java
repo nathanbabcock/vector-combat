@@ -18,6 +18,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -27,6 +28,8 @@ public class Client extends JFrame {
     Game game;
     String clientName;
     InputState inputState;
+    ArrayList<ChatMessage> chatQueue;
+    SpawnParams spawnParams;
     Socket server;
     ObjectOutputStream out;
     ObjectInputStream in;
@@ -56,6 +59,7 @@ public class Client extends JFrame {
         game = new Game();
         inputState = new InputState();
         messageMode = 0;
+        chatQueue = new ArrayList();
 
         initGUI();
         connectToServer(host, port);
@@ -217,7 +221,19 @@ public class Client extends JFrame {
             inputState.xhair = new Point2D(canvas.xhair.x - canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - canvas.xhair.y);
             repaint();
             try {
+                // InputState
                 out.writeObject(ObjectCloner.deepCopy(inputState));
+
+                // Chat
+                for (ChatMessage msg : chatQueue)
+                    out.writeObject(msg);
+                chatQueue = new ArrayList();
+
+                // Spawn params
+                if (spawnParams != null) {
+                    out.writeObject(spawnParams);
+                    spawnParams = null;
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -372,14 +388,8 @@ public class Client extends JFrame {
                     final Player player = game.players.get(clientName);
                     Character character = player.character;
 //                    System.out.println(player.team+", "+menu.teamSelector.selectedTeam);
-                    if (player.team != menu.teamSelector.selectedTeam || player.charClass != menu.classSelector.selectedClass) {
-                        try {
-                            out.writeObject(new SpawnParams(menu.teamSelector.selectedTeam, menu.classSelector.selectedClass));
-                            System.out.println("Spawn params sent");
-                        } catch (Exception err) {
-                            err.printStackTrace();
-                        }
-                    }
+                    if (player.team != menu.teamSelector.selectedTeam || player.charClass != menu.classSelector.selectedClass)
+                        spawnParams = new SpawnParams(menu.teamSelector.selectedTeam, menu.classSelector.selectedClass);
                 } else {
                     if (scores.open)
                         scores.close();
@@ -441,13 +451,8 @@ public class Client extends JFrame {
 
     private void sendChat() {
         String message = chat.textField.getText();
-        if (!message.equals("")) {
-            try {
-                out.writeObject(new ChatMessage(clientName, message, game.players.get(clientName).team, messageMode == 2));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        if (!message.equals(""))
+            chatQueue.add(new ChatMessage(clientName, message, game.players.get(clientName).team, messageMode == 2));
         hideChat();
     }
 
