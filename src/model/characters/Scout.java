@@ -83,7 +83,7 @@ public class Scout extends Character {
         for (int i = 0; i < NUM_PELLETS; i++) {
             Bullet bullet = new Bullet(game, getCenter().x, getCenter().y, PELLET_SIZE);
             Point2D origin = getCenter();
-            bullet.owner = player;
+            bullet.owner = player.clientName;
             bullet.velocity = new Vector2D(xhair.x - origin.x, xhair.y - origin.y);
             bullet.velocity.setMagnitude(PELLET_VELOCITY);
             bullet.velocity.x += r.nextInt((int) ((MAX_SPREAD * 2 + 1) - MAX_SPREAD));

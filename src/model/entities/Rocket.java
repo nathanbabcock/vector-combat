@@ -18,7 +18,7 @@ import java.util.Random;
  * Created by Nathan on 8/25/2015.
  */
 public class Rocket extends Entity<Circle2D> implements Serializable {
-    public Player owner; // TODO handle dis shet
+    public String owner;
     public boolean exploded;
 
     public transient static final float RADIUS = 8;
@@ -70,7 +70,7 @@ public class Rocket extends Entity<Circle2D> implements Serializable {
         }
         if (collision == null) { // characters
             for (Player player : game.players.values()) {
-                if (player == owner)
+                if (player.clientName.equals(owner))
                     continue;
                 collision = player.character.hitbox.collision(hitbox);
                 if (collision != null)
@@ -94,7 +94,7 @@ public class Rocket extends Entity<Circle2D> implements Serializable {
                 player.character.velocity.add(explosion);
 
                 // Damage
-                if (owner != player)
+                if (!owner.equals(player.clientName))
                     player.character.damage(Rocket.DAMAGE);
             }
         }

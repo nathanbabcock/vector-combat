@@ -53,7 +53,7 @@ public class Soldier extends Character {
 
         Bullet bullet = new Bullet(game, getCenter().x, getCenter().y, Bullet.SIZE);
         Point2D origin = getCenter();
-        bullet.owner = player;
+        bullet.owner = player.clientName;
         bullet.velocity = new Vector2D(xhair.x - origin.x, xhair.y - origin.y);
         bullet.velocity.setMagnitude(Bullet.VELOCITY);
         game.entities.put(UUID.randomUUID().toString(), bullet);

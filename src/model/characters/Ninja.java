@@ -168,11 +168,11 @@ public class Ninja extends Character {
             return;
 
         AABB hitbox = new AABB(getBottomLeft().x, getBottomLeft().y + 40, 80, 80);
-        if (xhair.x < getCenter().x)
-            position.x -= (80 - width);
+//        if (xhair.x < getCenter().x)
+//            position.x -= (80 - width);
 
         for (Player player : game.players.values()) {
-            if (player == this.player) continue;
+            if (player.clientName.equals(player.clientName)) continue;
             if (player.character.hitbox.collision(hitbox) != null)
                 player.character.damage(SWORD_DAMAGE);
         }
@@ -199,7 +199,7 @@ public class Ninja extends Character {
         // Spawn grapple entity for first time
         if (grapple == null) {
             grapple = new Grapple(game, getCenter().x, getCenter().y, Grapple.RADIUS);
-            grapple.owner = player;
+            grapple.owner = player.clientName;
             model.geometry.Point2D origin = getCenter();
             grapple.velocity = new Vector2D(xhair.x - origin.x, xhair.y - origin.y);
             grapple.velocity.setMagnitude(Rocket.VELOCITY);

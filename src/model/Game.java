@@ -139,8 +139,6 @@ public class Game implements Serializable {
             player.team = otherPlayer.team;
 
             Character otherCharacter = otherPlayer.character;
-//            if (player.character == null || player.character.getClass() != otherCharacter.getClass())
-//                player.character = charFactory(otherCharacter.getClass());
             player.character.velocity = otherCharacter.velocity;
             player.character.acceleration = otherCharacter.acceleration;
             player.character.hitbox = otherCharacter.hitbox;
@@ -185,8 +183,10 @@ public class Game implements Serializable {
         Player player = players.get(clientName);
         if (player.team != params.team)
             player.team = params.team;
-        if (player.getClass() != params.charClass)
+        if (player.getClass() != params.charClass) {
             player.character = charFactory(params.charClass);
+            player.character.player = player; // TODO is there a better pattern for this relationship?
+        }
     }
 
 }

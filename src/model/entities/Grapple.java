@@ -3,6 +3,7 @@ package model.entities;
 import model.Collision;
 import model.Game;
 import model.Player;
+import model.characters.Character;
 import model.characters.Ninja;
 import model.geometry.AABB;
 import model.geometry.Circle2D;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
  * Created by Nathan on 8/25/2015.
  */
 public class Grapple extends Entity<Circle2D> {
-    public Player owner;
+    public String owner;
 
     public transient static final float RADIUS = 6;
     public transient static final float VELOCITY = 500;
@@ -49,7 +50,7 @@ public class Grapple extends Entity<Circle2D> {
         }
         if (collision == null) { // characters
             for (Player player : game.players.values()) {
-                if (player.clientName.equals(owner.clientName))
+                if (player.clientName.equals(owner))
                     continue;
                 collision = player.character.hitbox.collision(hitbox);
                 if (collision != null)
@@ -63,7 +64,7 @@ public class Grapple extends Entity<Circle2D> {
     public void handleCollision(Collision collision) {
 //        game.garbage.add(this);
         velocity = new Vector2D(0, 0);
-        Ninja owner = (Ninja) this.owner.character;
+        Ninja owner = (Ninja) game.players.get(this.owner).character;
         owner.grapplePoints = new ArrayList();
         owner.grapplePoints.add(getCenter());
 
@@ -91,7 +92,8 @@ public class Grapple extends Entity<Circle2D> {
         int y = (int) (canvas.HEIGHT - canvas.cameraOffsetY - getBottomLeft().y - 2 * hitbox.radius);
         int size = (int) (2 * hitbox.radius);
         g2.fillOval(x, y, size, size);
-        g2.drawLine((int) owner.character.getCenter().x + canvas.cameraOffsetX, (int) (canvas.getHeight() - canvas.cameraOffsetY - owner.character.getCenter().y), (int) getCenter().x + canvas.cameraOffsetX, (int) (canvas.getHeight() - canvas.cameraOffsetY - getCenter().y));
+        Character character = game.players.get(this.owner).character;
+        g2.drawLine((int) character.getCenter().x + canvas.cameraOffsetX, (int) (canvas.getHeight() - canvas.cameraOffsetY - character.getCenter().y), (int) getCenter().x + canvas.cameraOffsetX, (int) (canvas.getHeight() - canvas.cameraOffsetY - getCenter().y));
     }
 
 }
