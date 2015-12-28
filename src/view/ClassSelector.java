@@ -29,7 +29,6 @@ public class ClassSelector extends JPanel {
                 new JTextField("Scout")
         };
         classes = new Class[]{Rocketman.class, Ninja.class, Soldier.class, Scout.class};
-        selectedClass = Rocketman.class;
 
         for (int i = 0; i < classes.length; i++) {
             final Class newClass = classes[i];

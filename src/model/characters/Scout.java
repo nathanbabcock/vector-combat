@@ -28,6 +28,7 @@ public class Scout extends Character {
 
         extraJump = true;
         attackInterval = 1f;
+        moveSpeed = 300f;
     }
 
     @Override

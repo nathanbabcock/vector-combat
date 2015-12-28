@@ -97,6 +97,7 @@ public class Client extends JFrame {
         // Menu
         menu = new MenuPanel();
         lp.add(menu, LAYER_OVERLAY);
+        menu.open();
 
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -211,7 +212,7 @@ public class Client extends JFrame {
             }
 
             // Update model
-            game.update(OPTIMAL_TIME / 1000000000f);
+//            game.update(OPTIMAL_TIME / 1000000000f);
             updateUI();
             inputState.xhair = new Point2D(canvas.xhair.x - canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - canvas.xhair.y);
             repaint();
@@ -371,9 +372,10 @@ public class Client extends JFrame {
                     final Player player = game.players.get(clientName);
                     Character character = player.character;
 //                    System.out.println(player.team+", "+menu.teamSelector.selectedTeam);
-                    if (player.team != menu.teamSelector.selectedTeam || character.getClass() != menu.classSelector.selectedClass) {
+                    if (player.team != menu.teamSelector.selectedTeam || player.charClass != menu.classSelector.selectedClass) {
                         try {
                             out.writeObject(new SpawnParams(menu.teamSelector.selectedTeam, menu.classSelector.selectedClass));
+                            System.out.println("Spawn params sent");
                         } catch (Exception err) {
                             err.printStackTrace();
                         }

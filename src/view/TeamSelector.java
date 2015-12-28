@@ -19,9 +19,6 @@ public class TeamSelector extends JPanel {
     public Team selectedTeam;
 
     public TeamSelector() {
-        // Instance vars
-        selectedTeam = Team.BLUE;
-
         // JPanel parameters
         setOpaque(false);
         setVisible(true);
@@ -90,12 +87,11 @@ public class TeamSelector extends JPanel {
     }
 
     private void updateHighlight() {
-        if (selectedTeam == Team.RED) {
+        blue.setBackground(DEFAULT);
+        red.setBackground(DEFAULT);
+        if (selectedTeam == Team.RED)
             red.setBackground(RED_HIGHLIGHT);
-            blue.setBackground(DEFAULT);
-        } else {
+        else if (selectedTeam == Team.BLUE)
             blue.setBackground(BLUE_HIGHLIGHT);
-            red.setBackground(DEFAULT);
-        }
     }
 }

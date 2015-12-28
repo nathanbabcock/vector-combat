@@ -2,9 +2,6 @@ package network;
 
 import model.Game;
 import model.Player;
-import model.characters.Character;
-import model.characters.Rocketman;
-import model.characters.Team;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -76,17 +73,13 @@ public class Server {
                     // spawn a thread to handle communication with this client
                     new Thread(new ClientHandler(input, clientName)).start();
 
-                    // spawn player
-                    Player player = new Player();
-                    Character character = new Rocketman(game);
-//                    character.hitbox.position = new Point2D(400, 850);
-                    player.team = Team.BLUE;
+                    // init player
+                    Player player = new Player(game);
                     player.clientName = clientName;
-                    character.player = player;
-                    player.character = character;
                     game.players.put(clientName, player);
 
-
+                    // print message
+                    // TODO add to chat
                     System.out.println(clientName + " connected");
                 }
             } catch (Exception e) {
@@ -118,9 +111,12 @@ public class Server {
                         input.close();
                         return;
                     } else if (received instanceof InputState) {
-                        game.players.get(clientName).character.importState((InputState) received);
+                        if (game.players.get(clientName).character != null)
+                            game.players.get(clientName).character.importState((InputState) received);
                     } else if (received instanceof SpawnParams) {
-                        game.importSpawnParams(clientName, (SpawnParams) received);
+                        Player player = game.players.get(clientName);
+                        player.importSpawnParams((SpawnParams) received);
+                        if (player.character != null) player.kill();
                     } else if (received instanceof ChatMessage) {
                         ChatMessage msg = (ChatMessage) received;
                         System.out.println(msg.player + ": " + msg.content);
@@ -139,7 +135,7 @@ public class Server {
                     }*/
                 }
             } catch (Exception e) {
-                // e.printStackTrace();
+                e.printStackTrace();
             }
         }
     }

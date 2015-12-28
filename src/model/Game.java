@@ -6,7 +6,6 @@ import model.entities.Bullet;
 import model.entities.Entity;
 import model.particles.Particle;
 import network.ChatMessage;
-import network.SpawnParams;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -30,6 +29,7 @@ public class Game implements Serializable {
     public transient Map map;
 
     public transient static final float gravity = -400;
+    public transient static final int respawn_time = 5;
 
     public transient float time = 0;
 
@@ -79,7 +79,9 @@ public class Game implements Serializable {
 
         // Players
         for (Player player : players.values()) // Update characters
-            player.character.update(deltaTime);
+            player.update(deltaTime);
+//            if(player.character != null)
+//                player.character.update(deltaTime);
 
         // Entities
         for (Entity entity : entities.values())
@@ -106,6 +108,8 @@ public class Game implements Serializable {
     }
 
     private Character charFactory(Class charClass) {
+        if (charClass == null)
+            return null;
         if (charClass.equals(Rocketman.class))
             return new Rocketman(this);
         if (charClass.equals(Ninja.class))
@@ -124,11 +128,12 @@ public class Game implements Serializable {
         for (java.util.Map.Entry<String, Player> entry : other.players.entrySet()) {
             String clientName = entry.getKey();
             Player otherPlayer = entry.getValue();
-            if (players.containsKey(clientName) && players.get(clientName).character.getClass() == otherPlayer.character.getClass())
+            if (players.containsKey(clientName) && players.get(clientName).charClass == otherPlayer.charClass)
                 newPlayers.put(clientName, players.get(clientName));
             else {
                 newPlayers.put(clientName, otherPlayer);
-                newPlayers.get(clientName).character = charFactory(otherPlayer.character.getClass());
+                if (otherPlayer.character != null)
+                    newPlayers.get(clientName).character = charFactory(otherPlayer.charClass);
             }
 
             Player player = newPlayers.get(clientName);
@@ -139,11 +144,13 @@ public class Game implements Serializable {
             player.team = otherPlayer.team;
 
             Character otherCharacter = otherPlayer.character;
+            if (otherCharacter == null) continue;
             player.character.velocity = otherCharacter.velocity;
             player.character.acceleration = otherCharacter.acceleration;
             player.character.hitbox = otherCharacter.hitbox;
             player.character.xhair = otherCharacter.xhair;
             player.character.health = otherCharacter.health;
+            player.character.dead = otherCharacter.dead;
             player.character.movingLeft = otherCharacter.movingLeft;
             player.character.movingRight = otherCharacter.movingRight;
             player.character.movingUp = otherCharacter.movingUp;
@@ -177,16 +184,6 @@ public class Game implements Serializable {
             newEntity.game = this;
         }
         entities = newEntities;
-    }
-
-    public void importSpawnParams(String clientName, SpawnParams params) {
-        Player player = players.get(clientName);
-        if (player.team != params.team)
-            player.team = params.team;
-        if (player.getClass() != params.charClass) {
-            player.character = charFactory(params.charClass);
-            player.character.player = player; // TODO is there a better pattern for this relationship?
-        }
     }
 
 }

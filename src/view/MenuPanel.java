@@ -25,13 +25,13 @@ public class MenuPanel extends JPanel {
     }
 
     public void open() {
-        System.out.println("opening menu");
+//        System.out.println("opening menu");
         open = true;
         setVisible(true);
     }
 
     public void close() {
-        System.out.println("closing menu");
+//        System.out.println("closing menu");
         open = false;
         setVisible(false);
     }

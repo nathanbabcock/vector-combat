@@ -42,7 +42,7 @@ abstract public class Character extends Entity<AABB> implements Serializable {
 
     public Character(Game game) {
         super(game, new AABB(0, 0, 24, 80));
-        position = hitbox.position = new Point2D(400, 850);
+        position = hitbox.position;// = new Point2D(400, 850);
         width = hitbox.width;
         height = hitbox.height;
         xhair = new Point2D(0, 0);
@@ -139,10 +139,8 @@ abstract public class Character extends Entity<AABB> implements Serializable {
     }
 
     private void checkHealth() {
-        if (health <= 0) {
-            game.garbage.add(this);
-            dead = true;
-        }
+        if (health <= 0)
+            player.kill();
     }
 
     public void generateBloodParticles() {

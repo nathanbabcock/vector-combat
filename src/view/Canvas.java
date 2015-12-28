@@ -11,7 +11,6 @@ import model.particles.Particle;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.util.Map;
 
 /**
  * Created by Nathan on 8/19/2015.
@@ -67,8 +66,8 @@ public class Canvas extends JPanel {
             g2.fillRect((int) b.getBottomLeft().x + cameraOffsetX, (int) (getHeight() - cameraOffsetY - b.getBottomLeft().y - b.height), (int) (b.width), (int) (b.height));
 
         // Players
-        for (Map.Entry<String, Player> entry : game.players.entrySet())
-            entry.getValue().character.draw(this, g2, entry.getKey());
+        for (Player player : game.players.values())
+            if (player.character != null) player.character.draw(this, g2, player.clientName);
 
         // Particles
         for (Particle particle : game.particles)
@@ -122,7 +121,7 @@ public class Canvas extends JPanel {
     }
 
     private void calculateCameraOffset() {
-        if (game.players.get(clientName) == null) return;
+        if (game.players.get(clientName) == null || game.players.get(clientName).character == null) return;
 
         Character character = game.players.get(clientName).character;
         cameraOffsetX = (int) (-character.getCenter().x + ((getWidth() / 2) - (character.width / 2)));

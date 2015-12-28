@@ -100,7 +100,7 @@ public class ScorePanel extends JPanel {
     }
 
     public void update() {
-        System.out.println("Updating score");
+//        System.out.println("Updating score");
 
         // Header
         for (JPanel players : new JPanel[]{blue.players, red.players}) {
@@ -124,7 +124,7 @@ public class ScorePanel extends JPanel {
             row.deaths.setText(player.deaths + "");
             if (player.team == Team.BLUE)
                 blue.players.add(row);
-            else
+            else if (player.team == Team.RED)
                 red.players.add(row);
         }
 
