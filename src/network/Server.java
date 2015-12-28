@@ -1,9 +1,10 @@
 package network;
 
 import model.Game;
-import model.players.Player;
-import model.players.Rocketman;
-import model.players.Team;
+import model.Player;
+import model.characters.Character;
+import model.characters.Rocketman;
+import model.characters.Team;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -76,9 +77,13 @@ public class Server {
                     new Thread(new ClientHandler(input, clientName)).start();
 
                     // spawn player
-                    Player player = new Rocketman(game);
-//                    player.hitbox.position = new Point2D(400, 850);
+                    Player player = new Player();
+                    Character character = new Rocketman(game);
+//                    character.hitbox.position = new Point2D(400, 850);
                     player.team = Team.BLUE;
+                    player.clientName = clientName;
+                    character.player = player;
+                    player.character = character;
                     game.players.put(clientName, player);
 
 
@@ -113,7 +118,7 @@ public class Server {
                         input.close();
                         return;
                     } else if (received instanceof InputState) {
-                        game.players.get(clientName).importState((InputState) received);
+                        game.players.get(clientName).character.importState((InputState) received);
                     } else if (received instanceof SpawnParams) {
                         game.importSpawnParams(clientName, (SpawnParams) received);
                     } else if (received instanceof ChatMessage) {

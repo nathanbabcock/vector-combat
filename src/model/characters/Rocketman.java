@@ -1,4 +1,4 @@
-package model.players;
+package model.characters;
 
 import model.Game;
 import model.Sprite;
@@ -14,7 +14,7 @@ import java.util.UUID;
 /**
  * Created by Nathan on 8/31/2015.
  */
-public class Rocketman extends Player {
+public class Rocketman extends Character {
     public Rocketman(Game game) {
         super(game);
         attackInterval = 1.0f;
@@ -46,7 +46,7 @@ public class Rocketman extends Player {
             return;
 
         Rocket rocket = new Rocket(game, getCenter().x, getCenter().y, Rocket.RADIUS);
-        rocket.owner = this;
+        rocket.owner = player;
         Point2D origin = getCenter();
         rocket.velocity = new Vector2D(xhair.x - origin.x, xhair.y - origin.y);
         rocket.velocity.setMagnitude(Rocket.VELOCITY);

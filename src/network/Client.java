@@ -1,8 +1,9 @@
 package network;
 
 import model.Game;
+import model.Player;
+import model.characters.Character;
 import model.geometry.Point2D;
-import model.players.Player;
 import view.Canvas;
 import view.ChatPanel;
 import view.MenuPanel;
@@ -367,9 +368,10 @@ public class Client extends JFrame {
                     hideChat();
                 else if (menu.open) {
                     menu.close();
-                    Player player = game.players.get(clientName);
+                    final Player player = game.players.get(clientName);
+                    Character character = player.character;
 //                    System.out.println(player.team+", "+menu.teamSelector.selectedTeam);
-                    if (player.team != menu.teamSelector.selectedTeam || player.getClass() != menu.classSelector.selectedClass) {
+                    if (player.team != menu.teamSelector.selectedTeam || character.getClass() != menu.classSelector.selectedClass) {
                         try {
                             out.writeObject(new SpawnParams(menu.teamSelector.selectedTeam, menu.classSelector.selectedClass));
                         } catch (Exception err) {
@@ -473,7 +475,7 @@ public class Client extends JFrame {
         // Health
         int hp;
         try {
-            hp = game.players.get(clientName).health;
+            hp = game.players.get(clientName).character.health;
         } catch (NullPointerException e) {
             hp = 0;
         }

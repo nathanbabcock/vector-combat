@@ -1,9 +1,9 @@
 package view;
 
-import model.players.Ninja;
-import model.players.Rocketman;
-import model.players.Scout;
-import model.players.Soldier;
+import model.characters.Ninja;
+import model.characters.Rocketman;
+import model.characters.Scout;
+import model.characters.Soldier;
 
 import javax.swing.*;
 import java.awt.*;

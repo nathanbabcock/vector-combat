@@ -2,11 +2,11 @@ package model.entities;
 
 import model.Collision;
 import model.Game;
+import model.Player;
+import model.characters.Ninja;
 import model.geometry.AABB;
 import model.geometry.Circle2D;
 import model.geometry.Vector2D;
-import model.players.Ninja;
-import model.players.Player;
 import view.Canvas;
 
 import java.awt.*;
@@ -47,11 +47,11 @@ public class Grapple extends Entity<Circle2D> {
             if (collision != null)
                 break;
         }
-        if (collision == null) { // players
+        if (collision == null) { // characters
             for (Player player : game.players.values()) {
-                if (player == owner)
+                if (player.clientName.equals(owner.clientName))
                     continue;
-                collision = player.hitbox.collision(hitbox);
+                collision = player.character.hitbox.collision(hitbox);
                 if (collision != null)
                     break;
             }
@@ -63,11 +63,11 @@ public class Grapple extends Entity<Circle2D> {
     public void handleCollision(Collision collision) {
 //        game.garbage.add(this);
         velocity = new Vector2D(0, 0);
-        Ninja owner = (Ninja) this.owner;
+        Ninja owner = (Ninja) this.owner.character;
         owner.grapplePoints = new ArrayList();
         owner.grapplePoints.add(getCenter());
 
-//        for (Player player : game.players) {
+//        for (Player player : game.characters) {
 //            float distance = player.position.distance(position);
 //            if (distance <= Grapple.EXPLOSION_RADIUS) {
 //                // Knockback
@@ -91,7 +91,7 @@ public class Grapple extends Entity<Circle2D> {
         int y = (int) (canvas.HEIGHT - canvas.cameraOffsetY - getBottomLeft().y - 2 * hitbox.radius);
         int size = (int) (2 * hitbox.radius);
         g2.fillOval(x, y, size, size);
-        g2.drawLine((int) owner.getCenter().x + canvas.cameraOffsetX, (int) (canvas.getHeight() - canvas.cameraOffsetY - owner.getCenter().y), (int) getCenter().x + canvas.cameraOffsetX, (int) (canvas.getHeight() - canvas.cameraOffsetY - getCenter().y));
+        g2.drawLine((int) owner.character.getCenter().x + canvas.cameraOffsetX, (int) (canvas.getHeight() - canvas.cameraOffsetY - owner.character.getCenter().y), (int) getCenter().x + canvas.cameraOffsetX, (int) (canvas.getHeight() - canvas.cameraOffsetY - getCenter().y));
     }
 
 }

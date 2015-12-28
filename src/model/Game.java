@@ -1,8 +1,10 @@
 package model;
 
+import model.characters.Character;
+import model.characters.*;
+import model.entities.Bullet;
 import model.entities.Entity;
 import model.particles.Particle;
-import model.players.*;
 import network.ChatMessage;
 import network.SpawnParams;
 
@@ -76,8 +78,8 @@ public class Game implements Serializable {
 //        System.out.println("t = " + time + ", pos = " + player.position + ", v = (" + player.velocity.x + ", " + player.velocity.y + "), a = (" + player.acceleration.x + ", " + player.acceleration.y + ")");
 
         // Players
-        for (Player player : players.values()) // Update players
-            player.update(deltaTime);
+        for (Player player : players.values()) // Update characters
+            player.character.update(deltaTime);
 
         // Entities
         for (Entity entity : entities.values())
@@ -96,53 +98,65 @@ public class Game implements Serializable {
             /*boolean b;
             if (trash instanceof String) {
                 String key = (String) trash;
-                b = players.remove(key) != null || entities.remove(key) != null;
+                b = characters.remove(key) != null || entities.remove(key) != null;
             } else
                 */
             boolean b = players.values().remove(trash) || entities.values().remove(trash) || particles.remove(trash);
         }
     }
 
-    private Player playerFactory(Class playerClass) {
-        if (playerClass.equals(Rocketman.class))
+    private Character charFactory(Class charClass) {
+        if (charClass.equals(Rocketman.class))
             return new Rocketman(this);
-        if (playerClass.equals(Ninja.class))
+        if (charClass.equals(Ninja.class))
             return new Ninja(this);
-        if (playerClass.equals(Soldier.class))
+        if (charClass.equals(Soldier.class))
             return new Soldier(this);
-        if (playerClass.equals(Scout.class))
+        if (charClass.equals(Scout.class))
             return new Scout(this);
         return null;
     }
 
     // TODO someday optimize this, as well as the weight of the gamestate other being passed over network
     public void importGame(Game other) {
-        // Add/merge (players)
+        // Add/merge (characters)
         HashMap<String, Player> newPlayers = new HashMap();
         for (java.util.Map.Entry<String, Player> entry : other.players.entrySet()) {
-            String key = entry.getKey();
-            if (players.containsKey(key) && players.get(key).getClass() == entry.getValue().getClass())
-                newPlayers.put(key, players.get(key));
-            else
-                newPlayers.put(key, playerFactory(entry.getValue().getClass()));
-            Player player = newPlayers.get(key);
+            String clientName = entry.getKey();
             Player otherPlayer = entry.getValue();
+            if (players.containsKey(clientName) && players.get(clientName).character.getClass() == otherPlayer.character.getClass())
+                newPlayers.put(clientName, players.get(clientName));
+            else {
+                newPlayers.put(clientName, otherPlayer);
+                newPlayers.get(clientName).character = charFactory(otherPlayer.character.getClass());
+            }
 
-            player.velocity = otherPlayer.velocity;
-            player.hitbox = otherPlayer.hitbox;
-            player.xhair = otherPlayer.xhair;
-            player.health = otherPlayer.health;
-            player.movingLeft = otherPlayer.movingLeft;
-            player.movingRight = otherPlayer.movingRight;
-            player.movingUp = otherPlayer.movingUp;
-            player.movingDown = otherPlayer.movingDown;
-            player.attacking = otherPlayer.attacking;
-            player.altAttacking = otherPlayer.altAttacking;
-            player.onGround = otherPlayer.onGround;
-            player.wallLeft = otherPlayer.wallLeft;
-            player.wallRight = otherPlayer.wallRight;
+            Player player = newPlayers.get(clientName);
+            player.clientName = otherPlayer.clientName;
+            player.kills = otherPlayer.kills;
+            player.deaths = otherPlayer.deaths;
+            player.respawnTime = otherPlayer.respawnTime;
             player.team = otherPlayer.team;
-            player.game = this;
+
+            Character otherCharacter = otherPlayer.character;
+//            if (player.character == null || player.character.getClass() != otherCharacter.getClass())
+//                player.character = charFactory(otherCharacter.getClass());
+            player.character.velocity = otherCharacter.velocity;
+            player.character.acceleration = otherCharacter.acceleration;
+            player.character.hitbox = otherCharacter.hitbox;
+            player.character.xhair = otherCharacter.xhair;
+            player.character.health = otherCharacter.health;
+            player.character.movingLeft = otherCharacter.movingLeft;
+            player.character.movingRight = otherCharacter.movingRight;
+            player.character.movingUp = otherCharacter.movingUp;
+            player.character.movingDown = otherCharacter.movingDown;
+            player.character.attacking = otherCharacter.attacking;
+            player.character.altAttacking = otherCharacter.altAttacking;
+            player.character.onGround = otherCharacter.onGround;
+            player.character.wallLeft = otherCharacter.wallLeft;
+            player.character.wallRight = otherCharacter.wallRight;
+            player.character.player = player;
+            player.character.game = this;
         }
         players = newPlayers;
 
@@ -157,6 +171,9 @@ public class Game implements Serializable {
             Entity newEntity = newEntities.get(key);
             Entity otherEntity = entry.getValue();
 
+            if (newEntity instanceof Bullet)
+                ((Bullet) newEntity).owner = ((Bullet) otherEntity).owner;
+
             newEntity.velocity = otherEntity.velocity;
             newEntity.hitbox = otherEntity.hitbox;
             newEntity.game = this;
@@ -168,10 +185,8 @@ public class Game implements Serializable {
         Player player = players.get(clientName);
         if (player.team != params.team)
             player.team = params.team;
-        if (player.getClass() != params.charClass) {
-            players.remove(clientName);
-            players.put(clientName, playerFactory(params.charClass));
-        }
+        if (player.getClass() != params.charClass)
+            player.character = charFactory(params.charClass);
     }
 
 }

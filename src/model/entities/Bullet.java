@@ -2,10 +2,11 @@ package model.entities;
 
 import model.Collision;
 import model.Game;
+import model.Player;
+import model.characters.Character;
 import model.geometry.AABB;
 import model.geometry.Vector2D;
 import model.particles.Particle;
-import model.players.Player;
 import view.Canvas;
 
 import java.awt.*;
@@ -34,10 +35,10 @@ public class Bullet extends Entity<AABB> implements Serializable {
             if (collision != null)
                 break;
         }
-        if (collision == null) { // players
+        if (collision == null) { // characters
             for (Player player : game.players.values()) {
-                if (player == owner) continue;
-                collision = player.hitbox.collision(hitbox);
+                if (owner == null || player.clientName.equals(owner.clientName)) continue;
+                collision = player.character.hitbox.collision(hitbox);
                 if (collision != null) {
                     collision.collider = player;
                     break;
@@ -51,9 +52,9 @@ public class Bullet extends Entity<AABB> implements Serializable {
     public void handleCollision(Collision collision) {
         game.garbage.add(this);
 
-        if (collision.collider instanceof Player) {
+        if (collision.collider instanceof Character) {
             // Damage
-            Player player = (Player) collision.collider;
+            Character player = (Character) collision.collider;
             player.damage(Bullet.DAMAGE);
 
             // Knockback
@@ -64,7 +65,7 @@ public class Bullet extends Entity<AABB> implements Serializable {
             // Particles
             generateImpactParticles();
         }
-//        for (Player player : game.players) {
+//        for (Player player : game.characters) {
 //            float distance = player.position.distance(position);
 //            if (distance <= Bullet.EXPLOSION_RADIUS) {
 //                // Knockback

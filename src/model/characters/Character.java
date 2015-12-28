@@ -1,7 +1,8 @@
-package model.players;
+package model.characters;
 
 import model.Collision;
 import model.Game;
+import model.Player;
 import model.Sprite;
 import model.entities.Entity;
 import model.geometry.AABB;
@@ -18,18 +19,16 @@ import java.util.Random;
 /**
  * Created by Nathan on 8/19/2015.
  */
-abstract public class Player extends Entity<AABB> implements Serializable {
+abstract public class Character extends Entity<AABB> implements Serializable {
     // Constants
     public transient Float moveSpeed = 200f;
     public transient Float jumpVelocity = 300f;
     public transient Float attackInterval = 1.0f;
 
-    public Team team;
+    public transient Player player;
     public Point2D xhair;
     public int health;
     public float currentAttackDelay;
-    public int kills;
-    public int deaths;
 
     // States, written to by controls and read from for sprites
     public boolean movingLeft, movingRight, movingUp, movingDown, attacking, altAttacking, dead, onGround, wallLeft, wallRight;
@@ -41,15 +40,13 @@ abstract public class Player extends Entity<AABB> implements Serializable {
     public final Point2D position;
     public final float width, height;
 
-    public Player(Game game) {
+    public Character(Game game) {
         super(game, new AABB(0, 0, 24, 80));
         position = hitbox.position = new Point2D(400, 850);
         width = hitbox.width;
         height = hitbox.height;
         xhair = new Point2D(0, 0);
         health = 200;
-        kills = 0;
-        deaths = 0;
         updateSprite(0);
     }
 
@@ -202,9 +199,9 @@ abstract public class Player extends Entity<AABB> implements Serializable {
         int playerHeight = sprite.height;
         final int fontSize = 12;
         g2.setFont(new Font("Lucida Sans", Font.PLAIN, fontSize));
-        if (team == Team.BLUE)
+        if (player.team == Team.BLUE)
             g2.setColor(Color.BLUE);
-        else if (team == Team.RED)
+        else if (player.team == Team.RED)
             g2.setColor(Color.RED);
         else
             g2.setColor(Color.BLACK);

@@ -1,4 +1,4 @@
-package model.players;
+package model.characters;
 
 /**
  * Created by Nathan on 9/19/2015.

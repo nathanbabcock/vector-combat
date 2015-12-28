@@ -1,6 +1,6 @@
 package network;
 
-import model.players.Team;
+import model.characters.Team;
 
 import java.io.Serializable;
 import java.util.Date;

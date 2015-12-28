@@ -1,4 +1,4 @@
-package model.players;
+package model.characters;
 
 import model.Game;
 import model.Sprite;
@@ -17,7 +17,7 @@ import java.util.UUID;
 /**
  * Created by Nathan on 8/31/2015.
  */
-public class Soldier extends Player {
+public class Soldier extends Character {
     public float jetpackVelocity = 250f;
 
     public Soldier(Game game) {
@@ -53,7 +53,7 @@ public class Soldier extends Player {
 
         Bullet bullet = new Bullet(game, getCenter().x, getCenter().y, Bullet.SIZE);
         Point2D origin = getCenter();
-        bullet.owner = this;
+        bullet.owner = player;
         bullet.velocity = new Vector2D(xhair.x - origin.x, xhair.y - origin.y);
         bullet.velocity.setMagnitude(Bullet.VELOCITY);
         game.entities.put(UUID.randomUUID().toString(), bullet);

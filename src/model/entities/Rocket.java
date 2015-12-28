@@ -2,12 +2,12 @@ package model.entities;
 
 import model.Collision;
 import model.Game;
+import model.Player;
 import model.geometry.AABB;
 import model.geometry.Circle2D;
 import model.geometry.Vector2D;
 import model.particles.Fire;
 import model.particles.Particle;
-import model.players.Player;
 import view.Canvas;
 
 import java.awt.*;
@@ -68,11 +68,11 @@ public class Rocket extends Entity<Circle2D> implements Serializable {
             if (collision != null)
                 break;
         }
-        if (collision == null) { // players
+        if (collision == null) { // characters
             for (Player player : game.players.values()) {
                 if (player == owner)
                     continue;
-                collision = player.hitbox.collision(hitbox);
+                collision = player.character.hitbox.collision(hitbox);
                 if (collision != null)
                     break;
             }
@@ -85,17 +85,17 @@ public class Rocket extends Entity<Circle2D> implements Serializable {
         game.garbage.add(this);
 
         for (Player player : game.players.values()) {
-            float distance = player.hitbox.position.distance(getCenter());
+            float distance = player.character.hitbox.position.distance(getCenter());
             if (distance <= Rocket.EXPLOSION_RADIUS) {
                 // Knockback
-                Vector2D explosion = new Vector2D(player.getCenter().x - getCenter().x, player.getCenter().y - getCenter().y);
+                Vector2D explosion = new Vector2D(player.character.getCenter().x - getCenter().x, player.character.getCenter().y - getCenter().y);
                 // TODO scale damage and knockback with distance
                 explosion.setMagnitude(300f);
-                player.velocity.add(explosion);
+                player.character.velocity.add(explosion);
 
                 // Damage
                 if (owner != player)
-                    player.damage(Rocket.DAMAGE);
+                    player.character.damage(Rocket.DAMAGE);
             }
         }
 

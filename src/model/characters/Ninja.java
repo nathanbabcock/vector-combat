@@ -1,6 +1,7 @@
-package model.players;
+package model.characters;
 
 import model.Game;
+import model.Player;
 import model.entities.Grapple;
 import model.entities.Rocket;
 import model.geometry.AABB;
@@ -15,7 +16,7 @@ import java.util.UUID;
 /**
  * Created by Nathan on 8/31/2015.
  */
-public class Ninja extends Player {
+public class Ninja extends Character {
     public Grapple grapple;
     public ArrayList<model.geometry.Point2D> grapplePoints;
 
@@ -171,9 +172,9 @@ public class Ninja extends Player {
             position.x -= (80 - width);
 
         for (Player player : game.players.values()) {
-            if (player == this) continue;
-            if (player.hitbox.collision(hitbox) != null)
-                player.damage(SWORD_DAMAGE);
+            if (player == this.player) continue;
+            if (player.character.hitbox.collision(hitbox) != null)
+                player.character.damage(SWORD_DAMAGE);
         }
         currentAttackDelay = attackInterval;
     }
@@ -198,7 +199,7 @@ public class Ninja extends Player {
         // Spawn grapple entity for first time
         if (grapple == null) {
             grapple = new Grapple(game, getCenter().x, getCenter().y, Grapple.RADIUS);
-            grapple.owner = this;
+            grapple.owner = player;
             model.geometry.Point2D origin = getCenter();
             grapple.velocity = new Vector2D(xhair.x - origin.x, xhair.y - origin.y);
             grapple.velocity.setMagnitude(Rocket.VELOCITY);

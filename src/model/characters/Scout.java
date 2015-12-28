@@ -1,4 +1,4 @@
-package model.players;
+package model.characters;
 
 import model.Game;
 import model.Sprite;
@@ -16,7 +16,7 @@ import java.util.UUID;
 /**
  * Created by Nathan on 8/31/2015.
  */
-public class Scout extends Player {
+public class Scout extends Character {
     public final float maxJumpDelay = 0.25f;
     public final float wallVelocity = -50f;
 
@@ -83,7 +83,7 @@ public class Scout extends Player {
         for (int i = 0; i < NUM_PELLETS; i++) {
             Bullet bullet = new Bullet(game, getCenter().x, getCenter().y, PELLET_SIZE);
             Point2D origin = getCenter();
-            bullet.owner = this;
+            bullet.owner = player;
             bullet.velocity = new Vector2D(xhair.x - origin.x, xhair.y - origin.y);
             bullet.velocity.setMagnitude(PELLET_VELOCITY);
             bullet.velocity.x += r.nextInt((int) ((MAX_SPREAD * 2 + 1) - MAX_SPREAD));

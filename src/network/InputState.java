@@ -1,7 +1,7 @@
 package network;
 
+import model.characters.Character;
 import model.geometry.Point2D;
-import model.players.Player;
 
 import java.io.Serializable;
 
@@ -16,7 +16,7 @@ public class InputState implements Serializable {
         xhair = new Point2D(0, 0);
     }
 
-    InputState(Player player) {
+    InputState(Character player) {
         movingLeft = player.movingLeft;
         movingRight = player.movingRight;
         movingUp = player.movingUp;

@@ -1,8 +1,8 @@
 package view;
 
 import model.Game;
-import model.players.Player;
-import model.players.Team;
+import model.Player;
+import model.characters.Team;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
