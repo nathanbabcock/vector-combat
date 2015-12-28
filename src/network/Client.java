@@ -216,7 +216,7 @@ public class Client extends JFrame {
             }
 
             // Update model
-//            game.update(OPTIMAL_TIME / 1000000000f);
+            game.update(OPTIMAL_TIME / 1000000000f);
             updateUI();
             inputState.xhair = new Point2D(canvas.xhair.x - canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - canvas.xhair.y);
             repaint();

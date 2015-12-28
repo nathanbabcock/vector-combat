@@ -70,7 +70,7 @@ public class Rocket extends Entity<Circle2D> implements Serializable {
         }
         if (collision == null) { // characters
             for (Player player : game.players.values()) {
-                if (player.clientName.equals(owner))
+                if (player.clientName.equals(owner) || player.character == null)
                     continue;
                 collision = player.character.hitbox.collision(hitbox);
                 if (collision != null)
@@ -85,6 +85,7 @@ public class Rocket extends Entity<Circle2D> implements Serializable {
         game.garbage.add(this);
 
         for (Player player : game.players.values()) {
+            if (player.character == null) continue;
             float distance = player.character.hitbox.position.distance(getCenter());
             if (distance <= Rocket.EXPLOSION_RADIUS) {
                 // Knockback

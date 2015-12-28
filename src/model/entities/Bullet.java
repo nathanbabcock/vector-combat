@@ -37,10 +37,10 @@ public class Bullet extends Entity<AABB> implements Serializable {
         }
         if (collision == null) { // characters
             for (Player player : game.players.values()) {
-                if (owner == null || player.clientName.equals(owner)) continue;
+                if (owner == null || player.clientName.equals(owner) || player.character == null) continue;
                 collision = player.character.hitbox.collision(hitbox);
                 if (collision != null) {
-                    collision.collider = player;
+                    collision.collider = player.character;
                     break;
                 }
             }

@@ -139,6 +139,7 @@ public class Game implements Serializable {
             player.deaths = otherPlayer.deaths;
             player.respawnTime = otherPlayer.respawnTime;
             player.team = otherPlayer.team;
+            player.game = this;
 
             Character oldCharacter = null;
             if (players.get(clientName) != null)
