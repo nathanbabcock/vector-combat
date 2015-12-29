@@ -37,14 +37,14 @@ abstract public class Character extends Entity<AABB> implements Serializable {
     public transient float spriteTime;
 
     // Final variables from Shape2D
-    public final Point2D position;
-    public final float width, height;
+//    public final Point2D position;
+//    public final float width, height;
 
     public Character(Game game) {
         super(game, new AABB(0, 0, 24, 80));
-        position = hitbox.position;// = new Point2D(400, 850);
-        width = hitbox.width;
-        height = hitbox.height;
+//        position = hitbox.position;// = new Point2D(400, 850);
+//        width = hitbox.width;
+//        height = hitbox.height;
         xhair = new Point2D(0, 0);
         health = 200;
         updateSprite(0);
@@ -192,7 +192,7 @@ abstract public class Character extends Entity<AABB> implements Serializable {
     public void draw(Canvas canvas, Graphics2D g2, String clientName) {
         // Draw client name
         int playerX = (int) getBottomLeft().x + canvas.cameraOffsetX;
-        int playerY = (int) (canvas.HEIGHT - canvas.cameraOffsetY - getBottomLeft().y - height);
+        int playerY = (int) (canvas.HEIGHT - canvas.cameraOffsetY - getBottomLeft().y - hitbox.height);
         int playerWidth = sprite.width;
         int playerHeight = sprite.height;
         final int fontSize = 12;

@@ -71,9 +71,9 @@ public class Player implements Serializable {
             return;
         }
         Random rand = new Random();
-        character.hitbox.position = spawns.get(rand.nextInt(spawns.size()));
+        character.hitbox.position = spawns.get(rand.nextInt(spawns.size())).copy();
 
-        // Reset respawn time
+        // Reset respawn timeg
         respawnTime = game.respawn_time;
     }
 

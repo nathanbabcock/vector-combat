@@ -76,7 +76,7 @@ public class Ninja extends Character {
                 Vector2D deltaRope = radius.copy().setMagnitude(moveSpeed).scale(deltaTime);
                 if (movingDown)
                     deltaRope.scale(-1);
-                position.translate(deltaRope);
+                hitbox.position.translate(deltaRope);
             }
 
             // Apply gravity
@@ -112,7 +112,7 @@ public class Ninja extends Character {
             velocity.setMagnitude(velocity.getMagnitude() + deltaMagnitude);*/
 
             // Finally apply velocity
-            position.translate(velocity.copy().scale(deltaTime));
+            hitbox.position.translate(velocity.copy().scale(deltaTime));
         } else
             super.applyDynamics(deltaTime);
     }
@@ -217,13 +217,13 @@ public class Ninja extends Character {
 
         // Player
         int playerX = (int) getBottomLeft().x + canvas.cameraOffsetX + sprite.offsetX;
-        int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - height - sprite.offsetY);
+        int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - hitbox.height - sprite.offsetY);
         int playerWidth = sprite.width;
         int playerHeight = sprite.height;
 
         if (xhair.x < getCenter().x) {
             playerWidth *= -1;
-            playerX += width + sprite.offsetX - 0;
+            playerX += hitbox.width + sprite.offsetX - 0;
         }
 
         g2.drawImage(sprite.image, playerX, playerY, playerWidth, playerHeight, null);

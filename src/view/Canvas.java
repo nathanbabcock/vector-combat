@@ -124,8 +124,8 @@ public class Canvas extends JPanel {
         if (game.players.get(clientName) == null || game.players.get(clientName).character == null) return;
 
         Character character = game.players.get(clientName).character;
-        cameraOffsetX = (int) (-character.getCenter().x + ((getWidth() / 2) - (character.width / 2)));
-        cameraOffsetY = (int) (-character.getCenter().y + ((getHeight() / 2) - (character.height / 2)));
+        cameraOffsetX = (int) (-character.getCenter().x + ((getWidth() / 2) - (character.hitbox.width / 2)));
+        cameraOffsetY = (int) (-character.getCenter().y + ((getHeight() / 2) - (character.hitbox.height / 2)));
 
 /*
 

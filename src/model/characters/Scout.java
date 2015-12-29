@@ -156,7 +156,7 @@ public class Scout extends Character {
             Particle particle = new Particle(game);
             particle.position = getBottomLeft().copy();
             if (wallRight)
-                particle.position.x += width;
+                particle.position.x += hitbox.width;
             int sign;
             if (r.nextBoolean())
                 sign = -1;
@@ -181,7 +181,7 @@ public class Scout extends Character {
 
         // Player
         int playerX = (int) getBottomLeft().x + canvas.cameraOffsetX + sprite.offsetX;
-        int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - height - sprite.offsetY);
+        int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - hitbox.height - sprite.offsetY);
         int playerWidth = sprite.width;
         int playerHeight = sprite.height;
 

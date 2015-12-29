@@ -111,6 +111,8 @@ public class Server {
                         input.close();
                         return;
                     } else if (received instanceof InputState) {
+                        if (game.players.get(clientName) == null)
+                            continue;
                         if (game.players.get(clientName).character != null)
                             game.players.get(clientName).character.importState((InputState) received);
                     } else if (received instanceof SpawnParams) {
