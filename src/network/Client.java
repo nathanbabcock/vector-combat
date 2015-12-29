@@ -49,10 +49,11 @@ public class Client extends JFrame {
 
     Insets insets;
     JLayeredPane lp;
-    JTextArea health;
     ChatPanel chat;
     ScorePanel scores;
     MenuPanel menu;
+    JTextArea health;
+    JTextField respawn;
 
     public Client(String host, int port, String username) {
         clientName = username;
@@ -89,6 +90,17 @@ public class Client extends JFrame {
         health.setEditable(false);
         health.setFocusable(false);
         lp.add(health, LAYER_HUD);
+
+        // Respawn HUD
+        respawn = new JTextField("Hello world");
+        respawn.setOpaque(false);
+        respawn.setEditable(false);
+        respawn.setFocusable(false);
+        respawn.setBorder(null);
+        respawn.setBackground(null);
+        respawn.setHorizontalAlignment(SwingConstants.CENTER);
+        respawn.setVisible(false);
+        lp.add(respawn, LAYER_HUD);
 
         // Chat
         chat = new ChatPanel();
@@ -128,23 +140,33 @@ public class Client extends JFrame {
         int realWidth = getRealWidth();
         int realHeight = getRealHeight();
 
+        // Chat
         final float chatWidth_relative = 0.50f;
         final float chatHeight_relative = 0.50f;
         final int chatWidth_absolute = (int) (chatWidth_relative * realWidth);
         final int chatHeight_absolute = (int) (chatHeight_relative * realHeight);
         chat.setBounds(0, realHeight - chatHeight_absolute, chatWidth_absolute, chatHeight_absolute);
 
-        final int hpWidth = 110;
-        final int hpHeight = 60;
-        health.setBounds(realWidth - hpWidth, realHeight - hpHeight, hpWidth, hpHeight);
-
+        // Scores
         final int scoresWidth = 500;
         final int scoresHeight = 400;
         scores.setBounds((int) ((realWidth - scoresWidth) / 2f), (int) ((realHeight - scoresHeight) / 2f), scoresWidth, scoresHeight);
 
+        // Pause
         final int menuWidth = 500;
         final int menuHeight = 300;
         menu.setBounds((int) ((realWidth - menuWidth) / 2f), (int) ((realHeight - menuHeight) / 2f), menuWidth, menuHeight);
+
+        // HUD
+        // Health
+        final int hpWidth = 110;
+        final int hpHeight = 60;
+        health.setBounds(realWidth - hpWidth, realHeight - hpHeight, hpWidth, hpHeight);
+
+        // Respawn timer
+        final int respawnWidth = 500;
+        final int respawnHeight = 50;
+        respawn.setBounds((int) ((realWidth - respawnWidth) / 2f), (int) ((realHeight - respawnHeight) / 2f), respawnWidth, respawnHeight);
 
         revalidate();
     }
@@ -217,7 +239,7 @@ public class Client extends JFrame {
 
             // Update model
             game.update(OPTIMAL_TIME / 1000000000f);
-            updateUI();
+            updateHUD();
             inputState.xhair = new Point2D(canvas.xhair.x - canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - canvas.xhair.y);
             repaint();
             try {
@@ -478,11 +500,13 @@ public class Client extends JFrame {
         chat.textArea.setText(chatText);
     }
 
-    private void updateUI() {
+    private void updateHUD() {
+        Player player = game.players.get(clientName);
+
         // Health
         int hp;
         try {
-            hp = game.players.get(clientName).character.health;
+            hp = player.character.health;
         } catch (NullPointerException e) {
             hp = 0;
         }
@@ -495,6 +519,14 @@ public class Client extends JFrame {
         else
             health.setForeground(Color.RED);
         health.setText(hp + "");
+
+        // Respawn
+        if (player != null && player.character == null && player.team != null && player.charClass != null) {
+            respawn.setText("Respawning in " + (int) Math.ceil(player.respawnTime) + " seconds");
+            respawn.setVisible(true);
+        } else {
+            respawn.setVisible(false);
+        }
     }
 
     /**

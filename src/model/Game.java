@@ -75,13 +75,11 @@ public class Game implements Serializable {
     public void update(float deltaTime) {
         // Debug
         time += deltaTime;
-//        System.out.println("t = " + time + ", pos = " + player.position + ", v = (" + player.velocity.x + ", " + player.velocity.y + "), a = (" + player.acceleration.x + ", " + player.acceleration.y + ")");
+//      System.out.println("t = " + time + ", pos = " + player.position + ", v = (" + player.velocity.x + ", " + player.velocity.y + "), a = (" + player.acceleration.x + ", " + player.acceleration.y + ")");
 
         // Players
         for (Player player : players.values()) // Update characters
             player.update(deltaTime);
-//            if(player.character != null)
-//                player.character.update(deltaTime);
 
         // Entities
         for (Entity entity : entities.values())
