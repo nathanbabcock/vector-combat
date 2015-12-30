@@ -32,7 +32,7 @@ public class Player implements Serializable {
 
     public void update(float delta) {
         if ((character == null || character.dead) && team != null && charClass != null) { // Waiting to spawn
-            if (respawnTime > 0)
+            if (respawnTime > 0 && game.countdown <= 0)
                 respawnTime -= delta;
             else
                 spawn();
