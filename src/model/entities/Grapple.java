@@ -28,7 +28,7 @@ public class Grapple extends Entity<Circle2D> {
 
     public void update(float deltaTime) {
         // Remove if necessary
-        if (getCenter().x > game.map.WIDTH || getCenter().y > game.map.HEIGHT || getCenter().x < 0 || getCenter().y < 0) {
+        if (getCenter().x > game.map.width || getCenter().y > game.map.height || getCenter().x < 0 || getCenter().y < 0) {
             game.garbage.add(this);
             return;
         }

@@ -81,9 +81,9 @@ public class Canvas extends JPanel {
 //        drawUI(g2);
 
        /* // Physics graphs
-        positionGraph.add(HEIGHT - player.y);
-        velocityGraph.add(HEIGHT - player.velocity.magnitude());
-        accelerationGraph.add(HEIGHT - player.acceleration.magnitude());
+        positionGraph.add(height - player.y);
+        velocityGraph.add(height - player.velocity.magnitude());
+        accelerationGraph.add(height - player.acceleration.magnitude());
         g2.setColor(Color.GREEN);
         for (int i = 0; i < positionGraph.size(); i++)
             g2.fillRect(i, positionGraph.get(i).intValue(), 2, 2); // height
@@ -97,7 +97,7 @@ public class Canvas extends JPanel {
 
     /* // Draw origin
         g2.setColor(Color.RED);
-        g2.drawRect(0, HEIGHT - 1, 1, 1);*/
+        g2.drawRect(0, height - 1, 1, 1);*/
     }
 
     private void drawUI(Graphics2D g2) {
@@ -135,8 +135,8 @@ public class Canvas extends JPanel {
             cameraOffsetX = 0;
             return;
         }
-        if (pos.x + game.characters.get(clientName).width > game.map.WIDTH - cameraMarginX) {
-            cameraOffsetX = getWidth() - game.map.WIDTH;
+        if (pos.x + game.characters.get(clientName).width > game.map.width - cameraMarginX) {
+            cameraOffsetX = getWidth() - game.map.width;
             return;
         }
 
@@ -155,8 +155,8 @@ public class Canvas extends JPanel {
             cameraOffsetY = 0;
             return;
         }
-        if (pos.y + game.characters.get(clientName).height > game.map.HEIGHT - cameraMarginX) { // Top of map
-            cameraOffsetY = getHeight() - game.map.HEIGHT;
+        if (pos.y + game.characters.get(clientName).height > game.map.height - cameraMarginX) { // Top of map
+            cameraOffsetY = getHeight() - game.map.height;
             return;
         }
 

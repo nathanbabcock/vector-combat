@@ -27,7 +27,7 @@ public class Particle {
 
     public void update(float deltaTime) {
         // Remove if necessary
-        if (position.x > game.map.WIDTH || position.y > game.map.HEIGHT || position.x < 0 || position.y < 0) {
+        if (position.x > game.map.width || position.y > game.map.height || position.x < 0 || position.y < 0) {
             game.garbage.add(this);
             return;
         }

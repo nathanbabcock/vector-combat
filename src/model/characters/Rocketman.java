@@ -59,7 +59,7 @@ public class Rocketman extends Character {
     public void draw(Canvas canvas, Graphics2D g2) {
         // Draw hitbox
 //            g2.setColor(randColor);
-//            g2.fillRect((int) player.getBottomLeft().x + cameraOffsetX, (int) (HEIGHT - cameraOffsetY - player.getBottomLeft().y - player.height), (int) player.width, (int) player.height);
+//            g2.fillRect((int) player.getBottomLeft().x + cameraOffsetX, (int) (height - cameraOffsetY - player.getBottomLeft().y - player.height), (int) player.width, (int) player.height);
 
         // Player
         int playerX = (int) getBottomLeft().x + canvas.cameraOffsetX + sprite.offsetX;

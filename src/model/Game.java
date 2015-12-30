@@ -3,6 +3,8 @@ package model;
 import model.characters.Character;
 import model.entities.Bullet;
 import model.entities.Entity;
+import model.maps.Map;
+import model.maps.Map1;
 import model.particles.Particle;
 import network.ChatMessage;
 
@@ -33,7 +35,7 @@ public class Game implements Serializable {
     public transient float time = 0;
 
     public Game() {
-        map = new Map();
+        map = new Map1();
         setupSprites();
 
         players = new HashMap();
@@ -103,20 +105,6 @@ public class Game implements Serializable {
             boolean b = players.values().remove(trash) || entities.values().remove(trash) || particles.remove(trash);
         }
     }
-
-//    private Character charFactory(Class charClass) {
-//        if (charClass == null)
-//            return null;
-//        if (charClass.equals(Rocketman.class))
-//            return new Rocketman(this);
-//        if (charClass.equals(Ninja.class))
-//            return new Ninja(this);
-//        if (charClass.equals(Soldier.class))
-//            return new Soldier(this);
-//        if (charClass.equals(Scout.class))
-//            return new Scout(this);
-//        return null;
-//    }
 
     // TODO someday optimize this, as well as the weight of the gamestate other being passed over network
     public void importGame(Game other) {

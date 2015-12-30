@@ -1,29 +1,22 @@
-package model;
+package model.maps;
 
 import model.geometry.AABB;
 import model.geometry.Point2D;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 /**
- * Created by Nathan on 8/20/2015.
+ * Created by Nathan on 12/29/2015.
  */
-public class Map {
-    public BufferedImage background;
-    public final int WIDTH = 2000;
-    public final int HEIGHT = 2000;
-    //    public ArrayList<Line2D> boundaries;
-    public ArrayList<AABB> statics;
-
-    public ArrayList<Point2D> spawnpoints_red, spawnpoints_blue;
-
-    public Map() {
+public class Map1 extends Map {
+    public Map1() {
 /*        try {
             background = ImageIO.read(new File("res/simplemap.png"));
         } catch (Exception e) {
             e.printStackTrace();
         }*/
+        width = height = 2000;
+
         statics = new ArrayList<>();
         statics.add(new AABB(0, 0, 2000, 64));
         statics.add(new AABB(0, 128, 400, 40));
