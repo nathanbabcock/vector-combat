@@ -4,7 +4,7 @@ import model.characters.Character;
 import model.entities.Bullet;
 import model.entities.Entity;
 import model.maps.Map;
-import model.maps.Map1;
+import model.maps.Map2;
 import model.particles.Particle;
 import network.ChatMessage;
 
@@ -35,7 +35,7 @@ public class Game implements Serializable {
     public transient float time = 0;
 
     public Game() {
-        map = new Map1();
+        map = new Map2();
         setupSprites();
 
         players = new HashMap();
