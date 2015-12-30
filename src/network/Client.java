@@ -184,7 +184,7 @@ public class Client extends JFrame {
         // Respawn timer
         final int respawnWidth = 500;
         final int respawnHeight = 50;
-        respawn.setBounds((int) ((realWidth - respawnWidth) / 2f), (int) ((realHeight - respawnHeight) / 2f), respawnWidth, respawnHeight);
+        respawn.setBounds((int) ((realWidth - respawnWidth) / 2f), (int) ((realHeight - respawnHeight) / 4f), respawnWidth, respawnHeight);
 
         revalidate();
     }
@@ -541,7 +541,10 @@ public class Client extends JFrame {
         health.setText(hp + "");
 
         // Respawn
-        if (player != null && player.character == null && player.team != null && player.charClass != null) {
+        if (game.countdown > 0) {
+            respawn.setText("Game starts in " + (int) Math.ceil(game.countdown) + " seconds");
+            respawn.setVisible(true);
+        } else if (player != null && player.character == null && player.team != null && player.charClass != null) {
             respawn.setText("Respawning in " + (int) Math.ceil(player.respawnTime) + " seconds");
             respawn.setVisible(true);
         } else {

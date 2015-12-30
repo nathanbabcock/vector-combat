@@ -75,7 +75,7 @@ public class Player implements Serializable {
         character.hitbox.position = spawns.get(rand.nextInt(spawns.size())).copy();
 
         // Reset respawn timeg
-        respawnTime = game.respawn_time;
+        respawnTime = game.RESPAWN_TIME;
     }
 
     public void importSpawnParams(SpawnParams other) {

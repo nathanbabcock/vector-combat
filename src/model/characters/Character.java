@@ -51,10 +51,12 @@ abstract public class Character extends Entity<AABB> implements Serializable {
 
     @Override
     public void update(float deltaTime) {
-        jump(deltaTime);
-        move(deltaTime);
-        attack(deltaTime);
-        altAttack(deltaTime);
+        if (game.countdown <= 0) {
+            jump(deltaTime);
+            move(deltaTime);
+            attack(deltaTime);
+            altAttack(deltaTime);
+        }
         checkHealth();
         applyDynamics(deltaTime);
         checkCollisions();
@@ -64,7 +66,7 @@ abstract public class Character extends Entity<AABB> implements Serializable {
     public void applyDynamics(float deltaTime) {
         // Apply gravity
         velocity.add(acceleration.copy().scale(deltaTime));
-        acceleration.y = game.gravity;
+        acceleration.y = game.GRAVITY;
 
         // Move player
         hitbox.position.displace(acceleration, velocity, deltaTime);
@@ -164,7 +166,7 @@ abstract public class Character extends Entity<AABB> implements Serializable {
             particle.growth = 0;// -15; // - (r.nextInt(5) + 10);
             particle.rotation = (float) Math.toRadians(r.nextInt(361));
             particle.velocity = new Vector2D(r.nextInt(AVG_VELOCITY * 2) - AVG_VELOCITY, r.nextInt(AVG_VELOCITY * 2) - AVG_VELOCITY);
-            particle.acceleration = new Vector2D(0, game.gravity);
+            particle.acceleration = new Vector2D(0, game.GRAVITY);
             game.particles.add(particle);
         }
     }

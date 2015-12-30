@@ -168,7 +168,7 @@ public class Scout extends Character {
             particle.growth = 0;// -15; // - (r.nextInt(5) + 10);
             particle.rotation = (float) Math.toRadians(r.nextInt(361));
             particle.velocity = new Vector2D(r.nextInt(AVG_VELOCITY * 2) - AVG_VELOCITY, r.nextInt(AVG_VELOCITY * 2) - AVG_VELOCITY);
-            particle.acceleration = new Vector2D(0, game.gravity);
+            particle.acceleration = new Vector2D(0, game.GRAVITY);
             game.particles.add(particle);
         }
     }

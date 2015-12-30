@@ -30,9 +30,11 @@ public class Game implements Serializable {
     public transient HashMap<String, Sprite> sprites;
     public transient Map map;
     public String mapID;
+    public float countdown;
 
-    public transient static final float gravity = -400;
-    public transient static final int respawn_time = 5;
+    public transient static final float GRAVITY = -400;
+    public transient static final int RESPAWN_TIME = 5;
+    public transient static final float START_COUNTDOWN = 10;
 
     public transient float time = 0;
 
@@ -44,6 +46,7 @@ public class Game implements Serializable {
         garbage = new Vector();
         particles = new Vector();
         chat = new Vector();
+        countdown = START_COUNTDOWN;
     }
 
     public void setMap(String mapID) {
@@ -93,6 +96,10 @@ public class Game implements Serializable {
         // Debug
         time += deltaTime;
 //      System.out.println("t = " + time + ", pos = " + player.position + ", v = (" + player.velocity.x + ", " + player.velocity.y + "), a = (" + player.acceleration.x + ", " + player.acceleration.y + ")");
+
+        // Countdown
+        if (countdown > 0)
+            countdown -= deltaTime;
 
         // Players
         for (Player player : players.values()) // Update characters

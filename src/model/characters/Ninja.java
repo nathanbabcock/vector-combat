@@ -78,9 +78,9 @@ public class Ninja extends Character {
                 hitbox.position.translate(deltaRope);
             }
 
-            // Apply gravity
+            // Apply GRAVITY
             velocity.add(acceleration.copy().scale(deltaTime));
-            acceleration.y = game.gravity;
+            acceleration.y = game.GRAVITY;
 
 /*            // Attempt to apply normal dynamics first
             Point2D newPos = position.copy().displace(acceleration, velocity, deltaTime);
