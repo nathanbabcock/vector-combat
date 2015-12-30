@@ -22,8 +22,9 @@ public class Player implements Serializable {
     public float respawnTime;
     public int kills, deaths;
 
-    public Player(Game game) {
+    public Player(Game game, String clientName) {
         this.game = game;
+        this.clientName = clientName;
         respawnTime = 0;
         kills = 0;
         deaths = 0;
@@ -49,13 +50,13 @@ public class Player implements Serializable {
             System.err.println("Attempting to spawn player " + clientName + " with no class chosen");
             return;
         } else if (charClass.equals(Rocketman.class))
-            character = new Rocketman(game);
+            character = new Rocketman(this);
         else if (charClass.equals(Ninja.class))
-            character = new Ninja(game);
+            character = new Ninja(this);
         else if (charClass.equals(Soldier.class))
-            character = new Soldier(game);
+            character = new Soldier(this);
         else if (charClass.equals(Scout.class))
-            character = new Scout(game);
+            character = new Scout(this);
         else
             return;
         character.player = this;

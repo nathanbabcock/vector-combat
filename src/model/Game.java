@@ -1,7 +1,6 @@
 package model;
 
 import model.characters.Character;
-import model.characters.*;
 import model.entities.Bullet;
 import model.entities.Entity;
 import model.particles.Particle;
@@ -105,19 +104,19 @@ public class Game implements Serializable {
         }
     }
 
-    private Character charFactory(Class charClass) {
-        if (charClass == null)
-            return null;
-        if (charClass.equals(Rocketman.class))
-            return new Rocketman(this);
-        if (charClass.equals(Ninja.class))
-            return new Ninja(this);
-        if (charClass.equals(Soldier.class))
-            return new Soldier(this);
-        if (charClass.equals(Scout.class))
-            return new Scout(this);
-        return null;
-    }
+//    private Character charFactory(Class charClass) {
+//        if (charClass == null)
+//            return null;
+//        if (charClass.equals(Rocketman.class))
+//            return new Rocketman(this);
+//        if (charClass.equals(Ninja.class))
+//            return new Ninja(this);
+//        if (charClass.equals(Soldier.class))
+//            return new Soldier(this);
+//        if (charClass.equals(Scout.class))
+//            return new Scout(this);
+//        return null;
+//    }
 
     // TODO someday optimize this, as well as the weight of the gamestate other being passed over network
     public void importGame(Game other) {
@@ -137,6 +136,7 @@ public class Game implements Serializable {
             player.deaths = otherPlayer.deaths;
             player.respawnTime = otherPlayer.respawnTime;
             player.team = otherPlayer.team;
+            player.charClass = otherPlayer.charClass;
             player.game = this;
 
             Character oldCharacter = null;
@@ -147,7 +147,8 @@ public class Game implements Serializable {
                 player.character = null;
                 continue;
             } else if (oldCharacter == null || oldCharacter.getClass() != otherCharacter.getClass()) {
-                player.character = charFactory(otherPlayer.charClass);
+                //player.character = charFactory(otherPlayer.charClass);
+                player.spawn();
             }
             player.character.velocity = otherCharacter.velocity;
             player.character.acceleration = otherCharacter.acceleration;

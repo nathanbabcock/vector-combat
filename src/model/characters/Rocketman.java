@@ -1,6 +1,6 @@
 package model.characters;
 
-import model.Game;
+import model.Player;
 import model.Sprite;
 import model.entities.Rocket;
 import model.geometry.Point2D;
@@ -15,8 +15,8 @@ import java.util.UUID;
  * Created by Nathan on 8/31/2015.
  */
 public class Rocketman extends Character {
-    public Rocketman(Game game) {
-        super(game);
+    public Rocketman(Player player) {
+        super(player);
         attackInterval = 1.0f;
     }
 

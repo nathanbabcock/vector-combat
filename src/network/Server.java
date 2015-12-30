@@ -74,8 +74,7 @@ public class Server {
                     new Thread(new ClientHandler(input, clientName)).start();
 
                     // init player
-                    Player player = new Player(game);
-                    player.clientName = clientName;
+                    Player player = new Player(game, clientName);
                     game.players.put(clientName, player);
 
                     // print message

@@ -1,6 +1,6 @@
 package model.characters;
 
-import model.Game;
+import model.Player;
 import model.Sprite;
 import model.entities.Bullet;
 import model.geometry.Point2D;
@@ -20,8 +20,8 @@ import java.util.UUID;
 public class Soldier extends Character {
     public float jetpackVelocity = 250f;
 
-    public Soldier(Game game) {
-        super(game);
+    public Soldier(Player player) {
+        super(player);
 
         attackInterval = 0.1f;
     }

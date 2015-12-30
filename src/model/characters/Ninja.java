@@ -1,6 +1,5 @@
 package model.characters;
 
-import model.Game;
 import model.Player;
 import model.entities.Grapple;
 import model.entities.Rocket;
@@ -22,8 +21,8 @@ public class Ninja extends Character {
 
     public final int SWORD_DAMAGE = 50;
 
-    public Ninja(Game game) {
-        super(game);
+    public Ninja(Player player) {
+        super(player);
         attackInterval = 0.3f;
     }
 

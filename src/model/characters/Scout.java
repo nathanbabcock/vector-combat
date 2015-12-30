@@ -1,6 +1,6 @@
 package model.characters;
 
-import model.Game;
+import model.Player;
 import model.Sprite;
 import model.entities.Bullet;
 import model.geometry.Point2D;
@@ -23,8 +23,8 @@ public class Scout extends Character {
     public boolean extraJump;
     public float jumpDelay;
 
-    public Scout(Game game) {
-        super(game);
+    public Scout(Player player) {
+        super(player);
 
         extraJump = true;
         attackInterval = 1f;
