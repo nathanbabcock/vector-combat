@@ -39,8 +39,6 @@ public class ScorePanel extends JPanel {
         red.title.setForeground(Color.RED);
         red.title.setText("Red");
         add(red, BorderLayout.EAST);
-
-        update();
     }
 
     public void open() {

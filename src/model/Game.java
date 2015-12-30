@@ -4,6 +4,7 @@ import model.characters.Character;
 import model.entities.Bullet;
 import model.entities.Entity;
 import model.maps.Map;
+import model.maps.Map1;
 import model.maps.Map2;
 import model.particles.Particle;
 import network.ChatMessage;
@@ -28,6 +29,7 @@ public class Game implements Serializable {
     public transient List<ChatMessage> chat;
     public transient HashMap<String, Sprite> sprites;
     public transient Map map;
+    public String mapID;
 
     public transient static final float gravity = -400;
     public transient static final int respawn_time = 5;
@@ -35,7 +37,6 @@ public class Game implements Serializable {
     public transient float time = 0;
 
     public Game() {
-        map = new Map2();
         setupSprites();
 
         players = new HashMap();
@@ -43,6 +44,21 @@ public class Game implements Serializable {
         garbage = new Vector();
         particles = new Vector();
         chat = new Vector();
+    }
+
+    public void setMap(String mapID) {
+        this.mapID = mapID;
+        switch (mapID) {
+            case "Map1":
+                map = new Map1();
+                break;
+            case "Map2":
+                map = new Map2();
+                break;
+            default:
+                System.err.println("Unknown map " + mapID + " specified");
+                break;
+        }
     }
 
     private void setupSprites() {

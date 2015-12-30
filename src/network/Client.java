@@ -26,7 +26,8 @@ import java.util.Random;
  */
 public class Client extends JFrame {
     Game game;
-    String clientName;
+    String clientName, host;
+    int port;
     InputState inputState;
     ArrayList<ChatMessage> chatQueue;
     SpawnParams spawnParams;
@@ -36,8 +37,8 @@ public class Client extends JFrame {
     Canvas canvas;
     int messageMode;
 
-    static final int PREF_WIDTH = 800;
-    static final int PREF_HEIGHT = 600;
+    static final int PREF_WIDTH = 1024;
+    static final int PREF_HEIGHT = 768;
 
     static final Integer LAYER_CANVAS = new Integer(0);
     static final Integer LAYER_HUD = new Integer(1);
@@ -56,16 +57,33 @@ public class Client extends JFrame {
     JTextField respawn;
 
     public Client(String host, int port, String username) {
+//        this.host = host;
+//        this.port = port;
         clientName = username;
-        game = new Game();
+
+        connectToServer(host, port);
+//        initGame();
+    }
+
+    private void initGame(Game game) {
         inputState = new InputState();
         messageMode = 0;
         chatQueue = new ArrayList();
 
+        this.game = new Game();
+        this.game.setMap(game.mapID);
+        this.game.importGame(game);
+
         initGUI();
-        connectToServer(host, port);
         setupListeners();
-        gameLoop();
+
+        new Thread() {
+            @Override
+            public void run() {
+                gameLoop();
+            }
+        }.start();
+
     }
 
     private void initGUI() {
@@ -237,27 +255,29 @@ public class Client extends JFrame {
                 fps = 0;
             }
 
-            // Update model
-            game.update(OPTIMAL_TIME / 1000000000f);
-            updateHUD();
-            inputState.xhair = new Point2D(canvas.xhair.x - canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - canvas.xhair.y);
-            repaint();
-            try {
-                // InputState
-                out.writeObject(ObjectCloner.deepCopy(inputState));
+            if (game != null) {
+                // Update model
+                game.update(OPTIMAL_TIME / 1000000000f);
+                updateHUD();
+                inputState.xhair = new Point2D(canvas.xhair.x - canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - canvas.xhair.y);
+                repaint();
+                try {
+                    // InputState
+                    out.writeObject(ObjectCloner.deepCopy(inputState));
 
-                // Chat
-                for (ChatMessage msg : chatQueue)
-                    out.writeObject(msg);
-                chatQueue = new ArrayList();
+                    // Chat
+                    for (ChatMessage msg : chatQueue)
+                        out.writeObject(msg);
+                    chatQueue = new ArrayList();
 
-                // Spawn params
-                if (spawnParams != null) {
-                    out.writeObject(spawnParams);
-                    spawnParams = null;
+                    // Spawn params
+                    if (spawnParams != null) {
+                        out.writeObject(spawnParams);
+                        spawnParams = null;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
 
             // we want each frame to take 10 milliseconds, to do this
@@ -540,9 +560,12 @@ public class Client extends JFrame {
             try {
                 while (true) {
                     Object received = in.readObject();
-                    if (received instanceof Game)
-                        game.importGame((Game) received);
-                    else if (received instanceof ChatMessage) {
+                    if (received instanceof Game) {
+                        if (game == null) // First time game received
+                            initGame((Game) received);
+                        else
+                            game.importGame((Game) received);
+                    } else if (received instanceof ChatMessage) {
                         game.chat.add((ChatMessage) received);
                         refreshChat();
                     } else

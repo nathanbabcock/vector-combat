@@ -38,6 +38,7 @@ public class Server {
         }
 
         game = new Game();
+        game.setMap("Map2");
         new Thread(new StateDispatcher()).start();
     }
 
