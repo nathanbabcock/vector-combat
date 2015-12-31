@@ -167,11 +167,11 @@ public class Ninja extends Character {
             return;
 
         AABB hitbox = new AABB(getBottomLeft().x, getBottomLeft().y + 40, 80, 80);
-//        if (xhair.x < getCenter().x)
-//            position.x -= (80 - width);
+        if (xhair.x < getCenter().x)
+            hitbox.position.x -= (80 - this.hitbox.width);
 
         for (Player player : game.players.values()) {
-            if (player.clientName.equals(player.clientName)) continue;
+            if (player.clientName.equals(this.player.clientName) || player.character == null) continue;
             if (player.character.hitbox.collision(hitbox) != null)
                 player.character.damage(SWORD_DAMAGE, player);
         }

@@ -205,6 +205,5 @@ public class Server {
     public static void main(String[] args) {
         new Server(9001);
         new Client("localhost", 9001, "excalo");
-//        new Client("localhost", 9001, "nathansbrother");
     }
 }

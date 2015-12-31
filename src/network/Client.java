@@ -614,6 +614,7 @@ public class Client extends JFrame {
     }
 
     public static void main(String[] args) {
+//        new Client(JOptionPane.showInputDialog("Server:"), Integer.parseInt(JOptionPane.showInputDialog("Port:")), JOptionPane.showInputDialog("Username:"));
         new Client("localhost", 9001, new Random().nextInt(1000) + "");
     }
 }

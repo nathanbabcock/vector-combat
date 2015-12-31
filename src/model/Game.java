@@ -37,7 +37,7 @@ public class Game implements Serializable {
     public transient static final float GRAVITY = -400;
     public transient static final int RESPAWN_TIME = 5;
     public transient static final float START_COUNTDOWN = 10;
-    public transient static final int SCORE_LIMIT = 1;
+    public transient static final int SCORE_LIMIT = 10;
 
     public transient float time = 0;
 
