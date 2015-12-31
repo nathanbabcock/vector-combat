@@ -173,7 +173,7 @@ public class Ninja extends Character {
         for (Player player : game.players.values()) {
             if (player.clientName.equals(player.clientName)) continue;
             if (player.character.hitbox.collision(hitbox) != null)
-                player.character.damage(SWORD_DAMAGE);
+                player.character.damage(SWORD_DAMAGE, player);
         }
         currentAttackDelay = attackInterval;
     }

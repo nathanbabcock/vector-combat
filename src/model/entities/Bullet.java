@@ -55,7 +55,7 @@ public class Bullet extends Entity<AABB> implements Serializable {
         if (collision.collider instanceof Character) {
             // Damage
             Character player = (Character) collision.collider;
-            player.damage(Bullet.DAMAGE);
+            player.damage(Bullet.DAMAGE, game.players.get(owner));
 
             // Knockback
             Vector2D knockback = new Vector2D(player.getCenter().x - getCenter().x, player.getCenter().y - getCenter().y);

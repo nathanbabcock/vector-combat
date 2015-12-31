@@ -133,10 +133,16 @@ abstract public class Character extends Entity<AABB> implements Serializable {
         }
     }
 
-    public void damage(int damage) {
+    public void damage(int damage, Player dealer) {
         health -= damage;
         generateBloodParticles();
         checkHealth();
+
+        if (health <= 0) {
+            dealer.kills++;
+            player.deaths++;
+        }
+
     }
 
     private void checkHealth() {

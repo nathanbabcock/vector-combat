@@ -131,6 +131,8 @@ public class Game implements Serializable {
 
     // TODO someday optimize this, as well as the weight of the gamestate other being passed over network
     public void importGame(Game other) {
+        countdown = other.countdown;
+
         // Add/merge (characters)
         HashMap<String, Player> newPlayers = new HashMap();
         for (java.util.Map.Entry<String, Player> entry : other.players.entrySet()) {
