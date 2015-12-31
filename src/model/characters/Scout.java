@@ -69,10 +69,10 @@ public class Scout extends Character {
 
     @Override
     public void attack(float deltaTime) {
-        float NUM_PELLETS = 6;
-        float MAX_SPREAD = 150;
+        float NUM_PELLETS = 8;
+        float MAX_SPREAD = 120;
         float PELLET_SIZE = 6;
-        float PELLET_VELOCITY = 600;
+        float PELLET_VELOCITY = 900;
 
         if (currentAttackDelay > 0)
             currentAttackDelay -= deltaTime;

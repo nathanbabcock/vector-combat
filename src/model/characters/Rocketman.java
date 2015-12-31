@@ -15,9 +15,11 @@ import java.util.UUID;
  * Created by Nathan on 8/31/2015.
  */
 public class Rocketman extends Character {
+    public transient static final float ATTACK_INTERVAL = 0.8f;
+
     public Rocketman(Player player) {
         super(player);
-        attackInterval = 1.0f;
+        attackInterval = ATTACK_INTERVAL;
     }
 
     @Override

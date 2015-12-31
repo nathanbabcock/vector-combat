@@ -19,7 +19,7 @@ public class Ninja extends Character {
     public Grapple grapple;
     public ArrayList<model.geometry.Point2D> grapplePoints;
 
-    public final int SWORD_DAMAGE = 50;
+    public static transient final int SWORD_DAMAGE = 70;
 
     public Ninja(Player player) {
         super(player);

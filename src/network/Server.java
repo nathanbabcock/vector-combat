@@ -204,6 +204,7 @@ public class Server {
 
     public static void main(String[] args) {
         new Server(9001);
+//        System.out.println("asdf");
         new Client("localhost", 9001, "excalo");
     }
 }

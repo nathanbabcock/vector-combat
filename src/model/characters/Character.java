@@ -199,10 +199,11 @@ abstract public class Character extends Entity<AABB> implements Serializable {
 
     public void draw(Canvas canvas, Graphics2D g2, String clientName) {
         // Draw client name
-        int playerX = (int) getBottomLeft().x + canvas.cameraOffsetX;
-        int playerY = (int) (canvas.HEIGHT - canvas.cameraOffsetY - getBottomLeft().y - hitbox.height);
-        int playerWidth = sprite.width;
-        int playerHeight = sprite.height;
+        // Player
+        int playerX = (int) getBottomLeft().x + canvas.cameraOffsetX + sprite.offsetX;
+        int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - hitbox.height);
+        int playerWidth = 24;
+
         final int fontSize = 12;
         g2.setFont(new Font("Lucida Sans", Font.PLAIN, fontSize));
         if (player.team == Team.BLUE)

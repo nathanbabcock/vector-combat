@@ -20,7 +20,7 @@ public class Bullet extends Entity<AABB> implements Serializable {
     public String owner;
 
     public transient static final float SIZE = 8;
-    public transient static final float VELOCITY = 1000;
+    public transient static final float VELOCITY = 1250;
     public transient static final int DAMAGE = 10;
 
     public Bullet(Game game, float x, float y, float size) {

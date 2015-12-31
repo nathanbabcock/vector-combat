@@ -24,7 +24,7 @@ public class Rocket extends Entity<Circle2D> implements Serializable {
     public transient static final float RADIUS = 8;
     public transient static final float VELOCITY = 500;
     public transient static final float EXPLOSION_RADIUS = 100;
-    public transient static final int DAMAGE = 60;
+    public transient static final int DAMAGE = 70;
 
     public Rocket(Game game, float x, float y, float radius) {
         super(game, new Circle2D(x, y, radius));

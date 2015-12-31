@@ -20,7 +20,6 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * Created by Nathan on 9/12/2015.
@@ -58,12 +57,9 @@ public class Client extends JFrame {
     JTextField respawn, winner;
 
     public Client(String host, int port, String username) {
-//        this.host = host;
-//        this.port = port;
         clientName = username;
 
         connectToServer(host, port);
-//        initGame();
     }
 
     private void initGame(Game game) {
@@ -614,7 +610,7 @@ public class Client extends JFrame {
     }
 
     public static void main(String[] args) {
-//        new Client(JOptionPane.showInputDialog("Server:"), Integer.parseInt(JOptionPane.showInputDialog("Port:")), JOptionPane.showInputDialog("Username:"));
-        new Client("localhost", 9001, new Random().nextInt(1000) + "");
+        new Client(JOptionPane.showInputDialog("Server:"), Integer.parseInt(JOptionPane.showInputDialog("Port:")), JOptionPane.showInputDialog("Username:"));
+//        new Client("localhost", 9001, new Random().nextInt(1000) + "");
     }
 }
