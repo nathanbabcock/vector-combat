@@ -141,6 +141,7 @@ abstract public class Character extends Entity<AABB> implements Serializable {
         if (health <= 0) {
             dealer.kills++;
             player.deaths++;
+            game.checkWin();
         }
 
     }

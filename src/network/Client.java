@@ -3,6 +3,7 @@ package network;
 import model.Game;
 import model.Player;
 import model.characters.Character;
+import model.characters.Team;
 import model.geometry.Point2D;
 import view.Canvas;
 import view.ChatPanel;
@@ -54,7 +55,7 @@ public class Client extends JFrame {
     ScorePanel scores;
     MenuPanel menu;
     JTextArea health;
-    JTextField respawn;
+    JTextField respawn, winner;
 
     public Client(String host, int port, String username) {
 //        this.host = host;
@@ -119,6 +120,18 @@ public class Client extends JFrame {
         respawn.setHorizontalAlignment(SwingConstants.CENTER);
         respawn.setVisible(false);
         lp.add(respawn, LAYER_HUD);
+
+        // Winner HUD
+        winner = new JTextField("");
+        winner.setFont(new Font("Lucida Sans", Font.BOLD, 20));
+        winner.setOpaque(false);
+        winner.setEditable(false);
+        winner.setFocusable(false);
+        winner.setBorder(null);
+        winner.setBackground(null);
+        winner.setHorizontalAlignment(SwingConstants.CENTER);
+        winner.setVisible(false);
+        lp.add(winner, LAYER_HUD);
 
         // Chat
         chat = new ChatPanel();
@@ -185,6 +198,11 @@ public class Client extends JFrame {
         final int respawnWidth = 500;
         final int respawnHeight = 50;
         respawn.setBounds((int) ((realWidth - respawnWidth) / 2f), (int) ((realHeight - respawnHeight) / 4f), respawnWidth, respawnHeight);
+
+        // Game winner
+        final int winnerWidth = 500;
+        final int winnerHeight = 50;
+        winner.setBounds((int) ((realWidth - winnerWidth) / 2f), (int) ((realHeight - winnerHeight) / 3f), winnerWidth, winnerHeight);
 
         revalidate();
     }
@@ -549,6 +567,19 @@ public class Client extends JFrame {
             respawn.setVisible(true);
         } else {
             respawn.setVisible(false);
+        }
+
+        // Winner
+        if (game.winner == Team.BLUE) {
+            winner.setText("Blue wins the game!");
+            winner.setForeground(Color.BLUE);
+            winner.setVisible(true);
+        } else if (game.winner == Team.RED) {
+            winner.setText("Red wins the game!");
+            winner.setForeground(Color.RED);
+            winner.setVisible(true);
+        } else {
+            winner.setVisible(false);
         }
     }
 

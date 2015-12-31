@@ -1,6 +1,7 @@
 package model;
 
 import model.characters.Character;
+import model.characters.Team;
 import model.entities.Bullet;
 import model.entities.Entity;
 import model.maps.Map;
@@ -31,10 +32,12 @@ public class Game implements Serializable {
     public transient Map map;
     public String mapID;
     public float countdown;
+    public Team winner;
 
     public transient static final float GRAVITY = -400;
     public transient static final int RESPAWN_TIME = 5;
     public transient static final float START_COUNTDOWN = 10;
+    public transient static final int SCORE_LIMIT = 1;
 
     public transient float time = 0;
 
@@ -62,6 +65,23 @@ public class Game implements Serializable {
                 System.err.println("Unknown map " + mapID + " specified");
                 break;
         }
+    }
+
+    public void checkWin() {
+        if (getScore(Team.RED) >= SCORE_LIMIT)
+            winner = Team.RED;
+        else if (getScore(Team.BLUE) >= SCORE_LIMIT)
+            winner = Team.BLUE;
+        else
+            winner = null;
+    }
+
+    public int getScore(Team team) {
+        int score = 0;
+        for (Player player : players.values())
+            if (player.team == team)
+                score += player.kills;
+        return score;
     }
 
     private void setupSprites() {
@@ -132,6 +152,7 @@ public class Game implements Serializable {
     // TODO someday optimize this, as well as the weight of the gamestate other being passed over network
     public void importGame(Game other) {
         countdown = other.countdown;
+        winner = other.winner;
 
         // Add/merge (characters)
         HashMap<String, Player> newPlayers = new HashMap();

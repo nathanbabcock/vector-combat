@@ -131,8 +131,6 @@ public class ScorePanel extends JPanel {
             players.add(header);
         }
 
-        int blueScore, redScore;
-        blueScore = redScore = 0;
         for (Map.Entry<String, Player> entry : game.players.entrySet()) {
             ScoreRow row = new ScoreRow();
             String name = entry.getKey();
@@ -140,17 +138,14 @@ public class ScorePanel extends JPanel {
             row.name.setText(name);
             row.kills.setText(player.kills + "");
             row.deaths.setText(player.deaths + "");
-            if (player.team == Team.BLUE) {
+            if (player.team == Team.BLUE)
                 blue.players.add(row);
-                blueScore += player.kills;
-            } else if (player.team == Team.RED) {
+            else if (player.team == Team.RED)
                 red.players.add(row);
-                redScore += player.kills;
-            }
         }
 
-        blue.score.setText(blueScore + "");
-        red.score.setText(redScore + "");
+        blue.score.setText(game.getScore(Team.BLUE) + "");
+        red.score.setText(game.getScore(Team.RED) + "");
 
         revalidate();
     }
