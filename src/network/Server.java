@@ -185,6 +185,7 @@ public class Server {
                 }
 
                 // update the game logic
+//                game.lock();
                 game.update(OPTIMAL_TIME / 1000000000f);
 
                 // send state to all clients
@@ -221,6 +222,11 @@ public class Server {
     public static void main(String[] args) {
         new Server(9001);
         Client cl = new Client("localhost", 9001, "excalo");
+        try {
+            Thread.sleep(10);
+        } catch (Exception e) {
+            ;
+        }
         cl.setVisible(true);
         new Client("localhost", 9001, "nathansbrother");
         new Client("localhost", 9001, "3");

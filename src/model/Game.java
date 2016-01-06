@@ -17,13 +17,14 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by Nathan on 8/19/2015.
  */
 public class Game implements Serializable {
-    public HashMap<String, Player> players;
-    public HashMap<String, Entity> entities;
+    public ConcurrentHashMap<String, Player> players;
+    public ConcurrentHashMap<String, Entity> entities;
 
     public transient List<Object> garbage;
     public transient List<Particle> particles;
@@ -44,8 +45,8 @@ public class Game implements Serializable {
     public Game() {
         setupSprites();
 
-        players = new HashMap();
-        entities = new HashMap();
+        players = new ConcurrentHashMap();
+        entities = new ConcurrentHashMap();
         garbage = new Vector();
         particles = new Vector();
         chat = new Vector();
@@ -155,7 +156,7 @@ public class Game implements Serializable {
         winner = other.winner;
 
         // Add/merge (characters)
-        HashMap<String, Player> newPlayers = new HashMap();
+        ConcurrentHashMap<String, Player> newPlayers = new ConcurrentHashMap();
         for (java.util.Map.Entry<String, Player> entry : other.players.entrySet()) {
             String clientName = entry.getKey();
             Player otherPlayer = entry.getValue();
@@ -206,7 +207,7 @@ public class Game implements Serializable {
         players = newPlayers;
 
         // Add/merge (entity)
-        HashMap<String, Entity> newEntities = new HashMap();
+        ConcurrentHashMap<String, Entity> newEntities = new ConcurrentHashMap();
         for (java.util.Map.Entry<String, Entity> entry : other.entities.entrySet()) {
             String key = entry.getKey();
             if (entities.containsKey(key))

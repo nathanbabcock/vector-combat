@@ -14,10 +14,7 @@ import view.ScorePanel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
@@ -599,8 +596,8 @@ public class Client extends JFrame {
     private class ServerHandler implements Runnable {
         @SuppressWarnings("unchecked")
         public void run() {
-            try {
-                while (true) {
+            while (true) {
+                try {
                     // Part 1: Receive from server
                     Object received = in.readObject();
                     if (received instanceof Game) {
@@ -608,8 +605,7 @@ public class Client extends JFrame {
                             initGame((Game) received);
                             // DEBUG OnlY
                             out.writeObject(new SpawnParams(Team.BLUE, Rocketman.class));
-                        }
-                        else
+                        } else
                             game.importGame((Game) received);
                     } else if (received instanceof ChatMessage) {
                         game.chat.add((ChatMessage) received);
@@ -633,12 +629,17 @@ public class Client extends JFrame {
                         out.writeObject(spawnParams);
                         spawnParams = null;
                     }
+                } catch (SocketException | EOFException e) {
+                    return; // "gracefully" terminate after disconnect
+                } catch (OptionalDataException e) {
+                    e.printStackTrace();
+                    System.err.println("EOF: " + e.eof);
+                    System.err.println("Length: " + e.length);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (SocketException | EOFException e) {
-                return; // "gracefully" terminate after disconnect
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+
         }
     }
 
