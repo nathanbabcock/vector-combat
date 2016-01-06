@@ -33,14 +33,18 @@ public class Server {
             System.out.println("Server started on port " + port);
 
             // spawn a client accepter thread
-            new Thread(new ClientAccepter()).start();
+            Thread clientAccepter = new Thread(new ClientAccepter());
+            clientAccepter.setName("Server: Client accepter");
+            clientAccepter.start();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         game = new Game();
         game.setMap("Map2");
-        new Thread(new GameUpdater()).start();
+        Thread gameUpdater = new Thread(new GameUpdater());
+        gameUpdater.setName("Server: Game updater");
+        gameUpdater.start();
     }
 
     /**
@@ -73,7 +77,9 @@ public class Server {
                     outputs.put(clientName, output);
 
                     // spawn a thread to handle communication with this client
-                    new Thread(new ClientHandler(input, clientName)).start();
+                    Thread clientHandler = new Thread(new ClientHandler(input, clientName));
+                    clientHandler.setName("Server: Client handler (" + clientName + ")");
+                    clientHandler.start();
 
                     // init player
                     Player player = new Player(game, clientName);
@@ -109,7 +115,10 @@ public class Server {
                     startTime = System.currentTimeMillis();
 
                     // Part 1: Send to client
-                    outputs.get(clientName).writeObject(ObjectCloner.deepCopy(game));
+                    ObjectOutputStream out = outputs.get(clientName);
+                    out.reset();
+                    out.writeObject(game);
+//                    outputs.get(clientName).writeObject(ObjectCloner.deepCopy(game));
 
                     // Part 2: Receieve from client
                     Object received = input.readObject();
@@ -211,6 +220,17 @@ public class Server {
 
     public static void main(String[] args) {
         new Server(9001);
-        new Client("localhost", 9001, "excalo");
+        Client cl = new Client("localhost", 9001, "excalo");
+        cl.setVisible(true);
+        new Client("localhost", 9001, "nathansbrother");
+        new Client("localhost", 9001, "3");
+        new Client("localhost", 9001, "4");
+        new Client("localhost", 9001, "5");
+        new Client("localhost", 9001, "6");
+        new Client("localhost", 9001, "7");
+        new Client("localhost", 9001, "8");
+        new Client("localhost", 9001, "9");
+        new Client("localhost", 9001, "10");
+
     }
 }

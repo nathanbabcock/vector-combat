@@ -3,6 +3,7 @@ package network;
 import model.Game;
 import model.Player;
 import model.characters.Character;
+import model.characters.Rocketman;
 import model.characters.Team;
 import model.geometry.Point2D;
 import view.Canvas;
@@ -75,19 +76,21 @@ public class Client extends JFrame {
         initGUI();
         setupListeners();
 
-        new Thread() {
+        Thread gameUpdater = new Thread() {
             @Override
             public void run() {
                 gameLoop();
             }
-        }.start();
+        };
+        gameUpdater.setName("Client: Game updater (" + clientName + ")");
+        gameUpdater.start();
 
     }
 
     private void initGUI() {
         setSize(PREF_WIDTH, PREF_HEIGHT);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setVisible(true);
+        setVisible(false);
         setSize(PREF_WIDTH, PREF_HEIGHT);
         setFocusTraversalKeysEnabled(false);
 
@@ -237,7 +240,9 @@ public class Client extends JFrame {
             });
 
             // start a thread for handling server events
-            new Thread(new ServerHandler()).start();
+            Thread serverHandler = new Thread(new ServerHandler());
+            serverHandler.setName("Client: Server handler (" + clientName + ")");
+            serverHandler.start();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -272,7 +277,7 @@ public class Client extends JFrame {
 
             if (game != null) {
                 // Update model
-//                game.update(OPTIMAL_TIME / 1000000000f);
+                game.update(OPTIMAL_TIME / 1000000000f);
                 updateHUD();
                 inputState.xhair = new Point2D(canvas.xhair.x - canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - canvas.xhair.y);
                 repaint();
@@ -599,8 +604,11 @@ public class Client extends JFrame {
                     // Part 1: Receive from server
                     Object received = in.readObject();
                     if (received instanceof Game) {
-                        if (game == null) // First time game received
+                        if (game == null) { // First time game received
                             initGame((Game) received);
+                            // DEBUG OnlY
+                            out.writeObject(new SpawnParams(Team.BLUE, Rocketman.class));
+                        }
                         else
                             game.importGame((Game) received);
                     } else if (received instanceof ChatMessage) {
@@ -610,9 +618,10 @@ public class Client extends JFrame {
                         System.out.println(received);
 
                     // Part 2: Send back to server
+                    out.reset();
 
                     // InputState
-                    out.writeObject(ObjectCloner.deepCopy(inputState));
+                    out.writeObject(inputState);
 
                     // Chat
                     for (ChatMessage msg : chatQueue)

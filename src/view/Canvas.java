@@ -6,7 +6,6 @@ import model.characters.Character;
 import model.entities.Entity;
 import model.geometry.AABB;
 import model.geometry.Point2D;
-import model.particles.Particle;
 
 import javax.swing.*;
 import java.awt.*;
@@ -50,7 +49,7 @@ public class Canvas extends JPanel {
 //    }
 
     @Override
-    public void paintComponent(Graphics g) {
+    public synchronized void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         backup = g2.getTransform();
         super.paintComponent(g);
@@ -70,8 +69,8 @@ public class Canvas extends JPanel {
             if (player.character != null) player.character.draw(this, g2, player.clientName);
 
         // Particles
-        for (Particle particle : game.particles)
-            particle.draw(this, g2);
+//        for (Particle particle : game.particles)
+//            particle.draw(this, g2);
 
         // Entities
         for (Entity entity : game.entities.values())

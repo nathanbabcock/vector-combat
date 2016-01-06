@@ -29,6 +29,10 @@ public class Player implements Serializable {
         kills = 0;
         deaths = 0;
         ping = 999;
+
+        // DEBUG ONLY
+//        charClass = Rocketman.class;
+//        team = Team.BLUE;
     }
 
     public void update(float delta) {
