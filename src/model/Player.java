@@ -20,7 +20,7 @@ public class Player implements Serializable {
     public Team team;
     public Character character;
     public float respawnTime;
-    public int kills, deaths;
+    public int kills, deaths, ping;
 
     public Player(Game game, String clientName) {
         this.game = game;
@@ -28,6 +28,7 @@ public class Player implements Serializable {
         respawnTime = 0;
         kills = 0;
         deaths = 0;
+        ping = 999;
     }
 
     public void update(float delta) {

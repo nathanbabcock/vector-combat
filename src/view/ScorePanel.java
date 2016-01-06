@@ -95,7 +95,7 @@ public class ScorePanel extends JPanel {
     }
 
     private class ScoreRow extends JPanel {
-        JTextField name, kills, deaths;
+        JTextField name, kills, deaths, ping;
 
         public ScoreRow() {
             setOpaque(false);
@@ -103,7 +103,8 @@ public class ScorePanel extends JPanel {
             name = new JTextField();
             kills = new JTextField();
             deaths = new JTextField();
-            for (JTextField text : new JTextField[]{name, kills, deaths}) {
+            ping = new JTextField();
+            for (JTextField text : new JTextField[]{name, kills, deaths, ping}) {
                 text.setEditable(false);
                 text.setFocusable(false);
                 text.setOpaque(false);
@@ -125,9 +126,9 @@ public class ScorePanel extends JPanel {
             header.name.setText("Player");
             header.kills.setText("Kills");
             header.deaths.setText("Deaths");
-            for (JTextComponent text : new JTextComponent[]{header.name, header.kills, header.deaths}) {
+            header.ping.setText("Ping");
+            for (JTextComponent text : new JTextComponent[]{header.name, header.kills, header.deaths, header.ping})
                 text.setFont(new Font("Lucida Sans", Font.BOLD, 12));
-            }
             players.add(header);
         }
 
@@ -138,6 +139,7 @@ public class ScorePanel extends JPanel {
             row.name.setText(name);
             row.kills.setText(player.kills + "");
             row.deaths.setText(player.deaths + "");
+            row.ping.setText(player.ping + "");
             if (player.team == Team.BLUE)
                 blue.players.add(row);
             else if (player.team == Team.RED)

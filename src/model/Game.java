@@ -168,6 +168,7 @@ public class Game implements Serializable {
             player.clientName = otherPlayer.clientName;
             player.kills = otherPlayer.kills;
             player.deaths = otherPlayer.deaths;
+            player.ping = otherPlayer.ping;
             player.respawnTime = otherPlayer.respawnTime;
             player.team = otherPlayer.team;
             player.charClass = otherPlayer.charClass;

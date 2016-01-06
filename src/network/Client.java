@@ -20,6 +20,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by Nathan on 9/12/2015.
@@ -271,11 +272,11 @@ public class Client extends JFrame {
 
             if (game != null) {
                 // Update model
-                game.update(OPTIMAL_TIME / 1000000000f);
+//                game.update(OPTIMAL_TIME / 1000000000f);
                 updateHUD();
                 inputState.xhair = new Point2D(canvas.xhair.x - canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - canvas.xhair.y);
                 repaint();
-                try {
+                /*try {
                     // InputState
                     out.writeObject(ObjectCloner.deepCopy(inputState));
 
@@ -291,7 +292,7 @@ public class Client extends JFrame {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                }
+                }*/
             }
 
             // we want each frame to take 10 milliseconds, to do this
@@ -416,6 +417,7 @@ public class Client extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if (messageMode != 0 || menu.open) return;
                 scores.open();
+                am.remove("tabPressed");
             }
         };
         am.put("tabPressed", tabPressed);
@@ -427,6 +429,7 @@ public class Client extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if (messageMode != 0 || menu.open) return;
                 scores.close();
+                am.put("tabPressed", tabPressed);
             }
         };
         am.put("tabReleased", tabReleased);
@@ -577,6 +580,10 @@ public class Client extends JFrame {
         } else {
             winner.setVisible(false);
         }
+
+        // Scoreboard
+        if (scores.open && System.currentTimeMillis() % 60 == 0) // TODO ghetto af
+            scores.update();
     }
 
     /**
@@ -589,6 +596,7 @@ public class Client extends JFrame {
         public void run() {
             try {
                 while (true) {
+                    // Part 1: Receive from server
                     Object received = in.readObject();
                     if (received instanceof Game) {
                         if (game == null) // First time game received
@@ -600,6 +608,22 @@ public class Client extends JFrame {
                         refreshChat();
                     } else
                         System.out.println(received);
+
+                    // Part 2: Send back to server
+
+                    // InputState
+                    out.writeObject(ObjectCloner.deepCopy(inputState));
+
+                    // Chat
+                    for (ChatMessage msg : chatQueue)
+                        out.writeObject(msg);
+                    chatQueue = new ArrayList();
+
+                    // Spawn params
+                    if (spawnParams != null) {
+                        out.writeObject(spawnParams);
+                        spawnParams = null;
+                    }
                 }
             } catch (SocketException | EOFException e) {
                 return; // "gracefully" terminate after disconnect
@@ -610,7 +634,7 @@ public class Client extends JFrame {
     }
 
     public static void main(String[] args) {
-        new Client(JOptionPane.showInputDialog("Server:"), Integer.parseInt(JOptionPane.showInputDialog("Port:")), JOptionPane.showInputDialog("Username:"));
-//        new Client("localhost", 9001, new Random().nextInt(1000) + "");
+//        new Client(JOptionPane.showInputDialog("Server:"), Integer.parseInt(JOptionPane.showInputDialog("Port:")), JOptionPane.showInputDialog("Username:"));
+        new Client("localhost", 9001, new Random().nextInt(1000) + "");
     }
 }

@@ -20,6 +20,7 @@ public class Server {
     Game game;
     long lastFpsTime;
     int fps;
+    final int TARGET_FPS = 60;
     List<ChatMessage> newMsgs;
 
     public Server(int port) {
@@ -39,7 +40,7 @@ public class Server {
 
         game = new Game();
         game.setMap("Map2");
-        new Thread(new StateDispatcher()).start();
+        new Thread(new GameUpdater()).start();
     }
 
     /**
@@ -102,8 +103,15 @@ public class Server {
 
         @SuppressWarnings("unchecked")
         public void run() {
+            long startTime;
             try {
                 while (true) {
+                    startTime = System.currentTimeMillis();
+
+                    // Part 1: Send to client
+                    outputs.get(clientName).writeObject(ObjectCloner.deepCopy(game));
+
+                    // Part 2: Receieve from client
                     Object received = input.readObject();
                     if (received == null) {
                         System.out.println(clientName + " disconnected");
@@ -126,15 +134,15 @@ public class Server {
                         newMsgs.add(msg);
                     } else
                         System.out.println(received);
-                   /* // read a command from the client, execute on the server
-                    Command<Server> command = (Command<Server>)input.readObject();
-                    command.execute(Server.this);
 
-                    // terminate if client is disconnecting
-                    if (command instanceof DisconnectCommand){
-                        input.close();
-                        return;
-                    }*/
+                    // Record ping
+                    int ping = (int) Math.min(System.currentTimeMillis() - startTime, 999);
+                    final int MIN_PING = 1000 / TARGET_FPS; // Don't need to ping any faster than the server actually updates the gamestate
+                    if (ping < MIN_PING)
+                        Thread.sleep(MIN_PING - ping);
+                    ping = (int) Math.min(System.currentTimeMillis() - startTime, 999);
+                    game.players.get(clientName).ping = ping;
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -142,10 +150,9 @@ public class Server {
         }
     }
 
-    private class StateDispatcher implements Runnable {
+    private class GameUpdater implements Runnable {
         public void run() {
             long lastLoopTime = System.nanoTime();
-            final int TARGET_FPS = 60;
             final long OPTIMAL_TIME = 1000000000 / TARGET_FPS;
 
             while (true) {
@@ -172,7 +179,7 @@ public class Server {
                 game.update(OPTIMAL_TIME / 1000000000f);
 
                 // send state to all clients
-                for (ObjectOutputStream output : outputs.values()) {
+                /*for (ObjectOutputStream output : outputs.values()) {
                     try {
                         output.writeObject(ObjectCloner.deepCopy(game));
                     } catch (Exception e) {
@@ -186,7 +193,7 @@ public class Server {
                         }
                     }
                 }
-                newMsgs = new ArrayList();
+                newMsgs = new ArrayList();*/
 
                 // we want each frame to take 10 milliseconds, to do this
                 // we've recorded when we started the frame. We add 10 milliseconds
@@ -204,7 +211,6 @@ public class Server {
 
     public static void main(String[] args) {
         new Server(9001);
-//        System.out.println("asdf");
         new Client("localhost", 9001, "excalo");
     }
 }
