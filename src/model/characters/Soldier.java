@@ -12,7 +12,6 @@ import view.Canvas;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.util.Random;
-import java.util.UUID;
 
 /**
  * Created by Nathan on 8/31/2015.
@@ -56,7 +55,7 @@ public class Soldier extends Character {
         bullet.owner = player.clientName;
         bullet.velocity = new Vector2D(xhair.x - origin.x, xhair.y - origin.y);
         bullet.velocity.setMagnitude(Bullet.VELOCITY);
-        game.entities.put(UUID.randomUUID().toString(), bullet);
+        game.entities.add(bullet);
         currentAttackDelay = attackInterval;
     }
 

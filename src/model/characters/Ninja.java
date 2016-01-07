@@ -10,7 +10,6 @@ import view.Canvas;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.UUID;
 
 /**
  * Created by Nathan on 8/31/2015.
@@ -170,7 +169,7 @@ public class Ninja extends Character {
         if (xhair.x < getCenter().x)
             hitbox.position.x -= (80 - this.hitbox.width);
 
-        for (Player player : game.players.values()) {
+        for (Player player : game.players) {
             if (player.clientName.equals(this.player.clientName) || player.character == null) continue;
             if (player.character.hitbox.collision(hitbox) != null)
                 player.character.damage(SWORD_DAMAGE, player);
@@ -203,7 +202,7 @@ public class Ninja extends Character {
             grapple.velocity = new Vector2D(xhair.x - origin.x, xhair.y - origin.y);
             grapple.velocity.setMagnitude(Rocket.VELOCITY);
             grapple.acceleration = new Vector2D(0, 0);
-            game.entities.put(UUID.randomUUID().toString(), grapple);
+            game.entities.add(grapple);
         }
 
     }

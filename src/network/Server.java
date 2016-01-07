@@ -83,7 +83,7 @@ public class Server {
 
                     // init player
                     Player player = new Player(game, clientName);
-                    game.players.put(clientName, player);
+                    game.players.add(player);
 
                     // print message
                     // TODO add to chat
@@ -128,12 +128,12 @@ public class Server {
                         input.close();
                         return;
                     } else if (received instanceof InputState) {
-                        if (game.players.get(clientName) == null)
+                        if (game.getPlayer(clientName) == null)
                             continue;
-                        if (game.players.get(clientName).character != null)
-                            game.players.get(clientName).character.importState((InputState) received);
+                        if (game.getPlayer(clientName).character != null)
+                            game.getPlayer(clientName).character.importState((InputState) received);
                     } else if (received instanceof SpawnParams) {
-                        Player player = game.players.get(clientName);
+                        Player player = game.getPlayer(clientName);
                         player.importSpawnParams((SpawnParams) received);
                         if (player.character != null) player.kill();
                     } else if (received instanceof ChatMessage) {
@@ -150,7 +150,7 @@ public class Server {
                     if (ping < MIN_PING)
                         Thread.sleep(MIN_PING - ping);
                     ping = (int) Math.min(System.currentTimeMillis() - startTime, 999);
-                    game.players.get(clientName).ping = ping;
+                    game.getPlayer(clientName).ping = ping;
 
                 }
             } catch (Exception e) {
@@ -222,21 +222,20 @@ public class Server {
     public static void main(String[] args) {
         new Server(9001);
         Client cl = new Client("localhost", 9001, "excalo");
-        try {
-            Thread.sleep(10);
-        } catch (Exception e) {
-            ;
-        }
-        cl.setVisible(true);
-        new Client("localhost", 9001, "nathansbrother");
-        new Client("localhost", 9001, "3");
-        new Client("localhost", 9001, "4");
-        new Client("localhost", 9001, "5");
-        new Client("localhost", 9001, "6");
-        new Client("localhost", 9001, "7");
-        new Client("localhost", 9001, "8");
-        new Client("localhost", 9001, "9");
-        new Client("localhost", 9001, "10");
-
+//        try {
+//            Thread.sleep(15);
+//        } catch (Exception e) {
+//            ;
+//        }
+//        cl.setVisible(true);
+//        new Client("localhost", 9001, "nathansbrother");
+//        new Client("localhost", 9001, "3");
+//        new Client("localhost", 9001, "4");
+//        new Client("localhost", 9001, "5");
+//        new Client("localhost", 9001, "6");
+//        new Client("localhost", 9001, "7");
+//        new Client("localhost", 9001, "8");
+//        new Client("localhost", 9001, "9");
+//        new Client("localhost", 9001, "10");
     }
 }

@@ -87,7 +87,8 @@ public class Client extends JFrame {
     private void initGUI() {
         setSize(PREF_WIDTH, PREF_HEIGHT);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setVisible(false);
+//        setVisible(false); // DEBUG
+        setVisible(true);
         setSize(PREF_WIDTH, PREF_HEIGHT);
         setFocusTraversalKeysEnabled(false);
 
@@ -446,7 +447,7 @@ public class Client extends JFrame {
                     hideChat();
                 else if (menu.open) {
                     menu.close();
-                    final Player player = game.players.get(clientName);
+                    final Player player = game.getPlayer(clientName);
                     Character character = player.character;
 //                    System.out.println(player.team+", "+menu.teamSelector.selectedTeam);
                     if (player.team != menu.teamSelector.selectedTeam || player.charClass != menu.classSelector.selectedClass)
@@ -513,7 +514,7 @@ public class Client extends JFrame {
     private void sendChat() {
         String message = chat.textField.getText();
         if (!message.equals(""))
-            chatQueue.add(new ChatMessage(clientName, message, game.players.get(clientName).team, messageMode == 2));
+            chatQueue.add(new ChatMessage(clientName, message, game.getPlayer(clientName).team, messageMode == 2));
         hideChat();
     }
 
@@ -540,7 +541,7 @@ public class Client extends JFrame {
     }
 
     private void updateHUD() {
-        Player player = game.players.get(clientName);
+        Player player = game.getPlayer(clientName);
 
         // Health
         int hp;
@@ -645,6 +646,6 @@ public class Client extends JFrame {
 
     public static void main(String[] args) {
 //        new Client(JOptionPane.showInputDialog("Server:"), Integer.parseInt(JOptionPane.showInputDialog("Port:")), JOptionPane.showInputDialog("Username:"));
-        new Client("localhost", 9001, new Random().nextInt(1000) + "");
+        new Client("192.168.1.119", 9001, new Random().nextInt(1000) + "");
     }
 }

@@ -1,8 +1,6 @@
 package model;
 
-import model.characters.Character;
 import model.characters.Team;
-import model.entities.Bullet;
 import model.entities.Entity;
 import model.maps.Map;
 import model.maps.Map1;
@@ -17,14 +15,14 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by Nathan on 8/19/2015.
  */
 public class Game implements Serializable {
-    public ConcurrentHashMap<String, Player> players;
-    public ConcurrentHashMap<String, Entity> entities;
+    public List<Player> players;
+    public List<Entity> entities;
 
     public transient List<Object> garbage;
     public transient List<Particle> particles;
@@ -37,7 +35,7 @@ public class Game implements Serializable {
 
     public transient static final float GRAVITY = -400;
     public transient static final int RESPAWN_TIME = 5;
-    public transient static final float START_COUNTDOWN = 10;
+    public transient static final float START_COUNTDOWN = 3;
     public transient static final int SCORE_LIMIT = 10;
 
     public transient float time = 0;
@@ -45,12 +43,19 @@ public class Game implements Serializable {
     public Game() {
         setupSprites();
 
-        players = new ConcurrentHashMap();
-        entities = new ConcurrentHashMap();
+        players = new CopyOnWriteArrayList();
+        entities = new CopyOnWriteArrayList();
         garbage = new Vector();
         particles = new Vector();
         chat = new Vector();
         countdown = START_COUNTDOWN;
+    }
+
+    public Player getPlayer(String clientName) {
+        for (Player p : players)
+            if (p.clientName.equals(clientName))
+                return p;
+        return null;
     }
 
     public void setMap(String mapID) {
@@ -79,7 +84,7 @@ public class Game implements Serializable {
 
     public int getScore(Team team) {
         int score = 0;
-        for (Player player : players.values())
+        for (Player player : players)
             if (player.team == team)
                 score += player.kills;
         return score;
@@ -123,11 +128,11 @@ public class Game implements Serializable {
             countdown -= deltaTime;
 
         // Players
-        for (Player player : players.values()) // Update characters
+        for (Player player : players) // Update characters
             player.update(deltaTime);
 
         // Entities
-        for (Entity entity : entities.values())
+        for (Entity entity : entities)
             entity.update(deltaTime);
 
         // Particles
@@ -146,7 +151,7 @@ public class Game implements Serializable {
                 b = characters.remove(key) != null || entities.remove(key) != null;
             } else
                 */
-            boolean b = players.values().remove(trash) || entities.values().remove(trash) || particles.remove(trash);
+            boolean b = players.remove(trash) || entities.remove(trash) || particles.remove(trash);
         }
     }
 
@@ -155,12 +160,11 @@ public class Game implements Serializable {
         countdown = other.countdown;
         winner = other.winner;
 
-        // Add/merge (characters)
+        /*// Add/merge (characters)
         ConcurrentHashMap<String, Player> newPlayers = new ConcurrentHashMap();
-        for (java.util.Map.Entry<String, Player> entry : other.players.entrySet()) {
-            String clientName = entry.getKey();
-            Player otherPlayer = entry.getValue();
-            if (players.containsKey(clientName) && players.get(clientName).charClass == otherPlayer.charClass)
+        for (Player otherPlayer : other.players) {
+            String clientName = otherPlayer.clientName;
+            if (getPlayer(clientName) && players.get(clientName).charClass == otherPlayer.charClass)
                 newPlayers.put(clientName, players.get(clientName));
             else
                 newPlayers.put(clientName, otherPlayer);
@@ -204,11 +208,30 @@ public class Game implements Serializable {
             player.character.player = player;
             player.character.game = this;
         }
-        players = newPlayers;
+        players = newPlayers;*/
+
+        for (Player p : other.players) {
+            p.game = this;
+            Player oldPlayer = getPlayer(p.clientName);
+            if (p.character != null) {
+                if (oldPlayer.character == null) {
+                    oldPlayer.charClass = p.charClass;
+                    oldPlayer.team = p.team;
+                    oldPlayer.spawn();
+                }
+                p.character.merge(oldPlayer.character);
+                p.character.game = this;
+                p.character.player = p;
+            }
+        }
+        players = other.players;
 
         // Add/merge (entity)
-        ConcurrentHashMap<String, Entity> newEntities = new ConcurrentHashMap();
-        for (java.util.Map.Entry<String, Entity> entry : other.entities.entrySet()) {
+        entities = other.entities;
+        for (Entity e : entities)
+            e.game = this;
+        /*ConcurrentHashMap<String, Entity> newEntities = new ConcurrentHashMap();
+        for (java.util.Map.Entry<String, Entity> entry : other.entities) {
             String key = entry.getKey();
             if (entities.containsKey(key))
                 newEntities.put(key, entities.get(key));
@@ -224,7 +247,7 @@ public class Game implements Serializable {
             newEntity.hitbox = otherEntity.hitbox;
             newEntity.game = this;
         }
-        entities = newEntities;
+        entities = newEntities;*/
     }
 
 }

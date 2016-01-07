@@ -8,7 +8,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
-import java.util.Map;
 
 /**
  * Created by Nathan on 12/22/2015.
@@ -132,10 +131,9 @@ public class ScorePanel extends JPanel {
             players.add(header);
         }
 
-        for (Map.Entry<String, Player> entry : game.players.entrySet()) {
+        for (Player player : game.players) {
             ScoreRow row = new ScoreRow();
-            String name = entry.getKey();
-            Player player = entry.getValue();
+            String name = player.clientName;
             row.name.setText(name);
             row.kills.setText(player.kills + "");
             row.deaths.setText(player.deaths + "");

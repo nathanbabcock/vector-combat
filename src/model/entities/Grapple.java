@@ -49,7 +49,7 @@ public class Grapple extends Entity<Circle2D> {
                 break;
         }
         if (collision == null) { // characters
-            for (Player player : game.players.values()) {
+            for (Player player : game.players) {
                 if (player.clientName.equals(owner))
                     continue;
                 collision = player.character.hitbox.collision(hitbox);
@@ -64,7 +64,7 @@ public class Grapple extends Entity<Circle2D> {
     public void handleCollision(Collision collision) {
 //        game.garbage.add(this);
         velocity = new Vector2D(0, 0);
-        Ninja owner = (Ninja) game.players.get(this.owner).character;
+        Ninja owner = (Ninja) game.getPlayer(this.owner).character;
         owner.grapplePoints = new ArrayList();
         owner.grapplePoints.add(getCenter());
 
@@ -92,7 +92,7 @@ public class Grapple extends Entity<Circle2D> {
         int y = (int) (canvas.HEIGHT - canvas.cameraOffsetY - getBottomLeft().y - 2 * hitbox.radius);
         int size = (int) (2 * hitbox.radius);
         g2.fillOval(x, y, size, size);
-        Character character = game.players.get(this.owner).character;
+        Character character = game.getPlayer(this.owner).character;
         g2.drawLine((int) character.getCenter().x + canvas.cameraOffsetX, (int) (canvas.getHeight() - canvas.cameraOffsetY - character.getCenter().y), (int) getCenter().x + canvas.cameraOffsetX, (int) (canvas.getHeight() - canvas.cameraOffsetY - getCenter().y));
     }
 

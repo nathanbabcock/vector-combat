@@ -49,6 +49,20 @@ abstract public class Character extends Entity<AABB> implements Serializable {
         updateSprite(0);
     }
 
+    /**
+     * This method handles merging a character received over the network with the local copy.
+     * Specifically it copies over the transient fields that the server copy is missing.
+     *
+     * @param other
+     */
+    public void merge(Character other) {
+        moveSpeed = other.moveSpeed;
+        jumpVelocity = other.jumpVelocity;
+        attackInterval = other.attackInterval;
+        sprite = other.sprite;
+        spriteTime = other.spriteTime;
+    }
+
     @Override
     public void update(float deltaTime) {
         if (game.countdown <= 0) {

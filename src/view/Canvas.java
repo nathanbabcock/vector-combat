@@ -65,7 +65,7 @@ public class Canvas extends JPanel {
             g2.fillRect((int) b.getBottomLeft().x + cameraOffsetX, (int) (getHeight() - cameraOffsetY - b.getBottomLeft().y - b.height), (int) (b.width), (int) (b.height));
 
         // Players
-        for (Player player : game.players.values())
+        for (Player player : game.players)
             if (player.character != null) player.character.draw(this, g2, player.clientName);
 
         // Particles
@@ -73,7 +73,7 @@ public class Canvas extends JPanel {
 //            particle.draw(this, g2);
 
         // Entities
-        for (Entity entity : game.entities.values())
+        for (Entity entity : game.entities)
             entity.draw(this, g2);
 
         // UI
@@ -103,7 +103,7 @@ public class Canvas extends JPanel {
         // Health
         int health;
         try {
-            health = game.players.get(clientName).character.health;
+            health = game.getPlayer(clientName).character.health;
         } catch (NullPointerException e) {
             health = 0;
         }
@@ -120,9 +120,9 @@ public class Canvas extends JPanel {
     }
 
     private void calculateCameraOffset() {
-        if (game.players.get(clientName) == null || game.players.get(clientName).character == null) return;
+        if (game.getPlayer(clientName) == null || game.getPlayer(clientName).character == null) return;
 
-        Character character = game.players.get(clientName).character;
+        Character character = game.getPlayer(clientName).character;
         cameraOffsetX = (int) (-character.getCenter().x + ((getWidth() / 2) - (character.hitbox.width / 2)));
         cameraOffsetY = (int) (-character.getCenter().y + ((getHeight() / 2) - (character.hitbox.height / 2)));
 
