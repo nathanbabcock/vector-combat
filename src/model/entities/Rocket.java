@@ -95,10 +95,8 @@ public class Rocket extends Entity<Circle2D> implements Serializable {
                 player.character.velocity.add(explosion);
 
                 // Damage
-                if (ownerID != player.clientID) {
-                    System.out.println("ownerID = " + ownerID + ", clientID = " + player.clientID);
+                if (ownerID != player.clientID)
                     player.character.damage(Rocket.DAMAGE, game.players.get(ownerID));
-                }
             }
         }
 

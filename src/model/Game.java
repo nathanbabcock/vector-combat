@@ -155,7 +155,10 @@ public class Game implements Serializable {
         for (Player p : other.players) {
             p.game = this;
             Player oldPlayer = getPlayer(p.clientName);
-            if (p.character != null && oldPlayer != null) {
+            if (p.character != null) {
+                if (oldPlayer == null) {
+                    oldPlayer = new Player(this, p.clientName, p.clientID);
+                }
                 if (oldPlayer.character == null) {
                     oldPlayer.charClass = p.charClass;
                     oldPlayer.team = p.team;
