@@ -50,7 +50,7 @@ public class Grapple extends Entity<Circle2D> {
         }
         if (collision == null) { // characters
             for (Player player : game.players) {
-                if (player.clientName.equals(ownerID))
+                if (player.clientID == ownerID || player.character == null)
                     continue;
                 collision = player.character.hitbox.collision(hitbox);
                 if (collision != null)
@@ -88,12 +88,12 @@ public class Grapple extends Entity<Circle2D> {
 
     public void draw(Canvas canvas, Graphics2D g2) {
         g2.setColor(Color.black);
-        int x = (int) (getBottomLeft().x + canvas.cameraOffsetX);
-        int y = (int) (canvas.HEIGHT - canvas.cameraOffsetY - getBottomLeft().y - 2 * hitbox.radius);
+        int x = (int) (getCenter().x + canvas.cameraOffsetX - Grapple.RADIUS);
+        int y = (int) (canvas.getHeight() - canvas.cameraOffsetY - getCenter().y - Grapple.RADIUS);
         int size = (int) (2 * hitbox.radius);
         g2.fillOval(x, y, size, size);
         Character character = game.players.get(ownerID).character;
-        g2.drawLine((int) character.getCenter().x + canvas.cameraOffsetX, (int) (canvas.getHeight() - canvas.cameraOffsetY - character.getCenter().y), (int) getCenter().x + canvas.cameraOffsetX, (int) (canvas.getHeight() - canvas.cameraOffsetY - getCenter().y));
+        g2.drawLine((int) character.getCenter().x + canvas.cameraOffsetX, (int) (canvas.getHeight() - canvas.cameraOffsetY - character.getCenter().y), (int) (getCenter().x + canvas.cameraOffsetX), (int) (canvas.getHeight() - canvas.cameraOffsetY - getCenter().y));
     }
 
 }

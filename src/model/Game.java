@@ -145,75 +145,17 @@ public class Game implements Serializable {
 
     private void takeOutGarbage() {
         for (Object trash : garbage) {
-            /*boolean b;
-            if (trash instanceof String) {
-                String key = (String) trash;
-                b = characters.remove(key) != null || entities.remove(key) != null;
-            } else
-                */
             boolean b = players.remove(trash) || entities.remove(trash) || particles.remove(trash);
         }
     }
 
     // TODO someday optimize this, as well as the weight of the gamestate other being passed over network
     public void importGame(Game other) {
-        countdown = other.countdown;
-        winner = other.winner;
-
-        /*// Add/merge (characters)
-        ConcurrentHashMap<String, Player> newPlayers = new ConcurrentHashMap();
-        for (Player otherPlayer : other.players) {
-            String clientName = otherPlayer.clientName;
-            if (getPlayer(clientName) && players.get(clientName).charClass == otherPlayer.charClass)
-                newPlayers.put(clientName, players.get(clientName));
-            else
-                newPlayers.put(clientName, otherPlayer);
-
-            Player player = newPlayers.get(clientName);
-            player.clientName = otherPlayer.clientName;
-            player.kills = otherPlayer.kills;
-            player.deaths = otherPlayer.deaths;
-            player.ping = otherPlayer.ping;
-            player.respawnTime = otherPlayer.respawnTime;
-            player.team = otherPlayer.team;
-            player.charClass = otherPlayer.charClass;
-            player.game = this;
-
-            Character oldCharacter = null;
-            if (players.get(clientName) != null)
-                oldCharacter = players.get(clientName).character;
-            Character otherCharacter = otherPlayer.character;
-            if (otherCharacter == null) {
-                player.character = null;
-                continue;
-            } else if (oldCharacter == null || oldCharacter.getClass() != otherCharacter.getClass()) {
-                //player.character = charFactory(otherPlayer.charClass);
-                player.spawn();
-            }
-            player.character.velocity = otherCharacter.velocity;
-            player.character.acceleration = otherCharacter.acceleration;
-            player.character.hitbox = otherCharacter.hitbox;
-            player.character.xhair = otherCharacter.xhair;
-            player.character.health = otherCharacter.health;
-            player.character.dead = otherCharacter.dead;
-            player.character.movingLeft = otherCharacter.movingLeft;
-            player.character.movingRight = otherCharacter.movingRight;
-            player.character.movingUp = otherCharacter.movingUp;
-            player.character.movingDown = otherCharacter.movingDown;
-            player.character.attacking = otherCharacter.attacking;
-            player.character.altAttacking = otherCharacter.altAttacking;
-            player.character.onGround = otherCharacter.onGround;
-            player.character.wallLeft = otherCharacter.wallLeft;
-            player.character.wallRight = otherCharacter.wallRight;
-            player.character.player = player;
-            player.character.game = this;
-        }
-        players = newPlayers;*/
-
+        // Players
         for (Player p : other.players) {
             p.game = this;
             Player oldPlayer = getPlayer(p.clientName);
-            if (p.character != null) {
+            if (p.character != null && oldPlayer != null) {
                 if (oldPlayer.character == null) {
                     oldPlayer.charClass = p.charClass;
                     oldPlayer.team = p.team;
@@ -226,28 +168,14 @@ public class Game implements Serializable {
         }
         players = other.players;
 
-        // Add/merge (entity)
+        // Entities
         entities = other.entities;
         for (Entity e : entities)
             e.game = this;
-        /*ConcurrentHashMap<String, Entity> newEntities = new ConcurrentHashMap();
-        for (java.util.Map.Entry<String, Entity> entry : other.entities) {
-            String key = entry.getKey();
-            if (entities.containsKey(key))
-                newEntities.put(key, entities.get(key));
-            else
-                newEntities.put(key, entry.getValue());
-            Entity newEntity = newEntities.get(key);
-            Entity otherEntity = entry.getValue();
 
-            if (newEntity instanceof Bullet)
-                ((Bullet) newEntity).ownerID = ((Bullet) otherEntity).ownerID;
-
-            newEntity.velocity = otherEntity.velocity;
-            newEntity.hitbox = otherEntity.hitbox;
-            newEntity.game = this;
-        }
-        entities = newEntities;*/
+        // Other
+        countdown = other.countdown;
+        winner = other.winner;
     }
 
 }

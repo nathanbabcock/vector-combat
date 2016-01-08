@@ -70,7 +70,7 @@ public class Rocket extends Entity<Circle2D> implements Serializable {
         }
         if (collision == null) { // characters
             for (Player player : game.players) {
-                if (player.clientName.equals(ownerID) || player.character == null)
+                if (player.clientID == ownerID || player.character == null)
                     continue;
                 collision = player.character.hitbox.collision(hitbox);
                 if (collision != null)
@@ -95,8 +95,10 @@ public class Rocket extends Entity<Circle2D> implements Serializable {
                 player.character.velocity.add(explosion);
 
                 // Damage
-                if (ownerID != player.clientID)
+                if (ownerID != player.clientID) {
+                    System.out.println("ownerID = " + ownerID + ", clientID = " + player.clientID);
                     player.character.damage(Rocket.DAMAGE, game.players.get(ownerID));
+                }
             }
         }
 
