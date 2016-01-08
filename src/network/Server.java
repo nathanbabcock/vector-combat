@@ -82,7 +82,7 @@ public class Server {
                     clientHandler.start();
 
                     // init player
-                    Player player = new Player(game, clientName);
+                    Player player = new Player(game, clientName, game.players.size());
                     game.players.add(player);
 
                     // print message

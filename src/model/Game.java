@@ -241,7 +241,7 @@ public class Game implements Serializable {
             Entity otherEntity = entry.getValue();
 
             if (newEntity instanceof Bullet)
-                ((Bullet) newEntity).owner = ((Bullet) otherEntity).owner;
+                ((Bullet) newEntity).ownerID = ((Bullet) otherEntity).ownerID;
 
             newEntity.velocity = otherEntity.velocity;
             newEntity.hitbox = otherEntity.hitbox;

@@ -17,7 +17,7 @@ import java.util.ArrayList;
  * Created by Nathan on 8/25/2015.
  */
 public class Grapple extends Entity<Circle2D> {
-    public String owner;
+    public int ownerID;
 
     public transient static final float RADIUS = 6;
     public transient static final float VELOCITY = 500;
@@ -50,7 +50,7 @@ public class Grapple extends Entity<Circle2D> {
         }
         if (collision == null) { // characters
             for (Player player : game.players) {
-                if (player.clientName.equals(owner))
+                if (player.clientName.equals(ownerID))
                     continue;
                 collision = player.character.hitbox.collision(hitbox);
                 if (collision != null)
@@ -64,7 +64,7 @@ public class Grapple extends Entity<Circle2D> {
     public void handleCollision(Collision collision) {
 //        game.garbage.add(this);
         velocity = new Vector2D(0, 0);
-        Ninja owner = (Ninja) game.getPlayer(this.owner).character;
+        Ninja owner = (Ninja) game.players.get(ownerID).character;
         owner.grapplePoints = new ArrayList();
         owner.grapplePoints.add(getCenter());
 
@@ -78,7 +78,7 @@ public class Grapple extends Entity<Circle2D> {
 //                player.velocity.add(explosion);
 //
 //                // Damage
-//                if (owner != player)
+//                if (ownerID != player)
 //                    player.damage(Grapple.DAMAGE);
 //            }
 //        }
@@ -92,7 +92,7 @@ public class Grapple extends Entity<Circle2D> {
         int y = (int) (canvas.HEIGHT - canvas.cameraOffsetY - getBottomLeft().y - 2 * hitbox.radius);
         int size = (int) (2 * hitbox.radius);
         g2.fillOval(x, y, size, size);
-        Character character = game.getPlayer(this.owner).character;
+        Character character = game.players.get(ownerID).character;
         g2.drawLine((int) character.getCenter().x + canvas.cameraOffsetX, (int) (canvas.getHeight() - canvas.cameraOffsetY - character.getCenter().y), (int) getCenter().x + canvas.cameraOffsetX, (int) (canvas.getHeight() - canvas.cameraOffsetY - getCenter().y));
     }
 

@@ -47,7 +47,7 @@ public class Rocketman extends Character {
             return;
 
         Rocket rocket = new Rocket(game, getCenter().x, getCenter().y, Rocket.RADIUS);
-        rocket.owner = player.clientName;
+        rocket.ownerID = player.clientID;
         Point2D origin = getCenter();
         rocket.velocity = new Vector2D(xhair.x - origin.x, xhair.y - origin.y);
         rocket.velocity.setMagnitude(Rocket.VELOCITY);

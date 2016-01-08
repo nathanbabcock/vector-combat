@@ -16,23 +16,22 @@ public class Player implements Serializable {
     public transient Game game;
 
     public String clientName;
+    public int clientID;
     public Class charClass;
     public Team team;
     public Character character;
     public float respawnTime;
     public int kills, deaths, ping;
 
-    public Player(Game game, String clientName) {
+    public Player(Game game, String clientName, int clientID) {
         this.game = game;
         this.clientName = clientName;
+        this.clientID = clientID;
         respawnTime = 0;
         kills = 0;
         deaths = 0;
         ping = 999;
-
-        // DEBUG ONLY
-//        charClass = Rocketman.class;
-//        team = Team.BLUE;
+        clientID = -1;
     }
 
     public void update(float delta) {
