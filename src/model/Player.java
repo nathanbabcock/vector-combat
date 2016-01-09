@@ -23,10 +23,9 @@ public class Player implements Serializable {
     public float respawnTime;
     public int kills, deaths, ping;
 
-    public Player(Game game, String clientName, int clientID) {
+    public Player(Game game, String clientName) {
         this.game = game;
         this.clientName = clientName;
-        this.clientID = clientID;
         respawnTime = 0;
         kills = 0;
         deaths = 0;

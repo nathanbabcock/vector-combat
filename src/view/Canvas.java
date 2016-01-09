@@ -6,6 +6,7 @@ import model.characters.Character;
 import model.entities.Entity;
 import model.geometry.AABB;
 import model.geometry.Point2D;
+import model.particles.Particle;
 
 import javax.swing.*;
 import java.awt.*;
@@ -69,8 +70,8 @@ public class Canvas extends JPanel {
             if (player.character != null) player.character.draw(this, g2, player.clientName);
 
         // Particles
-//        for (Particle particle : game.particles)
-//            particle.draw(this, g2);
+        for (Particle particle : game.particles)
+            particle.draw(this, g2);
 
         // Entities
         for (Entity entity : game.entities)

@@ -3,10 +3,12 @@ package network;
 import model.Game;
 import model.Player;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -77,12 +79,12 @@ public class Server {
                     outputs.put(clientName, output);
 
                     // spawn a thread to handle communication with this client
-                    Thread clientHandler = new Thread(new ClientHandler(input, clientName));
+                    Thread clientHandler = new Thread(new ClientHandler(input, output, clientName));
                     clientHandler.setName("Server: Client handler (" + clientName + ")");
                     clientHandler.start();
 
                     // init player
-                    Player player = new Player(game, clientName, game.players.size());
+                    Player player = new Player(game, clientName);
                     game.players.add(player);
 
                     // print message
@@ -99,11 +101,13 @@ public class Server {
      * This thread reads and executes commands sent by a client
      */
     private class ClientHandler implements Runnable {
-        private ObjectInputStream input; // the input stream from the client
+        private ObjectInputStream input;
+        private ObjectOutputStream output;
         private String clientName;
 
-        public ClientHandler(ObjectInputStream input, String clientName) {
+        public ClientHandler(ObjectInputStream input, ObjectOutputStream output, String clientName) {
             this.input = input;
+            this.output = output;
             this.clientName = clientName;
         }
 
@@ -122,12 +126,7 @@ public class Server {
 
                     // Part 2: Receieve from client
                     Object received = input.readObject();
-                    if (received == null) {
-                        System.out.println(clientName + " disconnected");
-                        outputs.remove(clientName);
-                        input.close();
-                        return;
-                    } else if (received instanceof InputState) {
+                    if (received instanceof InputState) {
                         if (game.getPlayer(clientName) == null)
                             continue;
                         if (game.getPlayer(clientName).character != null)
@@ -153,6 +152,18 @@ public class Server {
                     game.getPlayer(clientName).ping = ping;
 
                 }
+            } catch (SocketException e) {
+                // Disconnect client, suppress errors
+                System.out.println(clientName + " disconnected"); // TODO add to chat
+                game.players.remove(game.getPlayer(clientName));
+                outputs.remove(clientName);
+                try {
+                    input.close();
+                    output.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+                return;
             } catch (Exception e) {
                 e.printStackTrace();
             }

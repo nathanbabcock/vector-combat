@@ -14,7 +14,10 @@ import view.ScorePanel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.*;
+import java.io.EOFException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OptionalDataException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
@@ -224,18 +227,6 @@ public class Client extends JFrame {
                     canvas.clientName = clientName;
                 }
             }
-
-            // add a listener that sends a disconnect command to when closing
-            addWindowListener(new WindowAdapter() {
-                public void windowClosing(WindowEvent arg0) {
-                    try {
-                        out.writeObject(null);
-                        out.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
 
             // start a thread for handling server events
             Thread serverHandler = new Thread(new ServerHandler());

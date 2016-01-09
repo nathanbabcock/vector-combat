@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -43,11 +42,12 @@ public class Game implements Serializable {
     public Game() {
         setupSprites();
 
+        // TODO CopyOnWriteArrayList cannot possibly be the most efficient data structure for this...
         players = new CopyOnWriteArrayList();
         entities = new CopyOnWriteArrayList();
-        garbage = new Vector();
-        particles = new Vector();
-        chat = new Vector();
+        garbage = new CopyOnWriteArrayList();
+        particles = new CopyOnWriteArrayList();
+        chat = new CopyOnWriteArrayList();
         countdown = START_COUNTDOWN;
     }
 
@@ -149,7 +149,6 @@ public class Game implements Serializable {
         }
     }
 
-    // TODO someday optimize this, as well as the weight of the gamestate other being passed over network
     public void importGame(Game other) {
         // Players
         for (Player p : other.players) {
@@ -157,7 +156,7 @@ public class Game implements Serializable {
             Player oldPlayer = getPlayer(p.clientName);
             if (p.character != null) {
                 if (oldPlayer == null) {
-                    oldPlayer = new Player(this, p.clientName, p.clientID);
+                    oldPlayer = new Player(this, p.clientName);
                 }
                 if (oldPlayer.character == null) {
                     oldPlayer.charClass = p.charClass;

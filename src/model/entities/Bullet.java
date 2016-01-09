@@ -17,7 +17,7 @@ import java.util.Random;
  * Created by Nathan on 8/25/2015.
  */
 public class Bullet extends Entity<AABB> implements Serializable {
-    public int ownerID;
+    public Player owner;
 
     public transient static final float SIZE = 8;
     public transient static final float VELOCITY = 1250;
@@ -37,7 +37,7 @@ public class Bullet extends Entity<AABB> implements Serializable {
         }
         if (collision == null) { // characters
             for (Player player : game.players) {
-                if (player.clientID == ownerID || player.character == null) continue;
+                if (player == owner || player.character == null) continue;
                 collision = player.character.hitbox.collision(hitbox);
                 if (collision != null) {
                     collision.collider = player.character;
@@ -55,7 +55,7 @@ public class Bullet extends Entity<AABB> implements Serializable {
         if (collision.collider instanceof Character) {
             // Damage
             Character player = (Character) collision.collider;
-            player.damage(Bullet.DAMAGE, game.players.get(ownerID));
+            player.damage(Bullet.DAMAGE, owner);
 
             // Knockback
             Vector2D knockback = new Vector2D(player.getCenter().x - getCenter().x, player.getCenter().y - getCenter().y);
