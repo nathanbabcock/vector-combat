@@ -15,9 +15,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.EOFException;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OptionalDataException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
@@ -588,8 +588,9 @@ public class Client extends JFrame {
     private class ServerHandler implements Runnable {
         @SuppressWarnings("unchecked")
         public void run() {
-            while (true) {
-                try {
+            try {
+                while (true) {
+
                     // Part 1: Receive from server
                     Object received = in.readObject();
                     if (received instanceof Game) {
@@ -620,16 +621,21 @@ public class Client extends JFrame {
                     if (spawnParams != null) {
                         out.writeObject(spawnParams);
                         spawnParams = null;
+
                     }
-                } catch (SocketException | EOFException e) {
-                    return; // "gracefully" terminate after disconnect
-                } catch (OptionalDataException e) {
-                    e.printStackTrace();
-                    System.err.println("EOF: " + e.eof);
-                    System.err.println("Length: " + e.length);
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
+            } catch (SocketException | EOFException e) {
+                JOptionPane.showMessageDialog(Client.this, "Server disconnected", "Error", JOptionPane.ERROR_MESSAGE);
+                try {
+                    out.close();
+                    in.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+                System.exit(0);
+                return; // "gracefully" terminate after disconnect
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
         }
