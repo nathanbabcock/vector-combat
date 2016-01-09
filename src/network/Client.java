@@ -525,9 +525,8 @@ public class Client extends JFrame {
 
     private void refreshChat() {
         String chatText = "";
-        for (ChatMessage msg : game.chat) {
+        for (ChatMessage msg : game.chat)
             chatText += "\n" + msg.player + ": " + msg.content;
-        }
         chat.textArea.setText(chatText);
     }
 
@@ -590,7 +589,6 @@ public class Client extends JFrame {
         public void run() {
             try {
                 while (true) {
-
                     // Part 1: Receive from server
                     Object received = in.readObject();
                     if (received instanceof Game) {

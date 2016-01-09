@@ -104,11 +104,13 @@ public class Server {
         private ObjectInputStream input;
         private ObjectOutputStream output;
         private String clientName;
+        int chatSent;
 
         public ClientHandler(ObjectInputStream input, ObjectOutputStream output, String clientName) {
             this.input = input;
             this.output = output;
             this.clientName = clientName;
+            chatSent = 0;
         }
 
         @SuppressWarnings("unchecked")
@@ -119,10 +121,10 @@ public class Server {
                     startTime = System.currentTimeMillis();
 
                     // Part 1: Send to client
-                    ObjectOutputStream out = outputs.get(clientName);
-                    out.reset();
-                    out.writeObject(game);
-//                    outputs.get(clientName).writeObject(ObjectCloner.deepCopy(game));
+                    output.reset();
+                    output.writeObject(game); // Gamestate
+                    while (chatSent < game.chat.size())
+                        output.writeObject(game.chat.get(chatSent++)); // Chat
 
                     // Part 2: Receieve from client
                     Object received = input.readObject();
