@@ -21,7 +21,6 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * Created by Nathan on 9/12/2015.
@@ -403,7 +402,7 @@ public class Client extends JFrame {
             }
         };
         am.put("enterPressed", enterPressed);
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), "enterPressed");
+//        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), "enterPressed");
 
         // TAB pressed
         Action tabPressed = new AbstractAction() {
@@ -640,7 +639,7 @@ public class Client extends JFrame {
     }
 
     public static void main(String[] args) {
-//        new Client(JOptionPane.showInputDialog("Server:"), Integer.parseInt(JOptionPane.showInputDialog("Port:")), JOptionPane.showInputDialog("Username:"));
-        new Client("192.168.1.119", 9001, new Random().nextInt(1000) + "");
+        new Client("192.168.1.119", 9001, JOptionPane.showInputDialog("Username:"));
+//        new Client("192.168.1.119", 9001, new Random().nextInt(1000) + "");
     }
 }
