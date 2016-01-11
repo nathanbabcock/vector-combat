@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by Nathan on 9/12/2015.
  */
-public class Server {
+public class OldServer {
     ServerSocket socket;
     private HashMap<String, ObjectOutputStream> outputs;
     Game game;
@@ -25,18 +25,18 @@ public class Server {
     final int TARGET_FPS = 60;
     List<ChatMessage> newMsgs;
 
-    public Server(int port) {
+    public OldServer(int port) {
         outputs = new HashMap();
         newMsgs = new ArrayList();
 
         try {
             // start a new server on port 9001
             socket = new ServerSocket(port);
-            System.out.println("Server started on port " + port);
+            System.out.println("OldServer started on port " + port);
 
             // spawn a client accepter thread
             Thread clientAccepter = new Thread(new ClientAccepter());
-            clientAccepter.setName("Server: Client accepter");
+            clientAccepter.setName("OldServer: OldClient accepter");
             clientAccepter.start();
         } catch (Exception e) {
             e.printStackTrace();
@@ -45,7 +45,7 @@ public class Server {
         game = new Game();
         game.setMap("Map2");
         Thread gameUpdater = new Thread(new GameUpdater());
-        gameUpdater.setName("Server: Game updater");
+        gameUpdater.setName("OldServer: Game updater");
         gameUpdater.start();
     }
 
@@ -80,7 +80,7 @@ public class Server {
 
                     // spawn a thread to handle communication with this client
                     Thread clientHandler = new Thread(new ClientHandler(input, output, clientName));
-                    clientHandler.setName("Server: Client handler (" + clientName + ")");
+                    clientHandler.setName("OldServer: OldClient handler (" + clientName + ")");
                     clientHandler.start();
 
                     // init player
@@ -233,22 +233,22 @@ public class Server {
     }
 
     public static void main(String[] args) {
-        new Server(9001);
-        Client cl = new Client("localhost", 9001, "excalo");
+        new OldServer(9001);
+        OldClient cl = new OldClient("localhost", 9001, "excalo");
 //        try {
 //            Thread.sleep(15);
 //        } catch (Exception e) {
 //            ;
 //        }
 //        cl.setVisible(true);
-//        new Client("localhost", 9001, "nathansbrother");
-//        new Client("localhost", 9001, "3");
-//        new Client("localhost", 9001, "4");
-//        new Client("localhost", 9001, "5");
-//        new Client("localhost", 9001, "6");
-//        new Client("localhost", 9001, "7");
-//        new Client("localhost", 9001, "8");
-//        new Client("localhost", 9001, "9");
-//        new Client("localhost", 9001, "10");
+//        new OldClient("localhost", 9001, "nathansbrother");
+//        new OldClient("localhost", 9001, "3");
+//        new OldClient("localhost", 9001, "4");
+//        new OldClient("localhost", 9001, "5");
+//        new OldClient("localhost", 9001, "6");
+//        new OldClient("localhost", 9001, "7");
+//        new OldClient("localhost", 9001, "8");
+//        new OldClient("localhost", 9001, "9");
+//        new OldClient("localhost", 9001, "10");
     }
 }

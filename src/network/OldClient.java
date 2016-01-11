@@ -25,7 +25,7 @@ import java.util.ArrayList;
 /**
  * Created by Nathan on 9/12/2015.
  */
-public class Client extends JFrame {
+public class OldClient extends JFrame {
     Game game;
     String clientName, host;
     int port;
@@ -57,7 +57,7 @@ public class Client extends JFrame {
     JTextArea health;
     JTextField respawn, winner;
 
-    public Client(String host, int port, String username) {
+    public OldClient(String host, int port, String username) {
         clientName = username;
 
         connectToServer(host, port);
@@ -81,7 +81,7 @@ public class Client extends JFrame {
                 gameLoop();
             }
         };
-        gameUpdater.setName("Client: Game updater (" + clientName + ")");
+        gameUpdater.setName("OldClient: Game updater (" + clientName + ")");
         gameUpdater.start();
 
     }
@@ -221,7 +221,7 @@ public class Client extends JFrame {
                     System.out.println("Connection accepted by server " + host + " on port " + port + " with username " + clientName);
                     break;
                 } else {
-                    System.out.println("Server denied connection; duplicate username " + clientName);
+                    System.out.println("OldServer denied connection; duplicate username " + clientName);
                     clientName = JOptionPane.showInputDialog("A player with that username is already connected to the server.\nPlease choose a different user name:");
                     canvas.clientName = clientName;
                 }
@@ -229,7 +229,7 @@ public class Client extends JFrame {
 
             // start a thread for handling server events
             Thread serverHandler = new Thread(new ServerHandler());
-            serverHandler.setName("Client: Server handler (" + clientName + ")");
+            serverHandler.setName("OldClient: OldServer handler (" + clientName + ")");
             serverHandler.start();
 
         } catch (Exception e) {
@@ -622,7 +622,7 @@ public class Client extends JFrame {
                     }
                 }
             } catch (SocketException | EOFException e) {
-                JOptionPane.showMessageDialog(Client.this, "Server disconnected", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(OldClient.this, "OldServer disconnected", "Error", JOptionPane.ERROR_MESSAGE);
                 try {
                     out.close();
                     in.close();
@@ -639,7 +639,7 @@ public class Client extends JFrame {
     }
 
     public static void main(String[] args) {
-        new Client("192.168.1.119", 9001, JOptionPane.showInputDialog("Username:"));
-//        new Client("192.168.1.119", 9001, new Random().nextInt(1000) + "");
+        new OldClient("192.168.1.119", 9001, JOptionPane.showInputDialog("Username:"));
+//        new OldClient("192.168.1.119", 9001, new Random().nextInt(1000) + "");
     }
 }
