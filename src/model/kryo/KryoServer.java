@@ -28,7 +28,7 @@ public class KryoServer {
 
                     FromServer response = new FromServer();
                     response.msg = "Thanks";
-                    connection.sendTCP(response);
+                    connection.sendUDP(response);
                 }
             }
         });

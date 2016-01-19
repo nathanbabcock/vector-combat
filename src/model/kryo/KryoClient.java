@@ -32,7 +32,7 @@ public class KryoClient extends JFrame {
 
         FromClient request = new FromClient();
         request.msg = "Here is the request";
-        client.sendTCP(request);
+        client.sendUDP(request);
     }
 
     public static void main(String[] args) {

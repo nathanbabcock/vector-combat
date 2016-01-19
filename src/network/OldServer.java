@@ -3,6 +3,7 @@ package network;
 import model.Game;
 import model.Player;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -113,9 +114,22 @@ public class OldServer {
             chatSent = 0;
         }
 
+        private int sizeof(Object obj) throws IOException {
+
+            ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteOutputStream);
+
+            objectOutputStream.writeObject(obj);
+            objectOutputStream.flush();
+            objectOutputStream.close();
+
+            return byteOutputStream.toByteArray().length;
+        }
+
         @SuppressWarnings("unchecked")
         public void run() {
             long startTime;
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
             try {
                 while (true) {
                     startTime = System.currentTimeMillis();
@@ -123,6 +137,7 @@ public class OldServer {
                     // Part 1: Send to client
                     output.reset();
                     output.writeObject(game); // Gamestate
+                    System.out.println("Server gamestate snapshot size = " + sizeof(game));
                     while (chatSent < game.chat.size())
                         output.writeObject(game.chat.get(chatSent++)); // Chat
 

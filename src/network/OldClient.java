@@ -639,7 +639,7 @@ public class OldClient extends JFrame {
     }
 
     public static void main(String[] args) {
-        new OldClient("192.168.1.119", 9001, JOptionPane.showInputDialog("Username:"));
+        new OldClient("localhost", 9001, JOptionPane.showInputDialog("Username:"));
 //        new OldClient("192.168.1.119", 9001, new Random().nextInt(1000) + "");
     }
 }
