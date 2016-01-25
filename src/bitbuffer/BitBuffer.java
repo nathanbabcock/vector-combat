@@ -528,6 +528,44 @@ public abstract class BitBuffer {
     }
 
     /**
+     * Default case: loops through an object's fields and puts each into the buffer, unless it's transient
+     *
+     * @param o value to set
+     * @return This buffer
+     */
+/*    public BitBuffer put(Object o) {
+        if(o instanceof Integer)
+            return putInt(((Integer) o).intValue());
+        else if(o instanceof Float)
+            return putFloat(((Float) o).floatValue());
+        else if (o instanceof Long)
+            return putLong(((Long) o).longValue());
+        else if (o instanceof Byte)
+            return putByte(((Byte) o).byteValue());
+        else if (o instanceof Double)
+            return putDouble(((Double) o).doubleValue());
+        else if (o instanceof String)
+            return putString((String) o);
+
+        for (Field f : o.getClass().getDeclaredFields()) {
+            // Skip transient
+            int mod = f.getModifiers();
+            if (Modifier.isTransient(mod) || Modifier.isPrivate(mod))
+                continue;
+
+            // Get field
+            try {
+                System.out.println("Putting field " + f.getName() + " on object " + o.getClass());
+                put(f.get(o));
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return this;
+    }*/
+
+    /**
      * @return Binary value of current bit
      */
     public abstract boolean getBoolean();
@@ -542,6 +580,50 @@ public abstract class BitBuffer {
      * @return Signed Byte value of given bit width
      */
     public abstract byte getByte(int bits);
+
+ /*   public Object get(Class c) {
+        // Primitives
+        if (c == Integer.class)
+            return getInt();
+        else if (c == Float.class)
+            return getFloat();
+        else if (c == Long.class)
+            return getLong();
+        else if (c == String.class)
+            return getString();
+        else if (c == Byte.class)
+            return getByte();
+        else if (c == Boolean.class)
+            return getBoolean();
+        else if (c == Double.class)
+            return getDouble();
+
+        // Instantiate class
+        Object o = null;
+        try {
+            o = c.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        for (Field f : c.getDeclaredFields()) {
+            // Skip transient
+            int mod = f.getModifiers();
+            if (Modifier.isTransient(mod) || Modifier.isPrivate(mod))
+                continue;
+
+            // Get field
+            try {
+                f.set(o, get(f.getClass()));
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return this;
+    }*/
 
     /**
      * @param bits length of value in bits

@@ -2,27 +2,33 @@ package test;
 
 import bitbuffer.BitBuffer;
 
+import java.util.ArrayList;
+
 /**
  * Created by Nathan on 1/19/2016.
  */
 public class BitBufferTest {
     public static void main(String[] args) {
+
+
+        // DeltaSerializable interface
+        TestStruct master = new TestStruct();
+        master.string = "Hello World";
+        master.integer = 69;
+        master.floatVal = 420.0f;
+        master.buttHole = new ArrayList();
+        master.buttHole.add(1);
+        master.buttHole.add("ass");
+        master.buttHole.add(0L);
+        master.buttHole.add(1f);
+//        master.integers = new int[]{1, 2, 3, 4, 5};
+
+        TestStruct old = new TestStruct();
+
         BitBuffer buf = BitBuffer.allocateDynamic();
-        buf.put(1);
-        buf.put(2.0f);
-        buf.put(3L);
-        buf.put("Hello world");
-        buf.put(true);
-        buf.put(4);
-
         System.out.println("Buffer size = " + buf.position());
-        buf.flip();
+        DeltaCompression.write(TestStruct.class, master, old, buf);
+        System.out.println("Buffer size = " + buf.position());
 
-        System.out.println(buf.getInt());
-        System.out.println(buf.getFloat());
-        System.out.println(buf.getLong());
-        System.out.println(buf.getString());
-        System.out.println(buf.getBoolean());
-        System.out.println(buf.getInt());
     }
 }
