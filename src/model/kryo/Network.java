@@ -30,6 +30,7 @@ public class Network {
         // General
         kryo.register(Game.class);
         kryo.register(CopyOnWriteArrayList.class);
+        kryo.register(Class.class);
 //        kryo.register(HashMap.class);
 
         // Players
