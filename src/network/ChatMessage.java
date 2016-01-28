@@ -9,10 +9,10 @@ import java.util.Date;
  * Created by Nathan on 9/19/2015.
  */
 public class ChatMessage implements Serializable {
-    Team team;
-    String player, content;
-    boolean teamOnly;
-    Date time;
+    public Team team;
+    public String player, content;
+    public boolean teamOnly;
+    public Date time;
 
     public ChatMessage(String player, String content, Team team) {
         this(player, content, team, false);

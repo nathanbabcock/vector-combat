@@ -15,6 +15,8 @@ import model.maps.Map;
 import model.maps.Map1;
 import model.maps.Map2;
 
+import java.util.concurrent.CopyOnWriteArrayList;
+
 /**
  * Created by Nathan on 1/10/2016.
  */
@@ -25,8 +27,10 @@ public class Network {
     public static void register(EndPoint endpoint) {
         Kryo kryo = endpoint.getKryo();
 
-        //Game
+        // General
         kryo.register(Game.class);
+        kryo.register(CopyOnWriteArrayList.class);
+//        kryo.register(HashMap.class);
 
         // Players
         kryo.register(Player.class);

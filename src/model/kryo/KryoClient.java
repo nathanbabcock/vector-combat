@@ -42,7 +42,7 @@ public class KryoClient extends JFrame {
             client.connect(5000, "localhost", Network.PORT1, Network.PORT2);
         } catch (IOException e) {
             e.printStackTrace();
-            System.exit(0);
+            System.exit(2);
         }
 
         client.sendUDP("excalo");

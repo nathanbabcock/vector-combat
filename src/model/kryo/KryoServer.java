@@ -3,10 +3,17 @@ package model.kryo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
+import com.esotericsoftware.minlog.Log;
 import model.Game;
+import model.Player;
+import network.ChatMessage;
+import network.InputState;
+import network.SpawnParams;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by Nathan on 1/10/2016.
@@ -14,20 +21,35 @@ import java.util.ArrayList;
 public class KryoServer {
     Server server;
     Game game;
-    ArrayList<Connection> connections;
+    List<Connection> connections;
+    List<ChatMessage> newMsgs;
 
     long lastFpsTime;
     int fps;
     final int TARGET_FPS = 60;
 
-    public KryoServer() throws IOException {
-        connections = new ArrayList();
+    public KryoServer() {
+        connections = new CopyOnWriteArrayList<>();
+        newMsgs = new ArrayList();
         game = new Game();
 
-        server = new Server();
+        server = new Server() {
+            @Override
+            protected Connection newConnection() {
+                return new PlayerConnection();
+            }
+        };
+
         Network.register(server);
         server.start();
-        server.bind(Network.PORT1, Network.PORT2);
+
+        try {
+            server.bind(Network.PORT1, Network.PORT2);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(2);
+        }
+
         System.out.println("Server started");
 
         server.addListener(new Listener() {
@@ -41,7 +63,7 @@ public class KryoServer {
             public void disconnected(Connection connection) {
                 super.disconnected(connection);
                 connections.remove(connection);
-                System.out.println("Somebody disconnected");
+                System.out.println(((PlayerConnection) connection).player.clientName + " disconnected");
             }
         });
 
@@ -49,24 +71,37 @@ public class KryoServer {
     }
 
     private class ClientListener extends Listener {
-        String clientName;
 
         @Override
         public void received(Connection connection, Object o) {
             super.received(connection, o);
 
             // Need to receive clientName
-            if (clientName == null) {
+            PlayerConnection con = (PlayerConnection) connection;
+            if (con.player == null) {
                 if (o instanceof String) {
-                    clientName = (String) o;
-                    System.out.println(clientName + " connected.");
+                    con.player = new Player(game, (String) o);
+                    game.players.add(con.player);
+                    System.out.println(o + " connected.");
                     connections.add(connection);
-                }
+                } else
+                    System.out.println("Unexpected object: " + o);
             }
 
             // Already have clientName
             else {
-                System.out.println("Received object " + o + " before clientName");
+                if (o instanceof InputState) {
+                    if (con.player.character != null) con.player.character.importState((InputState) o);
+                } else if (o instanceof SpawnParams) {
+                    con.player.importSpawnParams((SpawnParams) o);
+                    if (con.player.character != null) con.player.kill();
+                } else if (o instanceof ChatMessage) {
+                    ChatMessage msg = (ChatMessage) o;
+                    System.out.println(msg.player + ": " + msg.content);
+                    game.chat.add(msg);
+                    newMsgs.add(msg);
+                } else
+                    System.out.println("Unexpected object: " + o);
             }
         }
     }
@@ -119,20 +154,13 @@ public class KryoServer {
         }
     }
 
-/*    private class PlayerConnection extends Connection {
+    private class PlayerConnection extends Connection {
         Player player;
-
-        public PlayerConnection(){
-            player = new Player();
-        }
-    }*/
+    }
 
     public static void main(String[] args) {
-        try {
-            new KryoServer();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Log.set(Log.LEVEL_DEBUG);
+        new KryoServer();
     }
 }
 
