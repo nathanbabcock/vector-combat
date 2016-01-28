@@ -20,8 +20,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Created by Nathan on 8/19/2015.
  */
 public class Game implements Serializable {
-    public List<Player> players;
-    public List<Entity> entities;
+    public transient List<Player> players;
+    public transient List<Entity> entities;
 
     public transient List<Object> garbage;
     public transient List<Particle> particles;

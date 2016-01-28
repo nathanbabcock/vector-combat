@@ -14,33 +14,49 @@ import java.io.IOException;
 public class KryoClient extends JFrame {
     Client client;
 
-    public KryoClient() throws IOException {
+    static final int PREF_WIDTH = 1024;
+    static final int PREF_HEIGHT = 768;
+
+    public KryoClient() {
+        initNetwork();
+        initGUI();
+    }
+
+    private void initNetwork() {
         client = new Client();
-        client.start();
+
         Network.register(client);
 
-        client.addListener(new Listener() {
+        client.addListener(new Listener.ThreadedListener(new Listener() {
             public void received(Connection connection, Object object) {
-                if (object instanceof FromServer) {
-                    FromServer response = (FromServer) object;
-                    System.out.println("Client received: " + response.msg);
-                }
+                System.out.println("Received object: " + object);
+//                if (object instanceof Game) {
+//                    System.out.println(object);
+//                }
             }
-        });
+        }));
 
-        client.connect(5000, "localhost", 54555, 54777);
+        client.start();
 
-        FromClient request = new FromClient();
-        request.msg = "Here is the request";
-        client.sendUDP(request);
+        try {
+            client.connect(5000, "localhost", Network.PORT1, Network.PORT2);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(0);
+        }
+
+        client.sendUDP("excalo");
+    }
+
+    private void initGUI() {
+        setSize(PREF_WIDTH, PREF_HEIGHT);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setVisible(true);
+        setFocusTraversalKeysEnabled(false);
     }
 
     public static void main(String[] args) {
         Log.set(Log.LEVEL_DEBUG);
-        try {
-            new KryoClient();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        new KryoClient();
     }
 }
