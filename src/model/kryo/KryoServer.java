@@ -29,9 +29,13 @@ public class KryoServer {
     final int TARGET_FPS = 60;
 
     public KryoServer() {
+        init_network();
+        init_game();
+    }
+
+    private void init_network() {
         connections = new CopyOnWriteArrayList<>();
         newMsgs = new ArrayList();
-        game = new Game();
 
         server = new Server() {
             @Override
@@ -44,7 +48,7 @@ public class KryoServer {
         server.start();
 
         try {
-            server.bind(Network.PORT1, Network.PORT2);
+            server.bind(Network.TCP_PORT, Network.UDP_PORT);
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(2);
@@ -66,12 +70,15 @@ public class KryoServer {
                 System.out.println(((PlayerConnection) connection).player.clientName + " disconnected");
             }
         });
+    }
 
-        new GameUpdater().run();
+    private void init_game() {
+        game = new Game();
+        game.setMap("Map2");
+        new GameUpdater().start();
     }
 
     private class ClientListener extends Listener {
-
         @Override
         public void received(Connection connection, Object o) {
             super.received(connection, o);
@@ -106,7 +113,11 @@ public class KryoServer {
         }
     }
 
-    private class GameUpdater implements Runnable {
+    private class GameUpdater extends Thread {
+        public GameUpdater() {
+            setName("Server: Game Updater");
+        }
+
         public void run() {
             long lastLoopTime = System.nanoTime();
             final long OPTIMAL_TIME = 1000000000 / TARGET_FPS;

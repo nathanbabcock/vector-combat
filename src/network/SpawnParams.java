@@ -12,6 +12,11 @@ public class SpawnParams implements Serializable {
     public Team team;
     public CharClass charClass;
 
+    public SpawnParams() {
+    }
+
+    ;
+
     public SpawnParams(Team team, CharClass charClass) {
         this.team = team;
         this.charClass = charClass;

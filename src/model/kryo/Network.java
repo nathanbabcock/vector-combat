@@ -14,6 +14,8 @@ import model.geometry.*;
 import model.maps.Map;
 import model.maps.Map1;
 import model.maps.Map2;
+import network.InputState;
+import network.SpawnParams;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -21,8 +23,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Created by Nathan on 1/10/2016.
  */
 public class Network {
-    public static final int PORT1 = 54555;
-    public static final int PORT2 = 54777;
+    public static final int TCP_PORT = 54555;
+    public static final int UDP_PORT = 54777;
 
     public static void register(EndPoint endpoint) {
         Kryo kryo = endpoint.getKryo();
@@ -54,6 +56,10 @@ public class Network {
         kryo.register(Line2D.class);
         kryo.register(Point2D.class);
         kryo.register(Vector2D.class);
+
+        // Network
+        kryo.register(SpawnParams.class);
+        kryo.register(InputState.class);
 
         // Maps
         kryo.register(Map.class);

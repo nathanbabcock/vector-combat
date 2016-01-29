@@ -83,7 +83,6 @@ public class OldClient extends JFrame {
         };
         gameUpdater.setName("OldClient: Game updater (" + clientName + ")");
         gameUpdater.start();
-
     }
 
     private void initGUI() {

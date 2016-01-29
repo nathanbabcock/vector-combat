@@ -12,11 +12,11 @@ public class InputState implements Serializable {
     public boolean movingLeft, movingRight, movingUp, movingDown, attacking, altAttacking;
     public Point2D xhair;
 
-    InputState() {
+    public InputState() {
         xhair = new Point2D(0, 0);
     }
 
-    InputState(Character player) {
+    public InputState(Character player) {
         movingLeft = player.movingLeft;
         movingRight = player.movingRight;
         movingUp = player.movingUp;
