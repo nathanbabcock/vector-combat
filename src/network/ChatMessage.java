@@ -14,6 +14,9 @@ public class ChatMessage implements Serializable {
     public boolean teamOnly;
     public Date time;
 
+    public ChatMessage() {
+    }
+
     public ChatMessage(String player, String content, Team team) {
         this(player, content, team, false);
     }

@@ -3,10 +3,8 @@ package model.kryo;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import com.esotericsoftware.minlog.Log;
 import model.Game;
 import model.Player;
-import model.characters.CharClass;
 import model.characters.Character;
 import model.characters.Team;
 import model.geometry.Point2D;
@@ -59,9 +57,7 @@ public class KryoClient extends JFrame {
 
     public KryoClient(String clientName, String server, int tcp_port, int udp_port) {
         this.clientName = clientName;
-
         initNetwork(server, tcp_port, udp_port);
-        initGUI();
     }
 
     private void initGame(Game game) {
@@ -88,19 +84,18 @@ public class KryoClient extends JFrame {
             public void received(Connection connection, Object object) {
 //                System.out.println("Received object: " + object);
                 if (object instanceof Game) {
-                    if (object instanceof Game) {
-                        if (game == null) { // First time game received
-                            initGame((Game) object);
-                            // DEBUG OnlY
-                            client.sendTCP(new SpawnParams(Team.BLUE, CharClass.ROCKETMAN));
-                        } else
-                            game.importGame((Game) object);
-                    } else if (object instanceof ChatMessage) {
-                        game.chat.add((ChatMessage) object);
-                        refreshChat();
+                    if (game == null) { // First time game received
+                        initGame((Game) object);
+                        // DEBUG OnlY
+//                        client.sendTCP(new SpawnParams(Team.BLUE, CharClass.ROCKETMAN));
                     } else
-                        System.out.println(object);
-                }
+                        game.importGame((Game) object);
+                } else if (object instanceof ChatMessage) {
+                    System.out.println("RECEIVED CHAT");
+                    game.chat.add((ChatMessage) object);
+                    refreshChat();
+                } else
+                    System.out.println(object);
             }
         }));
 
@@ -407,7 +402,7 @@ public class KryoClient extends JFrame {
             }
         };
         am.put("enterPressed", enterPressed);
-//        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), "enterPressed");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), "enterPressed");
 
         // TAB pressed
         Action tabPressed = new AbstractAction() {
@@ -585,7 +580,6 @@ public class KryoClient extends JFrame {
 
 
     public static void main(String[] args) {
-        Log.set(Log.LEVEL_DEBUG);
-        new KryoClient("excalo", "localhost", Network.TCP_PORT, Network.UDP_PORT);
+        new KryoClient(JOptionPane.showInputDialog("Username:"), "localhost", Network.TCP_PORT, Network.UDP_PORT);
     }
 }

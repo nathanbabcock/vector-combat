@@ -2,6 +2,7 @@ package model.kryo;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
+import com.esotericsoftware.minlog.Log;
 import model.Game;
 import model.Player;
 import model.characters.*;
@@ -14,9 +15,12 @@ import model.geometry.*;
 import model.maps.Map;
 import model.maps.Map1;
 import model.maps.Map2;
+import network.ChatMessage;
 import network.InputState;
 import network.SpawnParams;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -27,10 +31,13 @@ public class Network {
     public static final int UDP_PORT = 54777;
 
     public static void register(EndPoint endpoint) {
+        Log.set(Log.LEVEL_DEBUG);
+
         Kryo kryo = endpoint.getKryo();
 
         // General
         kryo.register(Game.class);
+        kryo.register(ArrayList.class);
         kryo.register(CopyOnWriteArrayList.class);
 
         // Players
@@ -53,18 +60,18 @@ public class Network {
         kryo.register(Shape2D.class);
         kryo.register(AABB.class);
         kryo.register(Circle2D.class);
-        kryo.register(Line2D.class);
         kryo.register(Point2D.class);
         kryo.register(Vector2D.class);
 
         // Network
         kryo.register(SpawnParams.class);
         kryo.register(InputState.class);
+        kryo.register(ChatMessage.class);
+        kryo.register(Date.class);
 
         // Maps
         kryo.register(Map.class);
         kryo.register(Map1.class);
         kryo.register(Map2.class);
-
     }
 }

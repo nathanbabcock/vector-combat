@@ -60,6 +60,9 @@ public class Canvas extends JPanel {
         // Background
 //        g2.drawImage(game.map.background, 0, 0, null);
 
+//        if(game == null || game.map == null)
+//            return;
+
         // Boundaries
         g2.setColor(Color.black);
         for (AABB b : game.map.statics)
@@ -121,7 +124,7 @@ public class Canvas extends JPanel {
     }
 
     private void calculateCameraOffset() {
-        if (game.getPlayer(clientName) == null || game.getPlayer(clientName).character == null) return;
+        if (game == null || game.getPlayer(clientName) == null || game.getPlayer(clientName).character == null) return;
 
         Character character = game.getPlayer(clientName).character;
         cameraOffsetX = (int) (-character.getCenter().x + ((getWidth() / 2) - (character.hitbox.width / 2)));

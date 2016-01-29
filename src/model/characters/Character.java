@@ -39,6 +39,9 @@ abstract public class Character extends Entity<AABB> implements Serializable {
 //    public final Point2D position;
 //    public final float width, height;
 
+    public Character() {
+    }
+
     public Character(Player player) {
         super(player.game, new AABB(0, 0, 24, 80));
 //        position = hitbox.position;// = new Point2D(400, 850);

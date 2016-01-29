@@ -16,6 +16,9 @@ import java.awt.geom.AffineTransform;
 public class Rocketman extends Character {
     public transient static final float ATTACK_INTERVAL = 0.8f;
 
+    public Rocketman() {
+    }
+
     public Rocketman(Player player) {
         super(player);
         attackInterval = ATTACK_INTERVAL;

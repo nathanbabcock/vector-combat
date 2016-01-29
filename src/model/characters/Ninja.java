@@ -20,6 +20,9 @@ public class Ninja extends Character {
 
     public static transient final int SWORD_DAMAGE = 70;
 
+    public Ninja() {
+    }
+
     public Ninja(Player player) {
         super(player);
         attackInterval = 0.3f;

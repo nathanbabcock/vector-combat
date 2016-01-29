@@ -8,6 +8,9 @@ import java.io.Serializable;
 public class Circle2D extends Shape2D implements Serializable {
     public float radius;
 
+    public Circle2D() {
+    }
+
     public Circle2D(Point2D center, float radius) {
         this.position = center;
         this.radius = radius;

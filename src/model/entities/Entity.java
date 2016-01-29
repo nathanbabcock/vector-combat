@@ -19,6 +19,11 @@ public abstract class Entity<E extends Shape2D> implements Serializable {
 
     public Vector2D velocity, acceleration;
 
+    public Entity() {
+    }
+
+    ;
+
     public Entity(Game game, E hitbox) {
         this.game = game;
         this.hitbox = hitbox;

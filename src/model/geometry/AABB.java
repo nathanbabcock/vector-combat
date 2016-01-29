@@ -12,6 +12,9 @@ import java.io.Serializable;
 public class AABB extends Shape2D implements Serializable {
     public float width, height;
 
+    public AABB() {
+    }
+
     public AABB(Point2D position, float width, float height) {
         this.width = width;
         this.height = height;

@@ -19,6 +19,9 @@ import java.util.Random;
 public class Soldier extends Character {
     public float jetpackVelocity = 250f;
 
+    public Soldier() {
+    }
+
     public Soldier(Player player) {
         super(player);
 

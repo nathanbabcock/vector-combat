@@ -22,6 +22,9 @@ public class Grapple extends Entity<Circle2D> {
     public transient static final float RADIUS = 6;
     public transient static final float VELOCITY = 750;
 
+    public Grapple() {
+    }
+
     public Grapple(Game game, float x, float y, float radius) {
         super(game, new Circle2D(x, y, radius));
     }

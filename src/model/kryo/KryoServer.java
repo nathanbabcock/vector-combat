@@ -3,7 +3,6 @@ package model.kryo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-import com.esotericsoftware.minlog.Log;
 import model.Game;
 import model.Player;
 import network.ChatMessage;
@@ -54,7 +53,7 @@ public class KryoServer {
             System.exit(2);
         }
 
-//        System.out.println("Server started");
+        System.out.println("Server started");
 
         server.addListener(new Listener() {
             @Override
@@ -67,6 +66,7 @@ public class KryoServer {
             public void disconnected(Connection connection) {
                 super.disconnected(connection);
                 connections.remove(connection);
+                game.players.remove(((PlayerConnection) connection).player);
                 System.out.println(((PlayerConnection) connection).player.clientName + " disconnected");
             }
         });
@@ -147,8 +147,15 @@ public class KryoServer {
 
                 // Send to clients
                 for (Connection con : connections) {
-                    System.out.println("Sending gamestate");
+                    // Gamestate
                     con.sendUDP(game);
+
+                    // Chat
+                    for (ChatMessage msg : newMsgs) {
+//                        System.out.println("Sending new message to client");
+                        con.sendTCP(msg);
+                    }
+                    newMsgs = new ArrayList();
                 }
 
                 // we want each frame to take 10 milliseconds, to do this
@@ -170,7 +177,7 @@ public class KryoServer {
     }
 
     public static void main(String[] args) {
-        Log.set(Log.LEVEL_DEBUG);
+//        Log.set(Log.LEVEL_NONE);
         new KryoServer();
     }
 }

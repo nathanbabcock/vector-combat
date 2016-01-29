@@ -22,6 +22,9 @@ public class Scout extends Character {
     public boolean extraJump;
     public float jumpDelay;
 
+    public Scout() {
+    }
+
     public Scout(Player player) {
         super(player);
 

@@ -27,6 +27,9 @@ public class Bullet extends Entity<AABB> implements Serializable {
         super(game, new AABB(x, y, size, size));
     }
 
+    public Bullet() {
+    }
+
     public void checkCollisions() {
         // Check collisions
         Collision collision = null;
