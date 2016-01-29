@@ -4,8 +4,8 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
 import model.Game;
 import model.Player;
-import model.characters.Character;
 import model.characters.*;
+import model.characters.Character;
 import model.entities.Bullet;
 import model.entities.Entity;
 import model.entities.Grapple;
@@ -30,12 +30,11 @@ public class Network {
         // General
         kryo.register(Game.class);
         kryo.register(CopyOnWriteArrayList.class);
-        kryo.register(Class.class);
-//        kryo.register(HashMap.class);
 
         // Players
         kryo.register(Player.class);
         kryo.register(Character.class);
+        kryo.register(CharClass.class);
         kryo.register(Ninja.class);
         kryo.register(Rocketman.class);
         kryo.register(Scout.class);

@@ -1,7 +1,7 @@
 package model;
 
-import model.characters.Character;
 import model.characters.*;
+import model.characters.Character;
 import model.geometry.Point2D;
 import network.SpawnParams;
 
@@ -17,7 +17,7 @@ public class Player implements Serializable {
 
     public String clientName;
     public int clientID;
-    public Class charClass;
+    public CharClass charClass;
     public Team team;
     public Character character;
     public float respawnTime;
@@ -56,13 +56,13 @@ public class Player implements Serializable {
         if (charClass == null) {
             System.err.println("Attempting to spawn player " + clientName + " with no class chosen");
             return;
-        } else if (charClass.equals(Rocketman.class))
+        } else if (charClass == CharClass.ROCKETMAN)
             character = new Rocketman(this);
-        else if (charClass.equals(Ninja.class))
+        else if (charClass == CharClass.NINJA)
             character = new Ninja(this);
-        else if (charClass.equals(Soldier.class))
+        else if (charClass == CharClass.SOLDIER)
             character = new Soldier(this);
-        else if (charClass.equals(Scout.class))
+        else if (charClass == CharClass.SCOUT)
             character = new Scout(this);
         else
             return;

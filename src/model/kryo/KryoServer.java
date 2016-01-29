@@ -50,7 +50,7 @@ public class KryoServer {
             System.exit(2);
         }
 
-        System.out.println("Server started");
+//        System.out.println("Server started");
 
         server.addListener(new Listener() {
             @Override

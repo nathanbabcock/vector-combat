@@ -2,8 +2,8 @@ package network;
 
 import model.Game;
 import model.Player;
+import model.characters.CharClass;
 import model.characters.Character;
-import model.characters.Rocketman;
 import model.characters.Team;
 import model.geometry.Point2D;
 import view.Canvas;
@@ -594,7 +594,7 @@ public class OldClient extends JFrame {
                         if (game == null) { // First time game received
                             initGame((Game) received);
                             // DEBUG OnlY
-                            out.writeObject(new SpawnParams(Team.BLUE, Rocketman.class));
+                            out.writeObject(new SpawnParams(Team.BLUE, CharClass.ROCKETMAN));
                         } else
                             game.importGame((Game) received);
                     } else if (received instanceof ChatMessage) {

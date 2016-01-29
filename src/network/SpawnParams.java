@@ -1,5 +1,6 @@
 package network;
 
+import model.characters.CharClass;
 import model.characters.Team;
 
 import java.io.Serializable;
@@ -9,9 +10,9 @@ import java.io.Serializable;
  */
 public class SpawnParams implements Serializable {
     public Team team;
-    public Class charClass;
+    public CharClass charClass;
 
-    public SpawnParams(Team team, Class charClass) {
+    public SpawnParams(Team team, CharClass charClass) {
         this.team = team;
         this.charClass = charClass;
     }

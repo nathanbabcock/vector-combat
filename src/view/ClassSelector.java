@@ -1,9 +1,6 @@
 package view;
 
-import model.characters.Ninja;
-import model.characters.Rocketman;
-import model.characters.Scout;
-import model.characters.Soldier;
+import model.characters.CharClass;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,8 +11,8 @@ import java.awt.event.MouseEvent;
  * Created by Nathan on 12/25/2015.
  */
 public class ClassSelector extends JPanel {
-    public Class selectedClass;
-    private Class[] classes;
+    public CharClass selectedClass;
+    private CharClass[] classes;
     private JTextField portraits[];
 
     private final Color HIGHLIGHT = new Color(219, 219, 219);
@@ -28,10 +25,10 @@ public class ClassSelector extends JPanel {
                 new JTextField("Soldier"),
                 new JTextField("Scout")
         };
-        classes = new Class[]{Rocketman.class, Ninja.class, Soldier.class, Scout.class};
+        classes = new CharClass[]{CharClass.ROCKETMAN, CharClass.NINJA, CharClass.SOLDIER, CharClass.SCOUT};
 
         for (int i = 0; i < classes.length; i++) {
-            final Class newClass = classes[i];
+            final CharClass newClass = classes[i];
             JTextField current = portraits[i];
             current.addMouseListener(new MouseAdapter() {
                 @Override
