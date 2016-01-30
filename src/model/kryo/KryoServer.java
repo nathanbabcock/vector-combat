@@ -161,11 +161,11 @@ public class KryoServer {
                 game.update(OPTIMAL_TIME / 1000000000f);
 
                 // DEBUG
-                /*try {
+                try {
                     System.out.println("Server gamestate snapshot size = " + sizeof(game));
                 } catch (IOException e) {
                     e.printStackTrace();
-                }*/
+                }
 
                 // Send to clients
                 for (Connection con : connections) {

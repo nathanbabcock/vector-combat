@@ -200,7 +200,7 @@ public class Ninja extends Character {
         // Spawn grapple entity for first time
         if (grapple == null) {
             grapple = new Grapple(game, getCenter().x, getCenter().y, Grapple.RADIUS);
-            grapple.owner = player;
+            grapple.owner = player.clientID;
             model.geometry.Point2D origin = getCenter();
             grapple.velocity = new Vector2D(xhair.x - origin.x, xhair.y - origin.y);
             grapple.velocity.setMagnitude(Rocket.VELOCITY);

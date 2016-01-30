@@ -37,6 +37,7 @@ public class Game implements Serializable {
     public transient static final float START_COUNTDOWN = 3;
     public transient static final int SCORE_LIMIT = 10;
 
+    public transient byte nextClientID;
     public transient float time = 0;
     public long sent;
 
@@ -50,11 +51,19 @@ public class Game implements Serializable {
         particles = new CopyOnWriteArrayList();
         chat = new CopyOnWriteArrayList();
         countdown = START_COUNTDOWN;
+        nextClientID = 0;
     }
 
     public Player getPlayer(String clientName) {
         for (Player p : players)
             if (p.clientName.equals(clientName))
+                return p;
+        return null;
+    }
+
+    public Player getPlayer(byte clientID) {
+        for (Player p : players)
+            if (p.clientID == clientID)
                 return p;
         return null;
     }
@@ -120,28 +129,32 @@ public class Game implements Serializable {
     }
 
     public void update(float deltaTime) {
-        // Debug
-        time += deltaTime;
+        try {
+            // Debug
+            time += deltaTime;
 //      System.out.println("t = " + time + ", pos = " + player.position + ", v = (" + player.velocity.x + ", " + player.velocity.y + "), a = (" + player.acceleration.x + ", " + player.acceleration.y + ")");
 
-        // Countdown
-        if (countdown > 0)
-            countdown -= deltaTime;
+            // Countdown
+            if (countdown > 0)
+                countdown -= deltaTime;
 
-        // Players
-        for (Player player : players) // Update characters
-            player.update(deltaTime);
+            // Players
+            for (Player player : players) // Update characters
+                player.update(deltaTime);
 
-        // Entities
-        for (Entity entity : entities)
-            entity.update(deltaTime);
+            // Entities
+            for (Entity entity : entities)
+                entity.update(deltaTime);
 
-        // Particles
-        for (Particle particle : particles)
-            particle.update(deltaTime);
+            // Particles
+            for (Particle particle : particles)
+                particle.update(deltaTime);
 
-        // Garbage
-        takeOutGarbage();
+            // Garbage
+            takeOutGarbage();
+        } catch (Exception e) {
+            e.printStackTrace(); // Try to power through errors without crashing
+        }
     }
 
     private void takeOutGarbage() {

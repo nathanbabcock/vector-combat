@@ -6,13 +6,13 @@ import com.esotericsoftware.minlog.Log;
 import model.Game;
 import model.Player;
 import model.characters.*;
-import model.characters.Character;
 import model.entities.Bullet;
-import model.entities.Entity;
 import model.entities.Grapple;
 import model.entities.Rocket;
-import model.geometry.*;
-import model.maps.Map;
+import model.geometry.AABB;
+import model.geometry.Circle2D;
+import model.geometry.Point2D;
+import model.geometry.Vector2D;
 import model.maps.Map1;
 import model.maps.Map2;
 import network.ChatMessage;
@@ -48,7 +48,6 @@ public class Network {
 
         // Players
         kryo.register(Player.class);
-        kryo.register(Character.class);
         kryo.register(CharClass.class);
         kryo.register(Ninja.class);
         kryo.register(Rocketman.class);
@@ -57,13 +56,11 @@ public class Network {
         kryo.register(Team.class);
 
         // Entities
-        kryo.register(Entity.class);
         kryo.register(Bullet.class);
         kryo.register(Grapple.class);
         kryo.register(Rocket.class);
 
         // Geometry
-        kryo.register(Shape2D.class);
         kryo.register(AABB.class);
         kryo.register(Circle2D.class);
         kryo.register(Point2D.class);
@@ -76,7 +73,6 @@ public class Network {
         kryo.register(Date.class);
 
         // Maps
-        kryo.register(Map.class);
         kryo.register(Map1.class);
         kryo.register(Map2.class);
     }

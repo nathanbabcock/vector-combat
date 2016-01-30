@@ -16,7 +16,7 @@ public class Player implements Serializable {
     public transient Game game;
 
     public String clientName;
-    public int clientID;
+    public byte clientID;
     public CharClass charClass;
     public Team team;
     public Character character;
@@ -24,7 +24,6 @@ public class Player implements Serializable {
     public int kills, deaths, ping;
 
     public Player() {
-        this(null, null);
     }
 
     public Player(Game game, String clientName) {
@@ -34,7 +33,7 @@ public class Player implements Serializable {
         kills = 0;
         deaths = 0;
         ping = 999;
-        clientID = -1;
+        clientID = game.nextClientID++;
     }
 
     public void update(float delta) {

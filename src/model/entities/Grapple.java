@@ -17,7 +17,7 @@ import java.util.ArrayList;
  * Created by Nathan on 8/25/2015.
  */
 public class Grapple extends Entity<Circle2D> {
-    public Player owner;
+    public byte owner;
 
     public transient static final float RADIUS = 6;
     public transient static final float VELOCITY = 750;
@@ -53,7 +53,7 @@ public class Grapple extends Entity<Circle2D> {
         }
         if (collision == null) { // characters
             for (Player player : game.players) {
-                if (player == owner || player.character == null)
+                if (player.clientID == owner || player.character == null)
                     continue;
                 collision = player.character.hitbox.collision(hitbox);
                 if (collision != null)
@@ -67,9 +67,9 @@ public class Grapple extends Entity<Circle2D> {
     public void handleCollision(Collision collision) {
 //        game.garbage.add(this);
         velocity = new Vector2D(0, 0);
-        Ninja owner = (Ninja) this.owner.character;
-        owner.grapplePoints = new ArrayList();
-        owner.grapplePoints.add(getCenter());
+        Ninja ownerNinja = (Ninja) game.getPlayer(owner).character;
+        ownerNinja.grapplePoints = new ArrayList();
+        ownerNinja.grapplePoints.add(getCenter());
 
 //        for (Player player : game.characters) {
 //            float distance = player.position.distance(position);
@@ -95,7 +95,7 @@ public class Grapple extends Entity<Circle2D> {
         int y = (int) (canvas.getHeight() - canvas.cameraOffsetY - getCenter().y - Grapple.RADIUS);
         int size = (int) (2 * hitbox.radius);
         g2.fillOval(x, y, size, size);
-        Character character = owner.character;
+        Character character = game.getPlayer(owner).character;
         g2.drawLine((int) character.getCenter().x + canvas.cameraOffsetX, (int) (canvas.getHeight() - canvas.cameraOffsetY - character.getCenter().y), (int) (getCenter().x + canvas.cameraOffsetX), (int) (canvas.getHeight() - canvas.cameraOffsetY - getCenter().y));
     }
 
