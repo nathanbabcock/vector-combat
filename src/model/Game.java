@@ -39,7 +39,7 @@ public class Game implements Serializable {
 
     public transient byte nextClientID;
     public transient float time = 0;
-    public long sent;
+//    public long sent;
 
     public Game() {
         setupSprites();
@@ -190,7 +190,7 @@ public class Game implements Serializable {
             e.game = this;
 
         // Other
-        sent = other.sent;
+//        sent = other.sent;
         countdown = other.countdown;
         winner = other.winner;
     }

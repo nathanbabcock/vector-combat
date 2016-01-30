@@ -19,7 +19,10 @@ import view.ScorePanel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 
 /**
@@ -91,13 +94,13 @@ public class KryoClient extends JFrame {
                         // DEBUG OnlY
 //                        client.sendTCP(new SpawnParams(Team.BLUE, CharClass.ROCKETMAN));
                     } else {
-                        if (game.sent > ((Game) object).sent) {
-                            System.out.println("Ignoring stale packet");
-                            return; // Ignore stale packets
-                        }
+//                        if (game.sent > ((Game) object).sent) {
+//                            System.out.println("Ignoring stale packet");
+//                            return; // Ignore stale packets
+//                        }
 //                        lastReceived = game.sent;
                         game.importGame((Game) object);
-                        game.getPlayer(clientName).ping = (int) Math.min(System.currentTimeMillis() - game.sent, 999L);
+//                        game.getPlayer(clientName).ping = (int) Math.min(System.currentTimeMillis() - game.sent, 999L);
                     }
                 } else if (object instanceof ChatMessage) {
                     System.out.println("RECEIVED CHAT");
@@ -283,6 +286,7 @@ public class KryoClient extends JFrame {
 
                 // Part 2: Send back to server
                 // InputState
+                inputState.sent = System.currentTimeMillis();
                 client.sendUDP(inputState);
 
                 // Chat
@@ -589,6 +593,13 @@ public class KryoClient extends JFrame {
 
 
     public static void main(String[] args) {
-        new KryoClient(JOptionPane.showInputDialog("Username:"), "localhost", Network.TCP_PORT, Network.UDP_PORT);
+        try {
+            PrintStream out = new PrintStream(new FileOutputStream("log.txt"));
+            System.setOut(out);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        new KryoClient(JOptionPane.showInputDialog("Username:"), "68.230.58.93", Network.TCP_PORT, Network.UDP_PORT);
     }
 }

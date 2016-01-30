@@ -94,6 +94,7 @@ public class KryoServer {
     }
 
     private class ClientListener extends Listener {
+
         @Override
         public void received(Connection connection, Object o) {
             super.received(connection, o);
@@ -113,6 +114,7 @@ public class KryoServer {
             // Already have clientName
             else {
                 if (o instanceof InputState) {
+                    con.player.ping = (int) (System.currentTimeMillis() - ((InputState) o).sent);
                     if (con.player.character != null) con.player.character.importState((InputState) o);
                 } else if (o instanceof SpawnParams) {
                     con.player.importSpawnParams((SpawnParams) o);
@@ -161,16 +163,16 @@ public class KryoServer {
                 game.update(OPTIMAL_TIME / 1000000000f);
 
                 // DEBUG
-                try {
+/*                try {
                     System.out.println("Server gamestate snapshot size = " + sizeof(game));
                 } catch (IOException e) {
                     e.printStackTrace();
-                }
+                }*/
 
                 // Send to clients
                 for (Connection con : connections) {
                     // Gamestate
-                    game.sent = System.currentTimeMillis();
+//                    game.sent = System.currentTimeMillis();
                     con.sendUDP(game);
 
                     // Chat

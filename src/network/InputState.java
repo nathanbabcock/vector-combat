@@ -11,6 +11,7 @@ import java.io.Serializable;
 public class InputState implements Serializable {
     public boolean movingLeft, movingRight, movingUp, movingDown, attacking, altAttacking;
     public Point2D xhair;
+    public long sent;
 
     public InputState() {
         xhair = new Point2D(0, 0);
