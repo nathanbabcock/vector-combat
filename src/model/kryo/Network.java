@@ -31,7 +31,13 @@ public class Network {
     public static final int UDP_PORT = 54777;
 
     public static void register(EndPoint endpoint) {
-        Log.set(Log.LEVEL_DEBUG);
+/*        try {
+            PrintStream out = new PrintStream(new FileOutputStream("log.txt"));
+            System.setOut(out);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }*/
+        Log.set(Log.LEVEL_WARN);
 
         Kryo kryo = endpoint.getKryo();
 

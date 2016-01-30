@@ -1,5 +1,7 @@
 package model.kryo;
 
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
@@ -9,6 +11,7 @@ import network.ChatMessage;
 import network.InputState;
 import network.SpawnParams;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +33,18 @@ public class KryoServer {
     public KryoServer() {
         init_network();
         init_game();
+    }
+
+
+    private int sizeof(Object obj) throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        Kryo kryo = new Kryo();
+        Output out = new Output(bos);
+        kryo.writeObject(out, obj);
+        out.flush();
+        out.close();
+
+        return bos.toByteArray().length;
     }
 
     private void init_network() {
@@ -145,6 +160,13 @@ public class KryoServer {
                 // update the game logic
                 game.update(OPTIMAL_TIME / 1000000000f);
 
+                // DEBUG
+                /*try {
+                    System.out.println("Server gamestate snapshot size = " + sizeof(game));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }*/
+
                 // Send to clients
                 for (Connection con : connections) {
                     // Gamestate
@@ -178,7 +200,6 @@ public class KryoServer {
     }
 
     public static void main(String[] args) {
-//        Log.set(Log.LEVEL_NONE);
         new KryoServer();
     }
 }
