@@ -148,6 +148,7 @@ public class KryoServer {
                 // Send to clients
                 for (Connection con : connections) {
                     // Gamestate
+                    game.sent = System.currentTimeMillis();
                     con.sendUDP(game);
 
                     // Chat

@@ -38,6 +38,7 @@ public class Game implements Serializable {
     public transient static final int SCORE_LIMIT = 10;
 
     public transient float time = 0;
+    public long sent;
 
     public Game() {
         setupSprites();
@@ -176,6 +177,7 @@ public class Game implements Serializable {
             e.game = this;
 
         // Other
+        sent = other.sent;
         countdown = other.countdown;
         winner = other.winner;
     }

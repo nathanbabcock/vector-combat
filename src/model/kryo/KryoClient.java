@@ -81,6 +81,8 @@ public class KryoClient extends JFrame {
         Network.register(client);
 
         client.addListener(new Listener.ThreadedListener(new Listener() {
+//            long lastReceived = 0;
+
             public void received(Connection connection, Object object) {
 //                System.out.println("Received object: " + object);
                 if (object instanceof Game) {
@@ -88,8 +90,15 @@ public class KryoClient extends JFrame {
                         initGame((Game) object);
                         // DEBUG OnlY
 //                        client.sendTCP(new SpawnParams(Team.BLUE, CharClass.ROCKETMAN));
-                    } else
+                    } else {
+                        if (game.sent > ((Game) object).sent) {
+                            System.out.println("Ignoring stale packet");
+                            return; // Ignore stale packets
+                        }
+//                        lastReceived = game.sent;
                         game.importGame((Game) object);
+                        game.getPlayer(clientName).ping = (int) Math.min(System.currentTimeMillis() - game.sent, 999L);
+                    }
                 } else if (object instanceof ChatMessage) {
                     System.out.println("RECEIVED CHAT");
                     game.chat.add((ChatMessage) object);
