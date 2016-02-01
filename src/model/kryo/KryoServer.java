@@ -26,10 +26,6 @@ public class KryoServer {
     List<Connection> connections;
     List<ChatMessage> newMsgs;
 
-    long lastFpsTime;
-    int fps;
-    final int TARGET_FPS = 60;
-
     public KryoServer() {
         init_network();
         init_game();
@@ -131,67 +127,62 @@ public class KryoServer {
     }
 
     private class GameUpdater extends Thread {
+        final int VID_FPS = 60; // Number of times per second both GAME LOGIC and RENDERING occur
+        final int NET_FPS = 20; // Number of times per second input is sent to the server
+        final int VID_NET_RATIO = VID_FPS / NET_FPS;
+        final int FRAME_TIME = 1000 / VID_FPS; // Expected time for each frame from in milliseconds
+
         public GameUpdater() {
-            setName("Server: Game Updater");
+            setName("Server: Game updater");
         }
 
+        @Override
         public void run() {
-            long lastLoopTime = System.nanoTime();
-            final long OPTIMAL_TIME = 1000000000 / TARGET_FPS;
+            long startTime;
+            short frameNo = 0;
+            int overflow = 0; // If a frame takes than usual, the next frame will compensate
 
             while (true) {
-                // work out how long its been since the last update, this
-                // will be used to calculate how far the entities should
-                // move this loop
-                long now = System.nanoTime();
-                long updateLength = now - lastLoopTime;
-                lastLoopTime = now;
-                float delta = updateLength / ((float) OPTIMAL_TIME);
+                startTime = System.currentTimeMillis();
+//                System.out.println("Frame " + frameNo + " ========");
 
-                // update the frame counter
-                lastFpsTime += updateLength;
-                fps++;
+                // Part 1: Update model
+//                System.out.println("game tick");
+                game.update(1f / VID_FPS);
 
-                // update our FPS counter if a second has passed since
-                // we last recorded
-                if (lastFpsTime >= 1000000000) {
-                    lastFpsTime = 0;
-                    fps = 0;
-                }
+                // Part 2: Send snapshot to clients
+                if (frameNo % VID_NET_RATIO == 0) {
+//                    System.out.println("network tick");
+                    for (Connection con : connections) {
+                        // Gamestate
+                        con.sendUDP(game);
 
-                // update the game logic
-                game.update(OPTIMAL_TIME / 1000000000f);
-
-                // DEBUG
-/*                try {
-                    System.out.println("Server gamestate snapshot size = " + sizeof(game));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }*/
-
-                // Send to clients
-                for (Connection con : connections) {
-                    // Gamestate
-//                    game.sent = System.currentTimeMillis();
-                    con.sendUDP(game);
-
-                    // Chat
-                    for (ChatMessage msg : newMsgs) {
-//                        System.out.println("Sending new message to client");
-                        con.sendTCP(msg);
+                        // Chat
+                        for (ChatMessage msg : newMsgs)
+                            con.sendTCP(msg);
+                        newMsgs = new ArrayList();
                     }
-                    newMsgs = new ArrayList();
                 }
 
-                // we want each frame to take 10 milliseconds, to do this
-                // we've recorded when we started the frame. We add 10 milliseconds
-                // to this and then factor in the current time to give
-                // us our final value to wait for
-                // remember this is in ms, whereas our lastLoopTime etc. vars are in ns.
-                try {
-                    Thread.sleep(Math.max(0, (lastLoopTime - System.nanoTime() + OPTIMAL_TIME) / 1000000));
-                } catch (Exception e) {
-                    e.printStackTrace();
+                // Increment frame number
+                if (frameNo++ >= VID_FPS) {
+                    frameNo = 0;
+                }
+
+                // Wait until next frame
+                long frameTime = System.currentTimeMillis() - startTime;
+//                System.out.println("Frame took " + frameTime + "ms");
+                int sleepTime = (int) (FRAME_TIME - frameTime) + overflow;
+                overflow = 0;
+                if (sleepTime < 0) {
+//                    System.out.println("Error: frame took " + frameTime + "/" + FRAME_TIME + "ms");
+                    overflow = sleepTime;
+                } else {
+                    try {
+                        Thread.sleep(sleepTime);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -203,6 +194,13 @@ public class KryoServer {
 
     public static void main(String[] args) {
         new KryoServer();
+        KryoClient client = new KryoClient("excalo", "68.230.58.93", Network.TCP_PORT, Network.UDP_PORT);
+        try {
+            Thread.sleep(105);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        client.setVisible(true);
     }
 }
 

@@ -128,6 +128,9 @@ public class Game implements Serializable {
         sprites.put("scout_gun", new Sprite(spriteSheet, 112, 304, 48, 24));
     }
 
+    /**
+     * @param deltaTime in seconds
+     */
     public void update(float deltaTime) {
         try {
             // Debug

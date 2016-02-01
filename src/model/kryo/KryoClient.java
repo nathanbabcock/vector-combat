@@ -5,6 +5,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import model.Game;
 import model.Player;
+import model.characters.CharClass;
 import model.characters.Character;
 import model.characters.Team;
 import model.geometry.Point2D;
@@ -19,10 +20,7 @@ import view.ScorePanel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.ArrayList;
 
 /**
@@ -44,9 +42,6 @@ public class KryoClient extends JFrame {
     static final Integer LAYER_HUD = new Integer(1);
     static final Integer LAYER_CHAT = new Integer(2);
     static final Integer LAYER_OVERLAY = new Integer(3);
-
-    long lastFpsTime;
-    public int fps;
 
     Canvas canvas;
     int messageMode;
@@ -92,7 +87,7 @@ public class KryoClient extends JFrame {
                     if (game == null) { // First time game received
                         initGame((Game) object);
                         // DEBUG OnlY
-//                        client.sendTCP(new SpawnParams(Team.BLUE, CharClass.ROCKETMAN));
+                        client.sendTCP(new SpawnParams(Team.BLUE, CharClass.ROCKETMAN));
                     } else {
 //                        if (game.sent > ((Game) object).sent) {
 //                            System.out.println("Ignoring stale packet");
@@ -126,8 +121,8 @@ public class KryoClient extends JFrame {
     private void initGUI() {
         setSize(PREF_WIDTH, PREF_HEIGHT);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-//        setVisible(false); // DEBUG
-        setVisible(true);
+        setVisible(false); // DEBUG
+//        setVisible(true);
         setSize(PREF_WIDTH, PREF_HEIGHT);
         setFocusTraversalKeysEnabled(false);
 
@@ -245,70 +240,72 @@ public class KryoClient extends JFrame {
     }
 
     private class GameUpdater extends Thread {
+        final int VID_FPS = 60; // Number of times per second both GAME LOGIC and RENDERING occur
+        final int NET_FPS = 20; // Number of times per second input is sent to the server
+        final int VID_NET_RATIO = VID_FPS / NET_FPS;
+        final int FRAME_TIME = 1000 / VID_FPS; // Expected time for each frame from in milliseconds
+
         public GameUpdater() {
             setName("Client: Game updater (" + clientName + ")");
         }
 
         @Override
         public void run() {
-            long lastLoopTime = System.nanoTime();
-            final int TARGET_FPS = 60;
-            final long OPTIMAL_TIME = 1000000000 / TARGET_FPS;
+            long startTime;
+            short frameNo = 0;
+            int overflow = 0; // If a frame takes than usual, the next frame will compensate
 
             while (client.isConnected()) {
-                // work out how long its been since the last update, this
-                // will be used to calculate how far the entities should
-                // move this loop
-                long now = System.nanoTime();
-                long updateLength = now - lastLoopTime;
-                lastLoopTime = now;
-                float delta = updateLength / ((float) OPTIMAL_TIME);
-
-                // update the frame counter
-                lastFpsTime += updateLength;
-                fps++;
-
-                // update our FPS counter if a second has passed since
-                // we last recorded
-                if (lastFpsTime >= 1000000000) {
-//                System.out.println("FPS: " + fps);
-                    lastFpsTime = 0;
-                    fps = 0;
-                }
+                startTime = System.currentTimeMillis();
+//                System.out.println("Frame " +   frameNo);
 
                 // Part 1: Update model
                 if (game != null) {
-                    game.update(OPTIMAL_TIME / 1000000000f);
+//                    System.out.println("game tick");
+                    game.update(1f / VID_FPS);
                     updateHUD();
                     inputState.xhair = new Point2D(canvas.xhair.x - canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - canvas.xhair.y);
                     repaint();
                 }
 
                 // Part 2: Send back to server
-                // InputState
-                inputState.sent = System.currentTimeMillis();
-                client.sendUDP(inputState);
+                if (frameNo % VID_NET_RATIO == 0) {
+//                    System.out.println("network tick");
+                    // InputState
+                    inputState.sent = System.currentTimeMillis();
+                    client.sendUDP(inputState);
 
-                // Chat
-                for (ChatMessage msg : chatQueue)
-                    client.sendTCP(msg);
-                chatQueue = new ArrayList();
+                    // Chat
+                    for (ChatMessage msg : chatQueue)
+                        client.sendTCP(msg);
+                    chatQueue = new ArrayList();
 
-                // Spawn params
-                if (spawnParams != null) {
-                    client.sendTCP(spawnParams);
-                    spawnParams = null;
+                    // Spawn params
+                    if (spawnParams != null) {
+                        client.sendTCP(spawnParams);
+                        spawnParams = null;
+                    }
                 }
 
-                // we want each frame to take 10 milliseconds, to do this
-                // we've recorded when we started the frame. We add 10 milliseconds
-                // to this and then factor in the current time to give
-                // us our final value to wait for
-                // remember this is in ms, whereas our lastLoopTime etc. vars are in ns.
-                try {
-                    Thread.sleep(Math.max(0, (lastLoopTime - System.nanoTime() + OPTIMAL_TIME) / 1000000));
-                } catch (Exception e) {
-                    e.printStackTrace();
+                // Increment frame number
+                if (frameNo++ >= VID_FPS) {
+                    frameNo = 0;
+                }
+
+                // Wait until next frame
+                long frameTime = System.currentTimeMillis() - startTime;
+//                System.out.println("Frame took " + frameTime + "ms");
+                int sleepTime = (int) (FRAME_TIME - frameTime) + overflow;
+                overflow = 0;
+                if (sleepTime < 0) {
+//                    System.out.println("Error: frame took " + frameTime + "/" + FRAME_TIME + "ms");
+                    overflow = sleepTime;
+                } else {
+                    try {
+                        Thread.sleep(sleepTime);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -593,12 +590,12 @@ public class KryoClient extends JFrame {
 
 
     public static void main(String[] args) {
-        try {
+/*        try {
             PrintStream out = new PrintStream(new FileOutputStream("log.txt"));
             System.setOut(out);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }
+        }*/
 
         new KryoClient(JOptionPane.showInputDialog("Username:"), "68.230.58.93", Network.TCP_PORT, Network.UDP_PORT);
     }
