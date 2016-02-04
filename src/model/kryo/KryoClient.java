@@ -22,6 +22,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Nathan on 1/10/2016.
@@ -37,6 +40,8 @@ public class KryoClient extends JFrame {
     static final int PREF_WIDTH = 1024;
     static final int PREF_HEIGHT = 768;
     static final int TIMEOUT = 5000;
+    final int VID_FPS = 60; // Number of times per second both GAME LOGIC and RENDERING occur
+    final int NET_FPS = 20; // Number of times per second input is sent to the server
 
     static final Integer LAYER_CANVAS = new Integer(0);
     static final Integer LAYER_HUD = new Integer(1);
@@ -52,6 +57,8 @@ public class KryoClient extends JFrame {
     MenuPanel menu;
     JTextArea health;
     JTextField respawn, winner;
+
+    private final boolean debug = false;
 
     public KryoClient(String clientName, String server, int tcp_port, int udp_port) {
         this.clientName = clientName;
@@ -70,7 +77,11 @@ public class KryoClient extends JFrame {
         initGUI();
         setupListeners();
 
-        new GameUpdater().start();
+        //        new GameUpdater().start();
+
+        final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
+        scheduler.scheduleAtFixedRate(new GameTick(), 0, 1000 / VID_FPS, TimeUnit.MILLISECONDS);
+        scheduler.scheduleAtFixedRate(new NetworkTick(), 0, 1000 / NET_FPS, TimeUnit.MILLISECONDS);
     }
 
     private void initNetwork(String server, int tcp_port, int udp_port) {
@@ -86,8 +97,7 @@ public class KryoClient extends JFrame {
                 if (object instanceof Game) {
                     if (game == null) { // First time game received
                         initGame((Game) object);
-                        // DEBUG OnlY
-                        client.sendTCP(new SpawnParams(Team.BLUE, CharClass.ROCKETMAN));
+                        if (debug) client.sendTCP(new SpawnParams(Team.BLUE, CharClass.ROCKETMAN));
                     } else {
 //                        if (game.sent > ((Game) object).sent) {
 //                            System.out.println("Ignoring stale packet");
@@ -121,8 +131,10 @@ public class KryoClient extends JFrame {
     private void initGUI() {
         setSize(PREF_WIDTH, PREF_HEIGHT);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setVisible(false); // DEBUG
-//        setVisible(true);
+        if (debug)
+            setVisible(false); // DEBUG
+        else
+            setVisible(true);
         setSize(PREF_WIDTH, PREF_HEIGHT);
         setFocusTraversalKeysEnabled(false);
 
@@ -239,9 +251,44 @@ public class KryoClient extends JFrame {
         revalidate();
     }
 
+    private class GameTick implements Runnable {
+        @Override
+        public void run() {
+            // Part 1: Update model
+            if (game != null) {
+//                System.out.println("game tick");
+                game.update(1f / VID_FPS);
+                updateHUD();
+                inputState.xhair = new Point2D(canvas.xhair.x - canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - canvas.xhair.y);
+                repaint();
+            }
+        }
+    }
+
+    private class NetworkTick implements Runnable {
+        @Override
+        public void run() {
+//            System.out.println("network tick");
+            // InputState
+            inputState.sent = System.currentTimeMillis();
+            client.sendUDP(inputState);
+
+            // Chat
+            for (ChatMessage msg : chatQueue)
+                client.sendTCP(msg);
+            chatQueue = new ArrayList();
+
+            // Spawn params
+            if (spawnParams != null) {
+                client.sendTCP(spawnParams);
+                spawnParams = null;
+            }
+        }
+    }
+
     private class GameUpdater extends Thread {
-        final int VID_FPS = 60; // Number of times per second both GAME LOGIC and RENDERING occur
-        final int NET_FPS = 20; // Number of times per second input is sent to the server
+        //        final int VID_FPS = 60; // Number of times per second both GAME LOGIC and RENDERING occur
+//        final int NET_FPS = 20; // Number of times per second input is sent to the server
         final int VID_NET_RATIO = VID_FPS / NET_FPS;
         final int FRAME_TIME = 1000 / VID_FPS; // Expected time for each frame from in milliseconds
 

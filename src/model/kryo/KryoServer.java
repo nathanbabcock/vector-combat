@@ -16,6 +16,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Nathan on 1/10/2016.
@@ -25,6 +28,9 @@ public class KryoServer {
     Game game;
     List<Connection> connections;
     List<ChatMessage> newMsgs;
+
+    final int VID_FPS = 60;
+    final int NET_FPS = 20;
 
     public KryoServer() {
         init_network();
@@ -86,11 +92,14 @@ public class KryoServer {
     private void init_game() {
         game = new Game();
         game.setMap("Map2");
-        new GameUpdater().start();
+//        new GameUpdater().start();
+
+        final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
+        scheduler.scheduleAtFixedRate(new GameTick(), 0, 1000 / VID_FPS, TimeUnit.MILLISECONDS);
+        scheduler.scheduleAtFixedRate(new NetworkTick(), 0, 1000 / NET_FPS, TimeUnit.MILLISECONDS);
     }
 
     private class ClientListener extends Listener {
-
         @Override
         public void received(Connection connection, Object o) {
             super.received(connection, o);
@@ -126,9 +135,33 @@ public class KryoServer {
         }
     }
 
+    private class GameTick implements Runnable {
+        @Override
+        public void run() {
+//            System.out.println("game tick");
+            game.update(1f / VID_FPS);
+        }
+    }
+
+    private class NetworkTick implements Runnable {
+        @Override
+        public void run() {
+//            System.out.println("network tick");
+            for (Connection con : connections) {
+                // Gamestate
+                con.sendUDP(game);
+
+                // Chat
+                for (ChatMessage msg : newMsgs)
+                    con.sendTCP(msg);
+                newMsgs = new ArrayList();
+            }
+        }
+    }
+
     private class GameUpdater extends Thread {
-        final int VID_FPS = 60; // Number of times per second both GAME LOGIC and RENDERING occur
-        final int NET_FPS = 20; // Number of times per second input is sent to the server
+        //        final int VID_FPS = 60; // Number of times per second both GAME LOGIC and RENDERING occur
+//        final int NET_FPS = 20; // Number of times per second input is sent to the server
         final int VID_NET_RATIO = VID_FPS / NET_FPS;
         final int FRAME_TIME = 1000 / VID_FPS; // Expected time for each frame from in milliseconds
 
@@ -148,20 +181,11 @@ public class KryoServer {
 
                 // Part 1: Update model
 //                System.out.println("game tick");
-                game.update(1f / VID_FPS);
+
 
                 // Part 2: Send snapshot to clients
                 if (frameNo % VID_NET_RATIO == 0) {
-//                    System.out.println("network tick");
-                    for (Connection con : connections) {
-                        // Gamestate
-                        con.sendUDP(game);
-
-                        // Chat
-                        for (ChatMessage msg : newMsgs)
-                            con.sendTCP(msg);
-                        newMsgs = new ArrayList();
-                    }
+//
                 }
 
                 // Increment frame number
@@ -194,13 +218,13 @@ public class KryoServer {
 
     public static void main(String[] args) {
         new KryoServer();
-        KryoClient client = new KryoClient("excalo", "68.230.58.93", Network.TCP_PORT, Network.UDP_PORT);
+/*        KryoClient client = new KryoClient("excalo", "68.230.58.93", Network.TCP_PORT, Network.UDP_PORT);
         try {
             Thread.sleep(105);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        client.setVisible(true);
+        client.setVisible(true);*/
     }
 }
 
