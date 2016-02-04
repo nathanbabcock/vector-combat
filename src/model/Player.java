@@ -3,10 +3,13 @@ package model;
 import model.characters.*;
 import model.characters.Character;
 import model.geometry.Point2D;
+import network.Ping;
 import network.SpawnParams;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Random;
 
 /**
@@ -14,6 +17,7 @@ import java.util.Random;
  */
 public class Player implements Serializable {
     public transient Game game;
+    public transient Queue<Ping> pings;
 
     public String clientName;
     public byte clientID;
@@ -34,6 +38,7 @@ public class Player implements Serializable {
         deaths = 0;
         ping = 999;
         clientID = game.nextClientID++;
+        pings = new LinkedList<>();
     }
 
     public void update(float delta) {

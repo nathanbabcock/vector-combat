@@ -90,8 +90,6 @@ public class KryoClient extends JFrame {
         Network.register(client);
 
         client.addListener(new Listener.ThreadedListener(new Listener() {
-//            long lastReceived = 0;
-
             public void received(Connection connection, Object object) {
 //                System.out.println("Received object: " + object);
                 if (object instanceof Game) {
@@ -105,6 +103,7 @@ public class KryoClient extends JFrame {
 //                        }
 //                        lastReceived = game.sent;
                         game.importGame((Game) object);
+                        inputState.lastTick = ((Game) object).net_tick;
 //                        game.getPlayer(clientName).ping = (int) Math.min(System.currentTimeMillis() - game.sent, 999L);
                     }
                 } else if (object instanceof ChatMessage) {
@@ -270,7 +269,6 @@ public class KryoClient extends JFrame {
         public void run() {
 //            System.out.println("network tick");
             // InputState
-            inputState.sent = System.currentTimeMillis();
             client.sendUDP(inputState);
 
             // Chat
@@ -319,7 +317,7 @@ public class KryoClient extends JFrame {
                 if (frameNo % VID_NET_RATIO == 0) {
 //                    System.out.println("network tick");
                     // InputState
-                    inputState.sent = System.currentTimeMillis();
+//                    inputState.sent = System.currentTimeMillis();
                     client.sendUDP(inputState);
 
                     // Chat
@@ -644,6 +642,7 @@ public class KryoClient extends JFrame {
             e.printStackTrace();
         }*/
 
-        new KryoClient(JOptionPane.showInputDialog("Username:"), "68.230.58.93", Network.TCP_PORT, Network.UDP_PORT);
+        new KryoClient(JOptionPane.showInputDialog("Username:"), "localhost", Network.TCP_PORT, Network.UDP_PORT);
+//        new KryoClient(JOptionPane.showInputDialog("Username:"), "68.230.58.93", Network.TCP_PORT, Network.UDP_PORT);
     }
 }

@@ -9,6 +9,7 @@ import model.Game;
 import model.Player;
 import network.ChatMessage;
 import network.InputState;
+import network.Ping;
 import network.SpawnParams;
 
 import java.io.ByteArrayOutputStream;
@@ -31,6 +32,7 @@ public class KryoServer {
 
     final int VID_FPS = 60;
     final int NET_FPS = 20;
+    final int MAX_PING_HISTORY = 60; // Number of ping times to save per player
 
     public KryoServer() {
         init_network();
@@ -119,8 +121,12 @@ public class KryoServer {
             // Already have clientName
             else {
                 if (o instanceof InputState) {
-                    con.player.ping = (int) (System.currentTimeMillis() - ((InputState) o).sent);
-                    if (con.player.character != null) con.player.character.importState((InputState) o);
+                    InputState i = (InputState) o;
+                    while (con.player.pings.peek().tick < i.lastTick)
+                        con.player.pings.remove();
+                    con.player.ping = (int) (System.currentTimeMillis() - con.player.pings.remove().time);
+
+                    if (con.player.character != null) con.player.character.importState(i);
                 } else if (o instanceof SpawnParams) {
                     con.player.importSpawnParams((SpawnParams) o);
                     if (con.player.character != null) con.player.kill();
@@ -148,6 +154,12 @@ public class KryoServer {
         public void run() {
 //            System.out.println("network tick");
             for (Connection con : connections) {
+                Player player = ((PlayerConnection) con).player;
+                player.pings.add(new Ping(game.net_tick, System.currentTimeMillis()));
+                while (player.pings.size() >= MAX_PING_HISTORY)
+                    player.pings.remove();
+//                System.out.println(player.pings.size()); // DEBUG
+
                 // Gamestate
                 con.sendUDP(game);
 
@@ -156,6 +168,7 @@ public class KryoServer {
                     con.sendTCP(msg);
                 newMsgs = new ArrayList();
             }
+            game.net_tick++;
         }
     }
 
