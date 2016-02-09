@@ -42,6 +42,7 @@ public class KryoClient extends JFrame {
     static final int TIMEOUT = 5000;
     final int VID_FPS = 60; // Number of times per second both GAME LOGIC and RENDERING occur
     final int NET_FPS = 20; // Number of times per second input is sent to the server
+    float TIMESCALE = 0.5f;
 
     static final Integer LAYER_CANVAS = new Integer(0);
     static final Integer LAYER_HUD = new Integer(1);
@@ -256,7 +257,7 @@ public class KryoClient extends JFrame {
             // Part 1: Update model
             if (game != null) {
 //                System.out.println("game tick");
-                game.update(1f / VID_FPS);
+                game.update(TIMESCALE / VID_FPS);
                 updateHUD();
                 inputState.xhair = new Point2D(canvas.xhair.x - canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - canvas.xhair.y);
                 repaint();
@@ -267,7 +268,7 @@ public class KryoClient extends JFrame {
     private class NetworkTick implements Runnable {
         @Override
         public void run() {
-//            System.out.println("network tick");
+//            System.out.println("network tick");d
             // InputState
             client.sendUDP(inputState);
 

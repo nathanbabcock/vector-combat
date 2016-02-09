@@ -227,6 +227,12 @@ public class Ninja extends Character {
             playerX += hitbox.width + sprite.offsetX - 0;
         }
 
+        // Velocity debugging
+        if (true) {
+            g2.setColor(Color.RED);
+            g2.drawLine((int) playerX + playerWidth / 2, (int) playerY + playerHeight / 2, (int) (playerX + playerWidth / 2 + velocity.x), (int) (playerY + playerHeight / 2 - velocity.y));
+        }
+
         g2.drawImage(sprite.image, playerX, playerY, playerWidth, playerHeight, null);
         g2.setTransform(canvas.backup);
     }

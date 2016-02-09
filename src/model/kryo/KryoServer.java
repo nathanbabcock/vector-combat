@@ -33,6 +33,7 @@ public class KryoServer {
     final int VID_FPS = 60;
     final int NET_FPS = 20;
     final int MAX_PING_HISTORY = 60; // Number of ping times to save per player
+    float TIMESCALE = 0.5f;
 
     public KryoServer() {
         init_network();
@@ -145,7 +146,7 @@ public class KryoServer {
         @Override
         public void run() {
 //            System.out.println("game tick");
-            game.update(1f / VID_FPS);
+            game.update(TIMESCALE / VID_FPS);
         }
     }
 
@@ -231,7 +232,7 @@ public class KryoServer {
 
     public static void main(String[] args) {
         new KryoServer();
-/*        KryoClient client = new KryoClient("excalo", "68.230.58.93", Network.TCP_PORT, Network.UDP_PORT);
+        KryoClient client = new KryoClient("excalo", "68.230.58.93", Network.TCP_PORT, Network.UDP_PORT);/*
         try {
             Thread.sleep(105);
         } catch (InterruptedException e) {
