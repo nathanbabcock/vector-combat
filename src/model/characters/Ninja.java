@@ -88,22 +88,27 @@ public class Ninja extends Character {
                 hitbox.position.translate(deltaRope);
             }
 
+            radius = new Vector2D(getCenter(), pivot);
+
             // Apply GRAVITY
             velocity.add(acceleration.copy().scale(deltaTime));
             acceleration.y = game.GRAVITY;
 
             // Attempt to apply normal dynamics first
-            Point2D newPos = hitbox.position.copy().displace(acceleration, velocity, deltaTime);
-            if (newPos.distance(pivot) <= radius.getMagnitude() + 0.1) {
-                hitbox.position = newPos;
-                return;
-            }
+            hitbox.position.displace(acceleration, velocity, deltaTime);
 
-            // Pendulum motion
-            float oldAngle = velocity.getDirection();
-            float newAngle1 = (float) (radius.getDirection() + Math.toRadians(90));
-            float newAngle2 = (float) (newAngle1 + Math.toRadians(180));
-            velocity.setDirection(closerAngle(oldAngle, newAngle1, newAngle2));
+            // Handle longer radii
+            if (hitbox.position.distance(pivot) > radius.getMagnitude()) {
+                Vector2D newRadius = new Vector2D(getCenter(), pivot);
+                newRadius.setMagnitude(newRadius.getMagnitude() - radius.getMagnitude());
+                hitbox.position.translate(newRadius);
+
+                // Pendulum motion
+                float oldAngle = velocity.getDirection();
+                float newAngle1 = (float) (radius.getDirection() + Math.toRadians(90));
+                float newAngle2 = (float) (newAngle1 + Math.toRadians(180));
+                velocity.setDirection(closerAngle(oldAngle, newAngle1, newAngle2));
+            }
 
 /*            // Controls affect momentum
             float deltaMagnitude = 0;
@@ -119,10 +124,6 @@ public class Ninja extends Character {
                     deltaMagnitude = moveSpeed * deltaTime * 2;
             }
             velocity.setMagnitude(velocity.getMagnitude() + deltaMagnitude);*/
-
-            // Finally apply velocity
-            //hitbox.position.translate(velocity.copy().scale(deltaTime));
-            hitbox.position.displace(acceleration, velocity, deltaTime);
         } else
             super.applyDynamics(deltaTime);
     }
