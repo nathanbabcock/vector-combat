@@ -20,7 +20,7 @@ public class Grapple extends Entity<Circle2D> {
     public byte owner;
 
     public transient static final float RADIUS = 6;
-    public transient static final float VELOCITY = 750;
+    public transient static final float VELOCITY = 1000;
 
     public Grapple() {
     }
@@ -67,7 +67,10 @@ public class Grapple extends Entity<Circle2D> {
     public void handleCollision(Collision collision) {
 //        game.garbage.add(this);
         velocity = new Vector2D(0, 0);
-        Ninja ownerNinja = (Ninja) game.getPlayer(owner).character;
+        Player player = game.getPlayer(owner);
+        if (player == null)
+            return;
+        Ninja ownerNinja = (Ninja) player.character;
         ownerNinja.grapplePoints = new ArrayList();
         ownerNinja.grapplePoints.add(getCenter());
 

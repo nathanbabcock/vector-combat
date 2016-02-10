@@ -42,7 +42,7 @@ public class KryoClient extends JFrame {
     static final int TIMEOUT = 5000;
     final int VID_FPS = 60; // Number of times per second both GAME LOGIC and RENDERING occur
     final int NET_FPS = 20; // Number of times per second input is sent to the server
-    float TIMESCALE = 0.5f;
+    float TIMESCALE = Network.TIMESCALE;
 
     static final Integer LAYER_CANVAS = new Integer(0);
     static final Integer LAYER_HUD = new Integer(1);
@@ -93,26 +93,30 @@ public class KryoClient extends JFrame {
         client.addListener(new Listener.ThreadedListener(new Listener() {
             public void received(Connection connection, Object object) {
 //                System.out.println("Received object: " + object);
-                if (object instanceof Game) {
-                    if (game == null) { // First time game received
-                        initGame((Game) object);
-                        if (debug) client.sendTCP(new SpawnParams(Team.BLUE, CharClass.ROCKETMAN));
-                    } else {
+                try {
+                    if (object instanceof Game) {
+                        if (game == null) { // First time game received
+                            initGame((Game) object);
+                            if (debug) client.sendTCP(new SpawnParams(Team.BLUE, CharClass.ROCKETMAN));
+                        } else {
 //                        if (game.sent > ((Game) object).sent) {
 //                            System.out.println("Ignoring stale packet");
 //                            return; // Ignore stale packets
 //                        }
 //                        lastReceived = game.sent;
-                        game.importGame((Game) object);
-                        inputState.lastTick = ((Game) object).net_tick;
+                            game.importGame((Game) object);
+                            inputState.lastTick = ((Game) object).net_tick;
 //                        game.getPlayer(clientName).ping = (int) Math.min(System.currentTimeMillis() - game.sent, 999L);
-                    }
-                } else if (object instanceof ChatMessage) {
-                    System.out.println("RECEIVED CHAT");
-                    game.chat.add((ChatMessage) object);
-                    refreshChat();
-                } else
-                    System.out.println(object);
+                        }
+                    } else if (object instanceof ChatMessage) {
+                        System.out.println("RECEIVED CHAT");
+                        game.chat.add((ChatMessage) object);
+                        refreshChat();
+                    } else
+                        System.out.println(object);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }));
 

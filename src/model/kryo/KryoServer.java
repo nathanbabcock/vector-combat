@@ -33,7 +33,7 @@ public class KryoServer {
     final int VID_FPS = 60;
     final int NET_FPS = 20;
     final int MAX_PING_HISTORY = 60; // Number of ping times to save per player
-    float TIMESCALE = 0.5f;
+    float TIMESCALE = Network.TIMESCALE;
 
     public KryoServer() {
         init_network();

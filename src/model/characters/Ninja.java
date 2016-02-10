@@ -72,9 +72,17 @@ public class Ninja extends Character {
             Point2D pivot = grapplePoints.get(grapplePoints.size() - 1);
             Vector2D radius = new Vector2D(getCenter(), pivot);
 
+            // Jump at end of radius
+            if (radius.getMagnitude() <= hitbox.width) {
+                velocity.add(new Vector2D(0, jumpVelocity));
+                altAttacking = false;
+                grapplePoints = null;
+                return;
+            }
+
             // Shorten or lengthen rope if necessary
             if (movingDown || movingUp) {
-                Vector2D deltaRope = radius.copy().setMagnitude(moveSpeed).scale(deltaTime);
+                Vector2D deltaRope = radius.copy().setMagnitude(moveSpeed * deltaTime * 1.2f);
                 if (movingDown)
                     deltaRope.scale(-1);
                 hitbox.position.translate(deltaRope);
@@ -84,12 +92,12 @@ public class Ninja extends Character {
             velocity.add(acceleration.copy().scale(deltaTime));
             acceleration.y = game.GRAVITY;
 
-/*            // Attempt to apply normal dynamics first
-            Point2D newPos = position.copy().displace(acceleration, velocity, deltaTime);
-            if(newPos.distance(pivot) <= radius.getMagnitude()) {
-                position = newPos;
+            // Attempt to apply normal dynamics first
+            Point2D newPos = hitbox.position.copy().displace(acceleration, velocity, deltaTime);
+            if (newPos.distance(pivot) <= radius.getMagnitude() + 0.1) {
+                hitbox.position = newPos;
                 return;
-            }*/
+            }
 
             // Pendulum motion
             float oldAngle = velocity.getDirection();
@@ -113,7 +121,8 @@ public class Ninja extends Character {
             velocity.setMagnitude(velocity.getMagnitude() + deltaMagnitude);*/
 
             // Finally apply velocity
-            hitbox.position.translate(velocity.copy().scale(deltaTime));
+            //hitbox.position.translate(velocity.copy().scale(deltaTime));
+            hitbox.position.displace(acceleration, velocity, deltaTime);
         } else
             super.applyDynamics(deltaTime);
     }

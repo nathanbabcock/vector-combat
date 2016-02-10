@@ -30,6 +30,8 @@ public class Network {
     public static final int TCP_PORT = 54555;
     public static final int UDP_PORT = 54777;
 
+    public static final float TIMESCALE = 1f;
+
     public static void register(EndPoint endpoint) {
 /*        try {
             PrintStream out = new PrintStream(new FileOutputStream("log.txt"));
