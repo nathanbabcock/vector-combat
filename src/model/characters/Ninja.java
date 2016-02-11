@@ -72,6 +72,7 @@ public class Ninja extends Character {
             Point2f pivot = grapplePoints.get(grapplePoints.size() - 1);
             Vector2f radius = new Vector2f(getCenter(), pivot);
 
+
             // Jump at end of radius
             if (radius.getMagnitude() <= width) {
                 velocity.add(new Vector2f(0, jumpVelocity));
@@ -92,22 +93,24 @@ public class Ninja extends Character {
 
             // Apply GRAVITY
             velocity.add(acceleration.copy().scale(deltaTime));
-            acceleration.y = game.GRAVITY;
 
             // Attempt to apply normal dynamics first
             position.displace(acceleration, velocity, deltaTime);
 
             // Handle longer radii
             if (position.distance(pivot) > radius.getMagnitude()) {
+                // Position
                 Vector2f newRadius = new Vector2f(getCenter(), pivot);
                 newRadius.setMagnitude(newRadius.getMagnitude() - radius.getMagnitude());
                 position.translate(newRadius);
 
-                // Pendulum motion
-                float oldAngle = velocity.getDirection();
-                float newAngle1 = (float) (radius.getDirection() + Math.toRadians(90));
-                float newAngle2 = (float) (newAngle1 + Math.toRadians(180));
-                velocity.setDirection(closerAngle(oldAngle, newAngle1, newAngle2));
+                // Tangential velocity
+                velocity = velocity.project(radius.normal()).setMagnitude(velocity.getMagnitude());
+
+//                float oldAngle = velocity.getDirection();
+//                float newAngle1 = (float) (radius.getDirection() + Math.toRadians(90));
+//                float newAngle2 = (float) (newAngle1 + Math.toRadians(180));
+//                velocity.setDirection(closerAngle(oldAngle, newAngle1, newAngle2));
             }
 
 /*            // Controls affect momentum
@@ -126,48 +129,6 @@ public class Ninja extends Character {
             velocity.setMagnitude(velocity.getMagnitude() + deltaMagnitude);*/
         } else
             super.applyDynamics(deltaTime);
-    }
-
-    private float closerAngle(float referenceAngle, float angle1, float angle2) {
-        /*double _360 = Math.toRadians(360);
-        double _0 = Math.toRadians(0);
-        while (referenceAngle < _0) referenceAngle += _360;
-        while (referenceAngle > _360) referenceAngle -= _360;
-        while (angle1 < _0) angle1 += _360;
-        while (angle1 > _360) angle1 -= _360;
-        while (angle2 < _0) angle2 += _360;
-        while (angle2 > _360) angle2 -= _360;
-
-//        if(angle1 < Math.toRadians(1))
-//            angle1 = Math.toRadians(360)
-
-        float diff1 = Math.abs(angle1 - referenceAngle);
-        float diff2 = Math.abs(angle2 - referenceAngle);
-
-
-        if (diff1 < diff2)
-            return angle1;
-        return angle2;*/
-
-
-//        double _360 = Math.toRadians(360);
-//        double _0 = Math.toRadians(0);
-//        while (referenceAngle < _0) referenceAngle += _360;
-//        while (referenceAngle > _360) referenceAngle -= _360;
-
-        // Get angle range relative to the reference angle (to handle the -360 = 0 = 360 circularity)
-        float _180 = (float) Math.toRadians(180);
-        while (angle1 < referenceAngle - _180) angle1 += _180;
-        while (angle1 > referenceAngle + _180) angle1 -= _180;
-        while (angle2 < referenceAngle - _180) angle2 += _180;
-        while (angle2 > referenceAngle + _180) angle2 -= _180;
-
-        float diff1 = Math.abs(angle1 - referenceAngle);
-        float diff2 = Math.abs(angle2 - referenceAngle);
-
-        if (diff1 < diff2)
-            return angle1;
-        return angle2;
     }
 
     @Override

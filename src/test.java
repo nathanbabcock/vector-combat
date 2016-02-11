@@ -5,21 +5,13 @@ import model.geometry.Vector2f;
  */
 public class test {
     public static void main(String[] args) {
-        Vector2f v = new Vector2f(1, 0);
-        System.out.println(v.toString() + Math.toDegrees(v.getDirection()));
-        v = new Vector2f(1, 1);
-        System.out.println(v.toString() + Math.toDegrees(v.getDirection()));
-        v = new Vector2f(0, 1);
-        System.out.println(v.toString() + Math.toDegrees(v.getDirection()));
-        v = new Vector2f(-1, 1);
-        System.out.println(v.toString() + Math.toDegrees(v.getDirection()));
-        v = new Vector2f(-1, 0);
-        System.out.println(v.toString() + Math.toDegrees(v.getDirection()));
-        v = new Vector2f(-1, -1);
-        System.out.println(v.toString() + Math.toDegrees(v.getDirection()));
-        v = new Vector2f(0, -1);
-        System.out.println(v.toString() + Math.toDegrees(v.getDirection()));
-        v = new Vector2f(1, -1);
-        System.out.println(v.toString() + Math.toDegrees(v.getDirection()));
+        Vector2f v1 = new Vector2f(1, 0);
+        Vector2f v2 = v1.normal();
+        System.out.println(v1);
+        System.out.println(Math.toDegrees(v1.getDirection()));
+        System.out.println(v2);
+        System.out.println(Math.toDegrees(v2.getDirection()));
+
+
     }
 }

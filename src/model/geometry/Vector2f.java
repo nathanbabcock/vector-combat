@@ -43,7 +43,7 @@ public class Vector2f {
         return scale(ratio);
     }
 
-    public void setDirection(float angle) {
+    public Vector2f setDirection(float angle) {
         float m = getMagnitude();
         float dangle = (float) Math.toDegrees(angle);
         if (dangle >= 0 && dangle < 90) {
@@ -59,6 +59,7 @@ public class Vector2f {
             x = (float) (m * (Math.cos(Math.toRadians(360) - angle)));
             y = (float) (-m * (Math.sin(Math.toRadians(360) - angle)));
         }
+        return this;
     }
 
     public float getDirection() {
@@ -95,6 +96,18 @@ public class Vector2f {
             return (float) (Math.toRadians(270) - Math.atan(Math.abs(x / y)));
         else
             return (float) (Math.toRadians(360) - Math.atan(Math.abs(y / x)));
+    }
+
+    public float dot(Vector2f other) {
+        return x * other.x + y * other.y;
+    }
+
+    public Vector2f normal() {
+        return copy().setDirection((float) (getDirection() + Math.toRadians(90)));
+    }
+
+    public Vector2f project(Vector2f onto) {
+        return onto.copy().scale(onto.dot(this) / (onto.getMagnitude() * onto.getMagnitude()));
     }
 
     @Override
