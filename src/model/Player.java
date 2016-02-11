@@ -2,11 +2,10 @@ package model;
 
 import model.characters.*;
 import model.characters.Character;
-import model.geometry.Point2D;
+import model.geometry.Point2f;
 import network.Ping;
 import network.SpawnParams;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -15,7 +14,7 @@ import java.util.Random;
 /**
  * Created by Nathan on 12/26/2015.
  */
-public class Player implements Serializable {
+public class Player {
     public transient Game game;
     public transient Queue<Ping> pings;
 
@@ -73,7 +72,7 @@ public class Player implements Serializable {
         character.player = this;
 
         // Set spawn point
-        ArrayList<Point2D> spawns;
+        ArrayList<Point2f> spawns;
         if (team == Team.BLUE)
             spawns = game.map.spawnpoints_blue;
         else if (team == Team.RED)
@@ -83,7 +82,7 @@ public class Player implements Serializable {
             return;
         }
         Random rand = new Random();
-        character.hitbox.position = spawns.get(rand.nextInt(spawns.size())).copy();
+        character.position = spawns.get(rand.nextInt(spawns.size())).copy();
 
         // Reset respawn timeg
         respawnTime = game.RESPAWN_TIME;

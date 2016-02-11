@@ -2,13 +2,12 @@ package network;
 
 import model.characters.Team;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by Nathan on 9/19/2015.
  */
-public class ChatMessage implements Serializable {
+public class ChatMessage {
     public Team team;
     public String player, content;
     public boolean teamOnly;

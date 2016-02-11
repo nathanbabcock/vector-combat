@@ -1,7 +1,7 @@
 package model.maps;
 
 import model.geometry.AABB;
-import model.geometry.Point2D;
+import model.geometry.Point2f;
 
 import java.util.ArrayList;
 
@@ -18,19 +18,19 @@ public class Map1 extends Map {
         width = height = 2000;
 
         statics = new ArrayList<>();
-        statics.add(new AABB(0, 0, 2000, 64));
-        statics.add(new AABB(0, 128, 400, 40));
-        statics.add(new AABB(1600, 128, 400, 40));
-        statics.add(new AABB(600, 256, 400, 40));
+        statics.add(new AABB(null, 0, 0, 2000, 64));
+        statics.add(new AABB(null, 0, 128, 400, 40));
+        statics.add(new AABB(null, 1600, 128, 400, 40));
+        statics.add(new AABB(null, 600, 256, 400, 40));
 
-        statics.add(new AABB(0, 0, 40, 1000));
-        statics.add(new AABB(600, 400, 40, 1000));
-        statics.add(new AABB(200, 400, 40, 1000));
+        statics.add(new AABB(null, 0, 0, 40, 1000));
+        statics.add(new AABB(null, 600, 400, 40, 1000));
+        statics.add(new AABB(null, 200, 400, 40, 1000));
 
         spawnpoints_red = new ArrayList();
-        spawnpoints_red.add(new Point2D(400, 850));
+        spawnpoints_red.add(new Point2f(400, 850));
 
         spawnpoints_blue = new ArrayList();
-        spawnpoints_blue.add(new Point2D(400, 850));
+        spawnpoints_blue.add(new Point2f(400, 850));
     }
 }

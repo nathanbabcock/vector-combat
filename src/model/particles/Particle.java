@@ -1,8 +1,8 @@
 package model.particles;
 
 import model.Game;
-import model.geometry.Point2D;
-import model.geometry.Vector2D;
+import model.geometry.Point2f;
+import model.geometry.Vector2f;
 import view.Canvas;
 
 import java.awt.*;
@@ -15,8 +15,8 @@ import java.awt.geom.Rectangle2D;
 public class Particle {
     public Game game;
 
-    public Point2D position;
-    public Vector2D velocity, acceleration;
+    public Point2f position;
+    public Vector2f velocity, acceleration;
     public float size, angle;//, age;
     public float growth, rotation; // change in size and angle over time (per second)
     public Color color;

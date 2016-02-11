@@ -3,8 +3,8 @@ package model.characters;
 import model.Player;
 import model.Sprite;
 import model.entities.Rocket;
-import model.geometry.Point2D;
-import model.geometry.Vector2D;
+import model.geometry.Point2f;
+import model.geometry.Vector2f;
 import view.Canvas;
 
 import java.awt.*;
@@ -51,10 +51,10 @@ public class Rocketman extends Character {
 
         Rocket rocket = new Rocket(game, getCenter().x, getCenter().y, Rocket.RADIUS);
         rocket.owner = player.clientID;
-        Point2D origin = getCenter();
-        rocket.velocity = new Vector2D(xhair.x - origin.x, xhair.y - origin.y);
+        Point2f origin = getCenter();
+        rocket.velocity = new Vector2f(xhair.x - origin.x, xhair.y - origin.y);
         rocket.velocity.setMagnitude(Rocket.VELOCITY);
-        rocket.acceleration = new Vector2D(0, 0);
+        rocket.acceleration = new Vector2f(0, 0);
         game.entities.add(rocket);
         currentAttackDelay = attackInterval;
     }
@@ -67,7 +67,7 @@ public class Rocketman extends Character {
 
         // Player
         int playerX = (int) getBottomLeft().x + canvas.cameraOffsetX + sprite.offsetX;
-        int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - hitbox.height - sprite.offsetY);
+        int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - height - sprite.offsetY);
         int playerWidth = sprite.width;
         int playerHeight = sprite.height;
 
@@ -78,8 +78,8 @@ public class Rocketman extends Character {
         int rlHeight = rl.height;
         int rlX = playerX - 8;
         int rlY = playerY + 16;
-        Point2D rlOrigin = new Point2D(playerX + 12, playerY + 36);
-        Vector2D rlVector = new Vector2D(xhair.x - (getBottomLeft().x + 12), -xhair.y + (getBottomLeft().y + 36));
+        Point2f rlOrigin = new Point2f(playerX + 12, playerY + 36);
+        Vector2f rlVector = new Vector2f(xhair.x - (getBottomLeft().x + 12), -xhair.y + (getBottomLeft().y + 36));
 
         if (xhair.x < getCenter().x) {
             playerWidth *= -1;

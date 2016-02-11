@@ -3,8 +3,8 @@ package model.characters;
 import model.Player;
 import model.Sprite;
 import model.entities.Bullet;
-import model.geometry.Point2D;
-import model.geometry.Vector2D;
+import model.geometry.Point2f;
+import model.geometry.Vector2f;
 import model.particles.Particle;
 import view.Canvas;
 
@@ -85,9 +85,9 @@ public class Scout extends Character {
         Random r = new Random();
         for (int i = 0; i < NUM_PELLETS; i++) {
             Bullet bullet = new Bullet(game, getCenter().x, getCenter().y, PELLET_SIZE);
-            Point2D origin = getCenter();
+            Point2f origin = getCenter();
             bullet.owner = player.clientID;
-            bullet.velocity = new Vector2D(xhair.x - origin.x, xhair.y - origin.y);
+            bullet.velocity = new Vector2f(xhair.x - origin.x, xhair.y - origin.y);
             bullet.velocity.setMagnitude(PELLET_VELOCITY);
             bullet.velocity.x += r.nextInt((int) ((MAX_SPREAD * 2 + 1) - MAX_SPREAD));
             bullet.velocity.y += r.nextInt((int) ((MAX_SPREAD * 2 + 1) - MAX_SPREAD));
@@ -112,13 +112,13 @@ public class Scout extends Character {
 
         // Double jump
         else if (!onGround && !wallLeft && !wallRight && extraJump && jumpDelay <= 0) {
-            Vector2D jump;
+            Vector2f jump;
             if (movingLeft)
-                jump = new Vector2D(-1, 1);
+                jump = new Vector2f(-1, 1);
             else if (movingRight)
-                jump = new Vector2D(1, 1);
+                jump = new Vector2f(1, 1);
             else
-                jump = new Vector2D(0, 1);
+                jump = new Vector2f(0, 1);
             jump.setMagnitude(jumpVelocity);
 //            velocity.y = jumpVelocity;
             velocity = jump;
@@ -130,12 +130,12 @@ public class Scout extends Character {
     public void move(float deltaTime) {
         // Wall jump
         if (movingRight && wallLeft) {
-            Vector2D wallJump = new Vector2D(1, 1);
+            Vector2f wallJump = new Vector2f(1, 1);
             wallJump.setMagnitude(jumpVelocity);
             velocity = wallJump;
             jumpDelay = maxJumpDelay;
         } else if (movingLeft && wallRight) {
-            Vector2D wallJump = new Vector2D(-1, 1);
+            Vector2f wallJump = new Vector2f(-1, 1);
             wallJump.setMagnitude(jumpVelocity);
             velocity = wallJump;
             jumpDelay = maxJumpDelay;
@@ -158,7 +158,7 @@ public class Scout extends Character {
             Particle particle = new Particle(game);
             particle.position = getBottomLeft().copy();
             if (wallRight)
-                particle.position.x += hitbox.width;
+                particle.position.x += width;
             int sign;
             if (r.nextBoolean())
                 sign = -1;
@@ -169,8 +169,8 @@ public class Scout extends Character {
             particle.angle = (float) Math.toRadians(r.nextInt(360));
             particle.growth = 0;// -15; // - (r.nextInt(5) + 10);
             particle.rotation = (float) Math.toRadians(r.nextInt(361));
-            particle.velocity = new Vector2D(r.nextInt(AVG_VELOCITY * 2) - AVG_VELOCITY, r.nextInt(AVG_VELOCITY * 2) - AVG_VELOCITY);
-            particle.acceleration = new Vector2D(0, game.GRAVITY);
+            particle.velocity = new Vector2f(r.nextInt(AVG_VELOCITY * 2) - AVG_VELOCITY, r.nextInt(AVG_VELOCITY * 2) - AVG_VELOCITY);
+            particle.acceleration = new Vector2f(0, game.GRAVITY);
             game.particles.add(particle);
         }
     }
@@ -183,7 +183,7 @@ public class Scout extends Character {
 
         // Player
         int playerX = (int) getBottomLeft().x + canvas.cameraOffsetX + sprite.offsetX;
-        int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - hitbox.height - sprite.offsetY);
+        int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - height - sprite.offsetY);
         int playerWidth = sprite.width;
         int playerHeight = sprite.height;
 
@@ -194,8 +194,8 @@ public class Scout extends Character {
         int sgHeight = sg.height;
         int sgX = playerX - sprite.offsetX + 8;
         int sgY = playerY + 24;
-        Point2D sgOrigin = new Point2D(playerX - sprite.offsetX + 16, playerY + 36);
-        Vector2D sgVector = new Vector2D(xhair.x - (getBottomLeft().x + 12), -xhair.y + (getBottomLeft().y + 36));
+        Point2f sgOrigin = new Point2f(playerX - sprite.offsetX + 16, playerY + 36);
+        Vector2f sgVector = new Vector2f(xhair.x - (getBottomLeft().x + 12), -xhair.y + (getBottomLeft().y + 36));
 
         // TODO refactor to avoid code duplication
         if (wallRight) {

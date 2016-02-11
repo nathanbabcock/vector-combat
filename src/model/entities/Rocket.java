@@ -4,20 +4,19 @@ import model.Collision;
 import model.Game;
 import model.Player;
 import model.geometry.AABB;
-import model.geometry.Circle2D;
-import model.geometry.Vector2D;
+import model.geometry.Circle;
+import model.geometry.Vector2f;
 import model.particles.Fire;
 import model.particles.Particle;
 import view.Canvas;
 
 import java.awt.*;
-import java.io.Serializable;
 import java.util.Random;
 
 /**
  * Created by Nathan on 8/25/2015.
  */
-public class Rocket extends Entity<Circle2D> implements Serializable {
+public class Rocket extends Circle {
     public byte owner;
     public boolean exploded;
 
@@ -30,7 +29,7 @@ public class Rocket extends Entity<Circle2D> implements Serializable {
     }
 
     public Rocket(Game game, float x, float y, float radius) {
-        super(game, new Circle2D(x, y, radius));
+        super(game, x, y, radius);
         exploded = false;
     }
 
@@ -67,7 +66,7 @@ public class Rocket extends Entity<Circle2D> implements Serializable {
         // Check collisions
         Collision collision = null;
         for (AABB box : game.map.statics) { // Walls
-            collision = box.collision(hitbox);
+            collision = box.collision(this);
             if (collision != null)
                 break;
         }
@@ -75,7 +74,7 @@ public class Rocket extends Entity<Circle2D> implements Serializable {
             for (Player player : game.players) {
                 if (player.clientID == owner || player.character == null)
                     continue;
-                collision = player.character.hitbox.collision(hitbox);
+                collision = player.character.collision(this);
                 if (collision != null)
                     break;
             }
@@ -89,10 +88,10 @@ public class Rocket extends Entity<Circle2D> implements Serializable {
 
         for (Player player : game.players) {
             if (player.character == null) continue;
-            float distance = player.character.hitbox.position.distance(getCenter());
+            float distance = player.character.position.distance(getCenter());
             if (distance <= Rocket.EXPLOSION_RADIUS) {
                 // Knockback
-                Vector2D explosion = new Vector2D(player.character.getCenter().x - getCenter().x, player.character.getCenter().y - getCenter().y);
+                Vector2f explosion = new Vector2f(player.character.getCenter().x - getCenter().x, player.character.getCenter().y - getCenter().y);
                 // TODO scale damage and knockback with distance
                 explosion.setMagnitude(300f);
                 player.character.velocity.add(explosion);
@@ -127,8 +126,8 @@ public class Rocket extends Entity<Circle2D> implements Serializable {
             particle.angle = (float) Math.toRadians(r.nextInt(360));
             particle.growth = 0;// -15; // - (r.nextInt(5) + 10);
             particle.rotation = (float) Math.toRadians(r.nextInt(361));
-            particle.velocity = new Vector2D(r.nextInt(AVG_VELOCITY * 2) - AVG_VELOCITY, r.nextInt(AVG_VELOCITY * 2) - AVG_VELOCITY);
-            particle.acceleration = new Vector2D(0, game.GRAVITY);
+            particle.velocity = new Vector2f(r.nextInt(AVG_VELOCITY * 2) - AVG_VELOCITY, r.nextInt(AVG_VELOCITY * 2) - AVG_VELOCITY);
+            particle.acceleration = new Vector2f(0, game.GRAVITY);
             game.particles.add(particle);
         }
     }
@@ -137,8 +136,8 @@ public class Rocket extends Entity<Circle2D> implements Serializable {
         if (exploded) return;
         g2.setColor(Color.red);
         int x = (int) (getBottomLeft().x + canvas.cameraOffsetX);
-        int y = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - 2 * hitbox.radius);
-        int size = (int) (2 * hitbox.radius);
+        int y = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - 2 * radius);
+        int size = (int) (2 * radius);
         g2.fillOval(x, y, size, size);
     }
 

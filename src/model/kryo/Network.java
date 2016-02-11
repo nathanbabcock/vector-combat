@@ -10,9 +10,9 @@ import model.entities.Bullet;
 import model.entities.Grapple;
 import model.entities.Rocket;
 import model.geometry.AABB;
-import model.geometry.Circle2D;
-import model.geometry.Point2D;
-import model.geometry.Vector2D;
+import model.geometry.Circle;
+import model.geometry.Point2f;
+import model.geometry.Vector2f;
 import model.maps.Map1;
 import model.maps.Map2;
 import network.ChatMessage;
@@ -64,9 +64,9 @@ public class Network {
 
         // Geometry
         kryo.register(AABB.class);
-        kryo.register(Circle2D.class);
-        kryo.register(Point2D.class);
-        kryo.register(Vector2D.class);
+        kryo.register(Circle.class);
+        kryo.register(Point2f.class);
+        kryo.register(Vector2f.class);
 
         // Network
         kryo.register(SpawnParams.class);

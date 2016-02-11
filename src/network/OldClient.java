@@ -5,7 +5,7 @@ import model.Player;
 import model.characters.CharClass;
 import model.characters.Character;
 import model.characters.Team;
-import model.geometry.Point2D;
+import model.geometry.Point2f;
 import view.Canvas;
 import view.ChatPanel;
 import view.MenuPanel;
@@ -266,7 +266,7 @@ public class OldClient extends JFrame {
                 // Update model
                 game.update(OPTIMAL_TIME / 1000000000f);
                 updateHUD();
-                inputState.xhair = new Point2D(canvas.xhair.x - canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - canvas.xhair.y);
+                inputState.xhair = new Point2f(canvas.xhair.x - canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - canvas.xhair.y);
                 repaint();
                 /*try {
                     // InputState
@@ -487,14 +487,14 @@ public class OldClient extends JFrame {
             public void mouseDragged(MouseEvent e) {
                 if (messageMode != 0 || menu.open) return;
                 Point xhair = e.getPoint();
-                canvas.xhair = new Point2D(xhair.x, xhair.y);
+                canvas.xhair = new Point2f(xhair.x, xhair.y);
             }
 
             @Override
             public void mouseMoved(MouseEvent e) {
                 if (messageMode != 0 || menu.open) return;
                 Point xhair = e.getPoint();
-                canvas.xhair = new Point2D(xhair.x, xhair.y);
+                canvas.xhair = new Point2f(xhair.x, xhair.y);
             }
         });
 

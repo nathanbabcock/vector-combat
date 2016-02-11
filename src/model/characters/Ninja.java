@@ -4,8 +4,8 @@ import model.Player;
 import model.entities.Grapple;
 import model.entities.Rocket;
 import model.geometry.AABB;
-import model.geometry.Point2D;
-import model.geometry.Vector2D;
+import model.geometry.Point2f;
+import model.geometry.Vector2f;
 import view.Canvas;
 
 import java.awt.*;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
  */
 public class Ninja extends Character {
     public Grapple grapple;
-    public ArrayList<model.geometry.Point2D> grapplePoints;
+    public ArrayList<Point2f> grapplePoints;
 
     public static transient final int SWORD_DAMAGE = 70;
 
@@ -69,12 +69,12 @@ public class Ninja extends Character {
     @Override
     public void applyDynamics(float deltaTime) {
         if (grapplePoints != null) {
-            Point2D pivot = grapplePoints.get(grapplePoints.size() - 1);
-            Vector2D radius = new Vector2D(getCenter(), pivot);
+            Point2f pivot = grapplePoints.get(grapplePoints.size() - 1);
+            Vector2f radius = new Vector2f(getCenter(), pivot);
 
             // Jump at end of radius
-            if (radius.getMagnitude() <= hitbox.width) {
-                velocity.add(new Vector2D(0, jumpVelocity));
+            if (radius.getMagnitude() <= width) {
+                velocity.add(new Vector2f(0, jumpVelocity));
                 altAttacking = false;
                 grapplePoints = null;
                 return;
@@ -82,26 +82,26 @@ public class Ninja extends Character {
 
             // Shorten or lengthen rope if necessary
             if (movingDown || movingUp) {
-                Vector2D deltaRope = radius.copy().setMagnitude(moveSpeed * deltaTime * 1.2f);
+                Vector2f deltaRope = radius.copy().setMagnitude(moveSpeed * deltaTime * 1.2f);
                 if (movingDown)
                     deltaRope.scale(-1);
-                hitbox.position.translate(deltaRope);
+                position.translate(deltaRope);
             }
 
-            radius = new Vector2D(getCenter(), pivot);
+            radius = new Vector2f(getCenter(), pivot);
 
             // Apply GRAVITY
             velocity.add(acceleration.copy().scale(deltaTime));
             acceleration.y = game.GRAVITY;
 
             // Attempt to apply normal dynamics first
-            hitbox.position.displace(acceleration, velocity, deltaTime);
+            position.displace(acceleration, velocity, deltaTime);
 
             // Handle longer radii
-            if (hitbox.position.distance(pivot) > radius.getMagnitude()) {
-                Vector2D newRadius = new Vector2D(getCenter(), pivot);
+            if (position.distance(pivot) > radius.getMagnitude()) {
+                Vector2f newRadius = new Vector2f(getCenter(), pivot);
                 newRadius.setMagnitude(newRadius.getMagnitude() - radius.getMagnitude());
-                hitbox.position.translate(newRadius);
+                position.translate(newRadius);
 
                 // Pendulum motion
                 float oldAngle = velocity.getDirection();
@@ -178,13 +178,13 @@ public class Ninja extends Character {
         if (!attacking || currentAttackDelay > 0)
             return;
 
-        AABB hitbox = new AABB(getBottomLeft().x, getBottomLeft().y + 40, 80, 80);
+        AABB hitbox = new AABB(game, getBottomLeft().x, getBottomLeft().y + 40, 80, 80);
         if (xhair.x < getCenter().x)
-            hitbox.position.x -= (80 - this.hitbox.width);
+            hitbox.position.x -= (80 - width);
 
         for (Player player : game.players) {
             if (player.clientName.equals(this.player.clientName) || player.character == null) continue;
-            if (player.character.hitbox.collision(hitbox) != null)
+            if (player.character.collision(hitbox) != null)
                 player.character.damage(SWORD_DAMAGE, player);
         }
         currentAttackDelay = attackInterval;
@@ -211,10 +211,10 @@ public class Ninja extends Character {
         if (grapple == null) {
             grapple = new Grapple(game, getCenter().x, getCenter().y, Grapple.RADIUS);
             grapple.owner = player.clientID;
-            model.geometry.Point2D origin = getCenter();
-            grapple.velocity = new Vector2D(xhair.x - origin.x, xhair.y - origin.y);
+            Point2f origin = getCenter();
+            grapple.velocity = new Vector2f(xhair.x - origin.x, xhair.y - origin.y);
             grapple.velocity.setMagnitude(Rocket.VELOCITY);
-            grapple.acceleration = new Vector2D(0, 0);
+            grapple.acceleration = new Vector2f(0, 0);
             game.entities.add(grapple);
         }
 
@@ -228,13 +228,13 @@ public class Ninja extends Character {
 
         // Player
         int playerX = (int) getBottomLeft().x + canvas.cameraOffsetX + sprite.offsetX;
-        int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - hitbox.height - sprite.offsetY);
+        int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - height - sprite.offsetY);
         int playerWidth = sprite.width;
         int playerHeight = sprite.height;
 
         if (xhair.x < getCenter().x) {
             playerWidth *= -1;
-            playerX += hitbox.width + sprite.offsetX - 0;
+            playerX += width + sprite.offsetX - 0;
         }
 
         // Velocity debugging

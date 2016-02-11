@@ -8,7 +8,7 @@ import model.Player;
 import model.characters.CharClass;
 import model.characters.Character;
 import model.characters.Team;
-import model.geometry.Point2D;
+import model.geometry.Point2f;
 import network.ChatMessage;
 import network.InputState;
 import network.SpawnParams;
@@ -263,7 +263,7 @@ public class KryoClient extends JFrame {
 //                System.out.println("game tick");
                 game.update(TIMESCALE / VID_FPS);
                 updateHUD();
-                inputState.xhair = new Point2D(canvas.xhair.x - canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - canvas.xhair.y);
+                inputState.xhair = new Point2f(canvas.xhair.x - canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - canvas.xhair.y);
                 repaint();
             }
         }
@@ -314,7 +314,7 @@ public class KryoClient extends JFrame {
 //                    System.out.println("game tick");
                     game.update(1f / VID_FPS);
                     updateHUD();
-                    inputState.xhair = new Point2D(canvas.xhair.x - canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - canvas.xhair.y);
+                    inputState.xhair = new Point2f(canvas.xhair.x - canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - canvas.xhair.y);
                     repaint();
                 }
 
@@ -548,14 +548,14 @@ public class KryoClient extends JFrame {
             public void mouseDragged(MouseEvent e) {
                 if (messageMode != 0 || menu.open) return;
                 Point xhair = e.getPoint();
-                canvas.xhair = new Point2D(xhair.x, xhair.y);
+                canvas.xhair = new Point2f(xhair.x, xhair.y);
             }
 
             @Override
             public void mouseMoved(MouseEvent e) {
                 if (messageMode != 0 || menu.open) return;
                 Point xhair = e.getPoint();
-                canvas.xhair = new Point2D(xhair.x, xhair.y);
+                canvas.xhair = new Point2f(xhair.x, xhair.y);
             }
         });
 

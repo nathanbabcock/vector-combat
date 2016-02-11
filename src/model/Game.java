@@ -11,7 +11,6 @@ import network.ChatMessage;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -19,7 +18,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * Created by Nathan on 8/19/2015.
  */
-public class Game implements Serializable {
+public class Game {
     public List<Player> players;
     public List<Entity> entities;
 

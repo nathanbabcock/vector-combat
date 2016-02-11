@@ -3,8 +3,8 @@ package model.characters;
 import model.Player;
 import model.Sprite;
 import model.entities.Bullet;
-import model.geometry.Point2D;
-import model.geometry.Vector2D;
+import model.geometry.Point2f;
+import model.geometry.Vector2f;
 import model.particles.Fire;
 import model.particles.Particle;
 import view.Canvas;
@@ -54,9 +54,9 @@ public class Soldier extends Character {
             return;
 
         Bullet bullet = new Bullet(game, getCenter().x, getCenter().y, Bullet.SIZE);
-        Point2D origin = getCenter();
+        Point2f origin = getCenter();
         bullet.owner = player.clientID;
-        bullet.velocity = new Vector2D(xhair.x - origin.x, xhair.y - origin.y);
+        bullet.velocity = new Vector2f(xhair.x - origin.x, xhair.y - origin.y);
         bullet.velocity.setMagnitude(Bullet.VELOCITY);
         game.entities.add(bullet);
         currentAttackDelay = attackInterval;
@@ -97,8 +97,8 @@ public class Soldier extends Character {
         }
     }
 
-    private Point2D getJetpackOrigin() {
-        Point2D point = getBottomLeft().copy();
+    private Point2f getJetpackOrigin() {
+        Point2f point = getBottomLeft().copy();
         point.y += 40;
         if (xhair.x < getCenter().x)
             point.x += 28;
@@ -115,7 +115,7 @@ public class Soldier extends Character {
 
         // Player
         int playerX = (int) getBottomLeft().x + canvas.cameraOffsetX + sprite.offsetX;
-        int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - hitbox.height - sprite.offsetY);
+        int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - height - sprite.offsetY);
         int playerWidth = sprite.width;
         int playerHeight = sprite.height;
 
@@ -126,8 +126,8 @@ public class Soldier extends Character {
         int mgHeight = mg.height;
         int mgX = playerX + 16;
         int mgY = playerY + 24;
-        Point2D mgOrigin = new Point2D(playerX + 16, playerY + 36);
-        Vector2D mgVector = new Vector2D(xhair.x - (getBottomLeft().x + 12), -xhair.y + (getBottomLeft().y + 36));
+        Point2f mgOrigin = new Point2f(playerX + 16, playerY + 36);
+        Vector2f mgVector = new Vector2f(xhair.x - (getBottomLeft().x + 12), -xhair.y + (getBottomLeft().y + 36));
 
         if (xhair.x < getCenter().x) {
             playerWidth *= -1;

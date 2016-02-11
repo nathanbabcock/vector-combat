@@ -6,8 +6,8 @@ import model.Player;
 import model.characters.Character;
 import model.characters.Ninja;
 import model.geometry.AABB;
-import model.geometry.Circle2D;
-import model.geometry.Vector2D;
+import model.geometry.Circle;
+import model.geometry.Vector2f;
 import view.Canvas;
 
 import java.awt.*;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 /**
  * Created by Nathan on 8/25/2015.
  */
-public class Grapple extends Entity<Circle2D> {
+public class Grapple extends Circle {
     public byte owner;
 
     public transient static final float RADIUS = 6;
@@ -26,7 +26,7 @@ public class Grapple extends Entity<Circle2D> {
     }
 
     public Grapple(Game game, float x, float y, float radius) {
-        super(game, new Circle2D(x, y, radius));
+        super(game, x, y, radius);
     }
 
     public void update(float deltaTime) {
@@ -37,7 +37,7 @@ public class Grapple extends Entity<Circle2D> {
         }
 
         // Move rocket
-        hitbox.position.displace(acceleration, velocity, deltaTime);
+        position.displace(acceleration, velocity, deltaTime);
 
         // Check collisions
         checkCollisions();
@@ -47,7 +47,7 @@ public class Grapple extends Entity<Circle2D> {
         // Check collisions
         Collision collision = null;
         for (AABB box : game.map.statics) { // Walls
-            collision = box.collision(hitbox);
+            collision = box.collision(this);
             if (collision != null)
                 break;
         }
@@ -55,7 +55,7 @@ public class Grapple extends Entity<Circle2D> {
             for (Player player : game.players) {
                 if (player.clientID == owner || player.character == null)
                     continue;
-                collision = player.character.hitbox.collision(hitbox);
+                collision = player.character.collision(this);
                 if (collision != null)
                     break;
             }
@@ -66,7 +66,7 @@ public class Grapple extends Entity<Circle2D> {
 
     public void handleCollision(Collision collision) {
 //        game.garbage.add(this);
-        velocity = new Vector2D(0, 0);
+        velocity = new Vector2f(0, 0);
         Player player = game.getPlayer(owner);
         if (player == null)
             return;
@@ -96,7 +96,7 @@ public class Grapple extends Entity<Circle2D> {
         g2.setColor(Color.black);
         int x = (int) (getCenter().x + canvas.cameraOffsetX - Grapple.RADIUS);
         int y = (int) (canvas.getHeight() - canvas.cameraOffsetY - getCenter().y - Grapple.RADIUS);
-        int size = (int) (2 * hitbox.radius);
+        int size = (int) (2 * radius);
         g2.fillOval(x, y, size, size);
         Character character = game.getPlayer(owner).character;
         g2.drawLine((int) character.getCenter().x + canvas.cameraOffsetX, (int) (canvas.getHeight() - canvas.cameraOffsetY - character.getCenter().y), (int) (getCenter().x + canvas.cameraOffsetX), (int) (canvas.getHeight() - canvas.cameraOffsetY - getCenter().y));

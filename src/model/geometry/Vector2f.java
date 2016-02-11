@@ -1,46 +1,44 @@
 package model.geometry;
 
-import java.io.Serializable;
-
 /**
  * Created by Nathan on 8/20/2015.
  */
-public class Vector2D implements Serializable {
+public class Vector2f {
     public Float x, y;
 
-    public Vector2D() {
+    public Vector2f() {
     }
 
-    public Vector2D(float x, float y) {
+    public Vector2f(float x, float y) {
         this.x = x;
         this.y = y;
     }
 
-    public Vector2D(Point2D a, Point2D b) {
+    public Vector2f(Point2f a, Point2f b) {
         this(b.x - a.x, b.y - a.y);
     }
 
-    public Vector2D add(Vector2D other) {
+    public Vector2f add(Vector2f other) {
         x += other.x;
         y += other.y;
         return this;
     }
 
-    public Vector2D scale(float scalar) {
+    public Vector2f scale(float scalar) {
         x *= scalar;
         y *= scalar;
         return this;
     }
 
-    public Vector2D copy() {
-        return new Vector2D(x, y);
+    public Vector2f copy() {
+        return new Vector2f(x, y);
     }
 
     public float getMagnitude() {
         return (float) Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
     }
 
-    public Vector2D setMagnitude(Float magnitude) {
+    public Vector2f setMagnitude(Float magnitude) {
         float ratio = magnitude / getMagnitude();
         return scale(ratio);
     }

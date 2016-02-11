@@ -5,7 +5,7 @@ import model.Player;
 import model.characters.Character;
 import model.entities.Entity;
 import model.geometry.AABB;
-import model.geometry.Point2D;
+import model.geometry.Point2f;
 import model.particles.Particle;
 
 import javax.swing.*;
@@ -27,7 +27,7 @@ public class Canvas extends JPanel {
 
 //    public ChatPanel chatPanel;
 
-    public Point2D xhair;
+    public Point2f xhair;
 
 /*    ArrayList<Float> positionGraph = new ArrayList();
     ArrayList<Float> velocityGraph = new ArrayList();
@@ -36,7 +36,7 @@ public class Canvas extends JPanel {
     public Canvas(Game game, String clientName) {
         this.game = game;
         this.clientName = clientName;
-        xhair = new Point2D(0, 0);
+        xhair = new Point2f(0, 0);
 
         cameraOffsetX = cameraOffsetY = 0;
 
@@ -127,8 +127,8 @@ public class Canvas extends JPanel {
         if (game == null || game.getPlayer(clientName) == null || game.getPlayer(clientName).character == null) return;
 
         Character character = game.getPlayer(clientName).character;
-        cameraOffsetX = (int) (-character.getCenter().x + ((getWidth() / 2) - (character.hitbox.width / 2)));
-        cameraOffsetY = (int) (-character.getCenter().y + ((getHeight() / 2) - (character.hitbox.height / 2)));
+        cameraOffsetX = (int) (-character.getCenter().x + ((getWidth() / 2) - (character.width / 2)));
+        cameraOffsetY = (int) (-character.getCenter().y + ((getHeight() / 2) - (character.height / 2)));
 
 /*
 
