@@ -1,4 +1,4 @@
-package model.kryo;
+package network;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
@@ -15,9 +15,6 @@ import model.geometry.Point2f;
 import model.geometry.Vector2f;
 import model.maps.Map1;
 import model.maps.Map2;
-import network.ChatMessage;
-import network.InputState;
-import network.SpawnParams;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,7 +23,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * Created by Nathan on 1/10/2016.
  */
-public class Network {
+public class Config {
     public static final int TCP_PORT = 54555;
     public static final int UDP_PORT = 54777;
 

@@ -1,6 +1,5 @@
-package model.kryo;
+package network;
 
-import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import model.Game;
@@ -9,9 +8,6 @@ import model.characters.CharClass;
 import model.characters.Character;
 import model.characters.Team;
 import model.geometry.Point2f;
-import network.ChatMessage;
-import network.InputState;
-import network.SpawnParams;
 import view.Canvas;
 import view.ChatPanel;
 import view.MenuPanel;
@@ -29,9 +25,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by Nathan on 1/10/2016.
  */
-public class KryoClient extends JFrame {
+public class GameClient extends JFrame {
     Game game;
-    Client client;
+    com.esotericsoftware.kryonet.Client client;
     String clientName;
     InputState inputState;
     ArrayList<ChatMessage> chatQueue;
@@ -42,7 +38,7 @@ public class KryoClient extends JFrame {
     static final int TIMEOUT = 5000;
     final int VID_FPS = 60; // Number of times per second both GAME LOGIC and RENDERING occur
     final int NET_FPS = 20; // Number of times per second input is sent to the server
-    float TIMESCALE = Network.TIMESCALE;
+    float TIMESCALE = Config.TIMESCALE;
 
     static final Integer LAYER_CANVAS = new Integer(0);
     static final Integer LAYER_HUD = new Integer(1);
@@ -61,7 +57,7 @@ public class KryoClient extends JFrame {
 
     private final boolean debug = false;
 
-    public KryoClient(String clientName, String server, int tcp_port, int udp_port) {
+    public GameClient(String clientName, String server, int tcp_port, int udp_port) {
         this.clientName = clientName;
         initNetwork(server, tcp_port, udp_port);
     }
@@ -86,9 +82,9 @@ public class KryoClient extends JFrame {
     }
 
     private void initNetwork(String server, int tcp_port, int udp_port) {
-        client = new Client();
+        client = new com.esotericsoftware.kryonet.Client();
 
-        Network.register(client);
+        Config.register(client);
 
         client.addListener(new Listener.ThreadedListener(new Listener() {
             public void received(Connection connection, Object object) {
@@ -647,7 +643,7 @@ public class KryoClient extends JFrame {
             e.printStackTrace();
         }*/
 
-        new KryoClient(JOptionPane.showInputDialog("Username:"), "localhost", Network.TCP_PORT, Network.UDP_PORT);
+        new GameClient(JOptionPane.showInputDialog("Username:"), "localhost", Config.TCP_PORT, Config.UDP_PORT);
 //        new KryoClient(JOptionPane.showInputDialog("Username:"), "68.230.58.93", Network.TCP_PORT, Network.UDP_PORT);
     }
 }

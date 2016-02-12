@@ -1,4 +1,4 @@
-package model.kryo;
+package network;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Output;
@@ -7,10 +7,6 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import model.Game;
 import model.Player;
-import network.ChatMessage;
-import network.InputState;
-import network.Ping;
-import network.SpawnParams;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -24,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by Nathan on 1/10/2016.
  */
-public class KryoServer {
+public class GameServer {
     Server server;
     Game game;
     List<Connection> connections;
@@ -33,9 +29,9 @@ public class KryoServer {
     final int VID_FPS = 60;
     final int NET_FPS = 20;
     final int MAX_PING_HISTORY = 60; // Number of ping times to save per player
-    float TIMESCALE = Network.TIMESCALE;
+    float TIMESCALE = Config.TIMESCALE;
 
-    public KryoServer() {
+    public GameServer() {
         init_network();
         init_game();
     }
@@ -63,11 +59,11 @@ public class KryoServer {
             }
         };
 
-        Network.register(server);
+        Config.register(server);
         server.start();
 
         try {
-            server.bind(Network.TCP_PORT, Network.UDP_PORT);
+            server.bind(Config.TCP_PORT, Config.UDP_PORT);
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(2);
@@ -106,38 +102,41 @@ public class KryoServer {
         @Override
         public void received(Connection connection, Object o) {
             super.received(connection, o);
+            try {
+                // Need to receive clientName
+                PlayerConnection con = (PlayerConnection) connection;
+                if (con.player == null) {
+                    if (o instanceof String) {
+                        con.player = new Player(game, (String) o);
+                        game.players.add(con.player);
+                        System.out.println(o + " connected.");
+                        connections.add(connection);
+                    } else
+                        System.out.println("Unexpected object: " + o);
+                }
 
-            // Need to receive clientName
-            PlayerConnection con = (PlayerConnection) connection;
-            if (con.player == null) {
-                if (o instanceof String) {
-                    con.player = new Player(game, (String) o);
-                    game.players.add(con.player);
-                    System.out.println(o + " connected.");
-                    connections.add(connection);
-                } else
-                    System.out.println("Unexpected object: " + o);
-            }
+                // Already have clientName
+                else {
+                    if (o instanceof InputState) {
+                        InputState i = (InputState) o;
+                        while (con.player.pings.peek().tick < i.lastTick)
+                            con.player.pings.remove();
+                        con.player.ping = (int) (System.currentTimeMillis() - con.player.pings.remove().time);
 
-            // Already have clientName
-            else {
-                if (o instanceof InputState) {
-                    InputState i = (InputState) o;
-                    while (con.player.pings.peek().tick < i.lastTick)
-                        con.player.pings.remove();
-                    con.player.ping = (int) (System.currentTimeMillis() - con.player.pings.remove().time);
-
-                    if (con.player.character != null) con.player.character.importState(i);
-                } else if (o instanceof SpawnParams) {
-                    con.player.importSpawnParams((SpawnParams) o);
-                    if (con.player.character != null) con.player.kill();
-                } else if (o instanceof ChatMessage) {
-                    ChatMessage msg = (ChatMessage) o;
-                    System.out.println(msg.player + ": " + msg.content);
-                    game.chat.add(msg);
-                    newMsgs.add(msg);
-                } else
-                    System.out.println("Unexpected object: " + o);
+                        if (con.player.character != null) con.player.character.importState(i);
+                    } else if (o instanceof SpawnParams) {
+                        con.player.importSpawnParams((SpawnParams) o);
+                        if (con.player.character != null) con.player.kill();
+                    } else if (o instanceof ChatMessage) {
+                        ChatMessage msg = (ChatMessage) o;
+                        System.out.println(msg.player + ": " + msg.content);
+                        game.chat.add(msg);
+                        newMsgs.add(msg);
+                    } else
+                        System.out.println("Unexpected object: " + o);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
@@ -231,8 +230,8 @@ public class KryoServer {
     }
 
     public static void main(String[] args) {
-        new KryoServer();
-        KryoClient client = new KryoClient("excalo", "68.230.58.93", Network.TCP_PORT, Network.UDP_PORT);/*
+        new GameServer();
+        GameClient client = new GameClient("excalo", "68.230.58.93", Config.TCP_PORT, Config.UDP_PORT);/*
         try {
             Thread.sleep(105);
         } catch (InterruptedException e) {

@@ -72,7 +72,6 @@ public class Ninja extends Character {
             Point2f pivot = grapplePoints.get(grapplePoints.size() - 1);
             Vector2f radius = new Vector2f(getCenter(), pivot);
 
-
             // Jump at end of radius
             if (radius.getMagnitude() <= width) {
                 velocity.add(new Vector2f(0, jumpVelocity));
@@ -91,8 +90,14 @@ public class Ninja extends Character {
 
             radius = new Vector2f(getCenter(), pivot);
 
+            System.out.println("before gravity = " + velocity + " = " + velocity.getMagnitude());
+            System.out.println("gavity this tick = " + acceleration.copy().scale(deltaTime) + " = " + acceleration.copy().scale(deltaTime).getMagnitude());
+
             // Apply GRAVITY
+            acceleration.y = game.GRAVITY;
             velocity.add(acceleration.copy().scale(deltaTime));
+
+            System.out.println("Right after gravity " + velocity);
 
             // Attempt to apply normal dynamics first
             position.displace(acceleration, velocity, deltaTime);
@@ -105,13 +110,17 @@ public class Ninja extends Character {
                 position.translate(newRadius);
 
                 // Tangential velocity
-                velocity = velocity.project(radius.normal()).setMagnitude(velocity.getMagnitude());
+                System.out.println("radius normal = " + radius.normal());
+                float oldMag = velocity.getMagnitude();
+                velocity = velocity.project(radius.normal());
 
-//                float oldAngle = velocity.getDirection();
-//                float newAngle1 = (float) (radius.getDirection() + Math.toRadians(90));
-//                float newAngle2 = (float) (newAngle1 + Math.toRadians(180));
-//                velocity.setDirection(closerAngle(oldAngle, newAngle1, newAngle2));
+                // Correct for loss of magnitude from the projection, but be careful not to cause equilibrium conditions at small values
+                if (velocity.getMagnitude() > 7f)
+                    velocity.setMagnitude(oldMag);
             }
+
+            System.out.println("adjusted vel = " + velocity + " = " + velocity.getMagnitude());
+            //System.out.println("acc = " + acceleration +" = " + acceleration.getMagnitude());
 
 /*            // Controls affect momentum
             float deltaMagnitude = 0;
