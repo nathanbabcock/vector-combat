@@ -73,12 +73,12 @@ public class Ninja extends Character {
             Vector2f radius = new Vector2f(getCenter(), pivot);
 
             // Jump at end of radius
-            if (radius.getMagnitude() <= width) {
-                velocity.add(new Vector2f(0, jumpVelocity));
-                altAttacking = false;
-                grapplePoints = null;
-                return;
-            }
+//            if (radius.getMagnitude() <= width) {
+//                velocity.add(new Vector2f(0, jumpVelocity));
+//                altAttacking = false;
+//                grapplePoints = null;
+//                return;
+//            }
 
             // Shorten or lengthen rope if necessary
             if (movingDown || movingUp) {
