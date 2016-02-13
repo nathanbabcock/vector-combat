@@ -73,12 +73,12 @@ abstract public class Character extends AABB {
             altAttack(deltaTime);
         }
         checkHealth();
-        applyDynamics(deltaTime);
+        applyPhysics(deltaTime);
         checkCollisions();
         updateSprite(deltaTime);
     }
 
-    public void applyDynamics(float deltaTime) {
+    public void applyPhysics(float deltaTime) {
         // Apply gravity
         velocity.add(acceleration.copy().scale(deltaTime));
         acceleration.y = game.GRAVITY;

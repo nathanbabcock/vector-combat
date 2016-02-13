@@ -23,6 +23,7 @@ public class Rocket extends Circle {
     public transient static final float RADIUS = 8;
     public transient static final float VELOCITY = 500;
     public transient static final float EXPLOSION_RADIUS = 100;
+    public transient static final float EXPLOSION_MAGNITUDE = 300;
     public transient static final int DAMAGE = 70;
 
     public Rocket() {
@@ -93,7 +94,7 @@ public class Rocket extends Circle {
                 // Knockback
                 Vector2f explosion = new Vector2f(player.character.getCenter().x - getCenter().x, player.character.getCenter().y - getCenter().y);
                 // TODO scale damage and knockback with distance
-                explosion.setMagnitude(300f);
+                explosion.setMagnitude(EXPLOSION_MAGNITUDE);
                 player.character.velocity.add(explosion);
 
                 // Damage

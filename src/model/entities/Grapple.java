@@ -4,20 +4,19 @@ import model.Collision;
 import model.Game;
 import model.Player;
 import model.characters.Character;
-import model.characters.Ninja;
 import model.geometry.AABB;
 import model.geometry.Circle;
-import model.geometry.Vector2f;
 import view.Canvas;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 /**
  * Created by Nathan on 8/25/2015.
  */
 public class Grapple extends Circle {
     public byte owner;
+
+    public Character grappleChar;
 
     public transient static final float RADIUS = 6;
     public transient static final float VELOCITY = 1000;
@@ -36,6 +35,11 @@ public class Grapple extends Circle {
             return;
         }
 
+        if (grappleChar != null) {
+            position = grappleChar.getCenter();
+            return;
+        }
+
         // Move rocket
         position.displace(acceleration, velocity, deltaTime);
 
@@ -46,6 +50,7 @@ public class Grapple extends Circle {
     public void checkCollisions() {
         // Check collisions
         Collision collision = null;
+        boolean isPlayer = false;
         for (AABB box : game.map.statics) { // Walls
             collision = box.collision(this);
             if (collision != null)
@@ -56,8 +61,10 @@ public class Grapple extends Circle {
                 if (player.clientID == owner || player.character == null)
                     continue;
                 collision = player.character.collision(this);
-                if (collision != null)
+                if (collision != null) {
+                    collision.collider = player.character;
                     break;
+                }
             }
         }
         if (collision != null)
@@ -65,31 +72,18 @@ public class Grapple extends Circle {
     }
 
     public void handleCollision(Collision collision) {
-//        game.garbage.add(this);
-        velocity = new Vector2f(0, 0);
-        Player player = game.getPlayer(owner);
-        if (player == null)
-            return;
-        Ninja ownerNinja = (Ninja) player.character;
-        ownerNinja.grapplePoints = new ArrayList();
-        ownerNinja.grapplePoints.add(getCenter());
+        velocity.zero();
+//        Player player = game.getPlayer(owner);
+//        if (player == null)
+//            return;
+//        Ninja ownerNinja = (Ninja) player.character;
 
-//        for (Player player : game.characters) {
-//            float distance = player.position.distance(position);
-//            if (distance <= Grapple.EXPLOSION_RADIUS) {
-//                // Knockback
-//                Vector2D explosion = new Vector2D(player.getCenter().x - getCenter().x, player.getCenter().y - getCenter().y);
-//                // TODO scale damage and knockback with distance
-//                explosion.setMagnitude(300f);
-//                player.velocity.add(explosion);
-//
-//                // Damage
-//                if (ownerID != player)
-//                    player.damage(Grapple.DAMAGE);
-//            }
-//        }
-//
-//        generateExplosionParticles();
+        if (collision.collider != null && collision.collider instanceof Character) {
+            grappleChar = (Character) collision.collider;
+            //position = ((Character) collision.collider).getCenter();
+        } else ;
+//            ownerNinja.grapplePoint = getCenter();
+
     }
 
     public void draw(Canvas canvas, Graphics2D g2) {

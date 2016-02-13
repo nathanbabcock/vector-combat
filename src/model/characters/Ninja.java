@@ -9,15 +9,21 @@ import model.geometry.Vector2f;
 import view.Canvas;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 /**
  * Created by Nathan on 8/31/2015.
  */
 public class Ninja extends Character {
     public Grapple grapple;
-    public ArrayList<Point2f> grapplePoints;
+    //public Point2f grapplePoint;
+    //public Character grappleChar;
 
+    public float grappleInterval = 0.5f;
+    public float currentGrappleDelay = 0;
+
+    public static transient final float KNOCKBACK = 300;
+    public static transient final float KNOCKUP = 100;
+    public static transient final float DIVE_SPEED = 1500;
     public static transient final int SWORD_DAMAGE = 70;
 
     public Ninja() {
@@ -67,12 +73,41 @@ public class Ninja extends Character {
     }
 
     @Override
-    public void applyDynamics(float deltaTime) {
-        if (grapplePoints != null) {
-            Point2f pivot = grapplePoints.get(grapplePoints.size() - 1);
-            Vector2f radius = new Vector2f(getCenter(), pivot);
+    public void checkCollisions() {
+        // Handle grappling to players
+        if (grapple != null && grapple.velocity.isZero() && grapple.grappleChar != null && getCenter().distance(grapple.grappleChar.getCenter()) <= width) {
+            Vector2f knockback = new Vector2f(getCenter(), grapple.grappleChar.getCenter());
+            knockback.y += KNOCKUP;
+            knockback.setMagnitude(KNOCKBACK);
+            grapple.grappleChar.velocity.add(knockback);
 
-            // Jump at end of radius
+            currentGrappleDelay = grappleInterval;
+            altAttacking = false;
+            game.garbage.add(grapple);
+            grapple = null;
+        }
+
+        super.checkCollisions();
+    }
+
+    @Override
+    public void applyPhysics(float deltaTime) {
+        // Grapple has hit something
+        if (grapple != null && grapple.velocity.isZero()) {
+
+            // Grappled to player
+            if (grapple.grappleChar != null) {
+                Vector2f radius = new Vector2f(getCenter(), grapple.grappleChar.getCenter());
+                radius.setMagnitude(DIVE_SPEED);
+                velocity = radius;
+                super.applyPhysics(deltaTime);
+            }
+
+            // Grappled to wall or something
+            else {
+                Vector2f radius = new Vector2f(getCenter(), grapple.position);
+
+                // Jump at end of radius
 //            if (radius.getMagnitude() <= width) {
 //                velocity.add(new Vector2f(0, jumpVelocity));
 //                altAttacking = false;
@@ -80,64 +115,60 @@ public class Ninja extends Character {
 //                return;
 //            }
 
-            // Shorten or lengthen rope if necessary
-            if (movingDown || movingUp) {
-                Vector2f deltaRope = radius.copy().setMagnitude(moveSpeed * deltaTime * 1.2f);
-                if (movingDown)
-                    deltaRope.scale(-1);
-                position.translate(deltaRope);
+                // Shorten or lengthen rope if necessary
+                if (movingDown || movingUp) {
+                    Vector2f deltaRope = radius.copy().setMagnitude(moveSpeed * deltaTime * 1.2f);
+                    if (movingDown)
+                        deltaRope.scale(-1);
+                    position.translate(deltaRope);
+                }
+
+                radius = new Vector2f(getCenter(), grapple.position);
+
+                //System.out.println("before gravity = " + velocity + " = " + velocity.getMagnitude());
+                //System.out.println("gravity this tick = " + acceleration.copy().scale(deltaTime) + " = " + acceleration.copy().scale(deltaTime).getMagnitude());
+
+                // Apply normal physics
+                super.applyPhysics(deltaTime);
+
+                // Handle longer radii
+                if (position.distance(grapple.position) > radius.getMagnitude()) {
+                    // Position
+                    Vector2f newRadius = new Vector2f(getCenter(), grapple.position);
+                    newRadius.setMagnitude(newRadius.getMagnitude() - radius.getMagnitude());
+                    position.translate(newRadius);
+
+                    // Tangential velocity
+                    //System.out.println("radius normal = " + radius.normal());
+                    float oldMag = velocity.getMagnitude();
+                    velocity = velocity.project(radius.normal());
+
+                    // Correct for loss of magnitude from the projection, but be careful not to cause equilibrium conditions at small values
+                    if (velocity.getMagnitude() > 7f)
+                        velocity.setMagnitude(oldMag);
+                }
+
+                //System.out.println("adjusted vel = " + velocity + " = " + velocity.getMagnitude());
+                //System.out.println("acc = " + acceleration +" = " + acceleration.getMagnitude());
+
+                // Controls affect momentum
+//                float deltaMagnitude = 0;
+//                if (movingLeft && !movingRight) {
+//                    if (velocity.x < 0)
+//                        deltaMagnitude = moveSpeed * deltaTime * 2;
+//                    else if (velocity.x > 0)
+//                        deltaMagnitude = -moveSpeed * deltaTime * 2;
+//                } else if (movingRight && !movingLeft) {
+//                    if (velocity.x < 0)
+//                        deltaMagnitude = -moveSpeed * deltaTime * 2;
+//                    else if (velocity.x > 0)
+//                        deltaMagnitude = moveSpeed * deltaTime * 2;
+//                }
+//                velocity.setMagnitude(velocity.getMagnitude() + deltaMagnitude);
+//                }
             }
-
-            radius = new Vector2f(getCenter(), pivot);
-
-            System.out.println("before gravity = " + velocity + " = " + velocity.getMagnitude());
-            System.out.println("gavity this tick = " + acceleration.copy().scale(deltaTime) + " = " + acceleration.copy().scale(deltaTime).getMagnitude());
-
-            // Apply GRAVITY
-            acceleration.y = game.GRAVITY;
-            velocity.add(acceleration.copy().scale(deltaTime));
-
-            System.out.println("Right after gravity " + velocity);
-
-            // Attempt to apply normal dynamics first
-            position.displace(acceleration, velocity, deltaTime);
-
-            // Handle longer radii
-            if (position.distance(pivot) > radius.getMagnitude()) {
-                // Position
-                Vector2f newRadius = new Vector2f(getCenter(), pivot);
-                newRadius.setMagnitude(newRadius.getMagnitude() - radius.getMagnitude());
-                position.translate(newRadius);
-
-                // Tangential velocity
-                System.out.println("radius normal = " + radius.normal());
-                float oldMag = velocity.getMagnitude();
-                velocity = velocity.project(radius.normal());
-
-                // Correct for loss of magnitude from the projection, but be careful not to cause equilibrium conditions at small values
-                if (velocity.getMagnitude() > 7f)
-                    velocity.setMagnitude(oldMag);
-            }
-
-            System.out.println("adjusted vel = " + velocity + " = " + velocity.getMagnitude());
-            //System.out.println("acc = " + acceleration +" = " + acceleration.getMagnitude());
-
-/*            // Controls affect momentum
-            float deltaMagnitude = 0;
-            if (movingLeft && !movingRight) {
-                if (velocity.x < 0)
-                    deltaMagnitude = moveSpeed * deltaTime * 2;
-                else if (velocity.x > 0)
-                    deltaMagnitude = -moveSpeed * deltaTime * 2;
-            } else if (movingRight && !movingLeft) {
-                if (velocity.x < 0)
-                    deltaMagnitude = -moveSpeed * deltaTime * 2;
-                else if (velocity.x > 0)
-                    deltaMagnitude = moveSpeed * deltaTime * 2;
-            }
-            velocity.setMagnitude(velocity.getMagnitude() + deltaMagnitude);*/
         } else
-            super.applyDynamics(deltaTime);
+            super.applyPhysics(deltaTime);
     }
 
     @Override
@@ -162,23 +193,28 @@ public class Ninja extends Character {
 
     @Override
     public void move(float deltaTime) {
-        if (grapplePoints != null)
+        if (grapple != null && grapple.velocity.isZero())
             return;
         super.move(deltaTime);
     }
 
     @Override
     public void altAttack(float deltaTime) {
+        if (currentGrappleDelay > 0)
+            currentGrappleDelay -= deltaTime;
+
         // Remove grapple when alt attack is released
         if (!altAttacking) {
-            game.garbage.add(grapple);
-            grapple = null;
-            grapplePoints = null;
+            if (grapple != null) {
+                game.garbage.add(grapple);
+                grapple = null;
+                //currentGrappleDelay = grappleInterval;
+            }
             return;
         }
 
         // Spawn grapple entity for first time
-        if (grapple == null) {
+        if (grapple == null && currentGrappleDelay <= 0) {
             grapple = new Grapple(game, getCenter().x, getCenter().y, Grapple.RADIUS);
             grapple.owner = player.clientID;
             Point2f origin = getCenter();

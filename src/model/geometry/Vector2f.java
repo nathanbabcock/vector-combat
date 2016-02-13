@@ -110,6 +110,14 @@ public class Vector2f {
         return onto.copy().scale(onto.dot(this) / (onto.getMagnitude() * onto.getMagnitude()));
     }
 
+    public void zero() {
+        x = y = 0f;
+    }
+
+    public boolean isZero() {
+        return x == 0f && y == 0f;
+    }
+
     @Override
     public String toString() {
         return "[" + x + ", " + y + "]";
