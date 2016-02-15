@@ -125,6 +125,19 @@ public class Game {
         sprites.put("scout_walking", new Sprite(spriteSheet, 32, 304, 24, 80));
         sprites.put("scout_walljump", new Sprite(spriteSheet, 64, 304, 40, 80, -12, 0));
         sprites.put("scout_gun", new Sprite(spriteSheet, 112, 304, 48, 24));
+
+        sprites.put("ninja2_standing", new Sprite(spriteSheet, 0, 392, 74, 52, -11, 0));
+        sprites.put("ninja2_run1", new Sprite(spriteSheet, 81, 400, 52, 44, -22, 0).setNext("ninja2_run2").setTime(0.1f));
+        sprites.put("ninja2_run2", new Sprite(spriteSheet, 142, 390, 40, 54, -11, 0).setNext("ninja2_run3").setTime(0.1f));
+        sprites.put("ninja2_run3", new Sprite(spriteSheet, 187, 396, 54, 48, -22, 0).setNext("ninja2_run4").setTime(0.1f));
+        sprites.put("ninja2_run4", new Sprite(spriteSheet, 249, 390, 40, 54, -11, 0).setNext("ninja2_run1").setTime(0.1f));
+        sprites.put("ninja2_parry", new Sprite(spriteSheet, 298, 378, 58, 66, -22, -16).setTime(1f));
+        sprites.put("ninja2_kick", new Sprite(spriteSheet, 367, 386, 58, 58, -8, -7));
+        sprites.put("ninja2_grapple", new Sprite(spriteSheet, 436, 395, 54, 49, -13, 0));
+        sprites.put("ninja2_attack1", new Sprite(spriteSheet, 7, 485, 60, 66, -32, 12).setNext("ninja2_attack2").setTime(0.1f));
+        sprites.put("ninja2_attack2", new Sprite(spriteSheet, 77, 459, 58, 92, 0, 38).setNext("ninja2_attack3").setTime(0.1f));
+        sprites.put("ninja2_attack3", new Sprite(spriteSheet, 139, 495, 97, 84, -23, 2).setNext("ninja2_attack4").setTime(0.1f));
+        sprites.put("ninja2_attack4", new Sprite(spriteSheet, 243, 495, 82, 56, -52, 2).setNext("ninja2_attack1").setTime(0.1f));
     }
 
     /**

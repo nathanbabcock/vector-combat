@@ -55,7 +55,7 @@ public class GameClient extends JFrame {
     JTextArea health;
     JTextField respawn, winner;
 
-    private final boolean debug = false;
+    private final boolean debug = true;
 
     public GameClient(String clientName, String server, int tcp_port, int udp_port) {
         this.clientName = clientName;

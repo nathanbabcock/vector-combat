@@ -32,11 +32,44 @@ public class Ninja extends Character {
     public Ninja(Player player) {
         super(player);
         attackInterval = 0.3f;
+
+        width = 32;
+        height = 52;
+        moveSpeed = 400f;
     }
 
     @Override
     public void updateSprite(float deltaTime) {
-        if (attacking && sprite != game.sprites.get("ninja_attack_1") && sprite != game.sprites.get("ninja_attack_2") && sprite != game.sprites.get("ninja_attack_3")) {
+        if (attacking) {
+            if (sprite == game.sprites.get("ninja2_attack1") || sprite == game.sprites.get("ninja2_attack2") || sprite == game.sprites.get("ninja2_attack3") || sprite == game.sprites.get("ninja2_attack4")) {
+                if (spriteTime >= sprite.time) {
+                    sprite = game.sprites.get(sprite.next);
+                    spriteTime = 0;
+                }
+            } else {
+                sprite = game.sprites.get("ninja2_attack1");
+                spriteTime = 0;
+            }
+        } else if (grapple != null && grapple.grappleChar != null) {
+            sprite = game.sprites.get("ninja2_kick");
+        } else if (!onGround) {
+            sprite = game.sprites.get("ninja2_grapple");
+        } else if (movingLeft || movingRight) {
+            if (sprite == game.sprites.get("ninja2_run1") || sprite == game.sprites.get("ninja2_run2") || sprite == game.sprites.get("ninja2_run3") || sprite == game.sprites.get("ninja2_run4")) {
+                if (spriteTime >= sprite.time) {
+                    sprite = game.sprites.get(sprite.next);
+                    spriteTime = 0;
+                }
+            } else {
+                sprite = game.sprites.get("ninja2_run1");
+                spriteTime = 0;
+            }
+        } else {
+            sprite = game.sprites.get("ninja2_standing");
+        }
+        spriteTime += deltaTime;
+
+        /*if (attacking && sprite != game.sprites.get("ninja_attack_1") && sprite != game.sprites.get("ninja_attack_2") && sprite != game.sprites.get("ninja_attack_3")) {
             sprite = game.sprites.get("ninja_attack_1");
             spriteTime = 0;
         } else if (sprite == game.sprites.get("ninja_attack_1")) {
@@ -69,7 +102,7 @@ public class Ninja extends Character {
         } else {
             sprite = game.sprites.get("ninja_standing");
         }
-        spriteTime += deltaTime;
+        spriteTime += deltaTime;*/
     }
 
     @Override
@@ -80,6 +113,8 @@ public class Ninja extends Character {
             knockback.y += KNOCKUP;
             knockback.setMagnitude(KNOCKBACK);
             grapple.grappleChar.velocity.add(knockback);
+            velocity.x = 0f;
+            velocity.y = KNOCKUP;
 
             currentGrappleDelay = grappleInterval;
             altAttacking = false;
@@ -218,8 +253,8 @@ public class Ninja extends Character {
             grapple = new Grapple(game, getCenter().x, getCenter().y, Grapple.RADIUS);
             grapple.owner = player.clientID;
             Point2f origin = getCenter();
-            grapple.velocity = new Vector2f(xhair.x - origin.x, xhair.y - origin.y);
-            grapple.velocity.setMagnitude(Rocket.VELOCITY);
+            grapple.velocity = new Vector2f(xhair.x - origin.x, xhair.y - origin.y).setMagnitude(Rocket.VELOCITY);
+            //        .add(velocity);
             grapple.acceleration = new Vector2f(0, 0);
             game.entities.add(grapple);
         }
