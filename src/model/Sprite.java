@@ -6,23 +6,34 @@ import java.awt.image.BufferedImage;
  * Created by Nathan on 8/30/2015.
  */
 public class Sprite {
-    public int width, height, offsetX, offsetY;
-    public String next;
+    public int width, height, hitboxX, hitboxY, hitboxWidth, hitboxHeight;
+    public String name, next;
+    public boolean interruptible;
     public float time;
     public BufferedImage image;
 
-    public Sprite(BufferedImage spriteSheet, int x, int y, int width, int height) {
-        this.width = width;
-        this.height = height;
-        offsetX = 0;
-        offsetY = 0;
-        image = spriteSheet.getSubimage(x, y, width, height);
+    public Sprite(String name) {
+        this.name = name;
+        interruptible = true;
     }
 
-    public Sprite(BufferedImage spriteSheet, int x, int y, int width, int height, int offsetX, int offsetY) {
-        this(spriteSheet, x, y, width, height);
-        this.offsetX = offsetX;
-        this.offsetY = offsetY;
+    public Sprite setImage(BufferedImage spriteSheet, int x, int y, int width, int height) {
+        this.width = hitboxWidth = width;
+        this.height = hitboxHeight = height;
+        image = spriteSheet.getSubimage(x, y, width, height);
+        return this;
+    }
+
+    public Sprite setHitboxOffset(int hitboxX, int hitboxY) {
+        this.hitboxX = hitboxX;
+        this.hitboxY = hitboxY;
+        return this;
+    }
+
+    public Sprite setHitboxSize(int hitboxWidth, int hitboxHeight) {
+        this.hitboxWidth = hitboxWidth;
+        this.hitboxHeight = hitboxHeight;
+        return this;
     }
 
     public Sprite setNext(String next) {
@@ -32,6 +43,11 @@ public class Sprite {
 
     public Sprite setTime(float time) {
         this.time = time;
+        return this;
+    }
+
+    public Sprite setInterruptible(boolean b) {
+        interruptible = b;
         return this;
     }
 }

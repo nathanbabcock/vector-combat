@@ -35,21 +35,21 @@ public class Scout extends Character {
 
     @Override
     public void updateSprite(float deltaTime) {
+        if (sprite == null)
+            sprite = game.getSprite("scout_standing");
+
         if (wallLeft || wallRight) {
-            sprite = game.sprites.get("scout_walljump");
+            sprite = game.getSprite("scout_walljump");
         } else if (movingLeft || movingRight) {
-            float spriteInterval = 0.25f;
-            if (sprite == game.sprites.get("scout_walljump"))
-                sprite = game.sprites.get("scout_standing");
-            if (spriteTime >= spriteInterval) {
-                if (sprite == game.sprites.get("scout_standing")) {
-                    sprite = game.sprites.get("scout_walking");
-                } else if (sprite == game.sprites.get("scout_walking"))
-                    sprite = game.sprites.get("scout_standing");
+            if (!sprite.name.startsWith("scout_walking")) {
+                sprite = game.getSprite("scout_walking_1");
+                spriteTime = 0;
+            } else if (spriteTime >= sprite.time) {
+                sprite = game.getSprite(sprite.next);
                 spriteTime = 0;
             }
         } else {
-            sprite = game.sprites.get("scout_standing");
+            sprite = game.getSprite("scout_standing");
         }
         spriteTime += deltaTime;
     }
@@ -182,25 +182,25 @@ public class Scout extends Character {
 //            g2.fillRect((int) player.getBottomLeft().x + cameraOffsetX, (int) (height - cameraOffsetY - player.getBottomLeft().y - player.height), (int) player.width, (int) player.height);
 
         // Player
-        int playerX = (int) getBottomLeft().x + canvas.cameraOffsetX + sprite.offsetX;
-        int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - height - sprite.offsetY);
+        int playerX = (int) getBottomLeft().x + canvas.cameraOffsetX + sprite.hitboxX;
+        int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - height - sprite.hitboxY);
         int playerWidth = sprite.width;
         int playerHeight = sprite.height;
 
         // Rocket launcher
         // Draw rocket
-        Sprite sg = game.sprites.get("scout_gun");
+        Sprite sg = game.getSprite("scout_gun");
         int sgWidth = sg.width;
         int sgHeight = sg.height;
-        int sgX = playerX - sprite.offsetX + 8;
+        int sgX = playerX - sprite.hitboxX + 8;
         int sgY = playerY + 24;
-        Point2f sgOrigin = new Point2f(playerX - sprite.offsetX + 16, playerY + 36);
+        Point2f sgOrigin = new Point2f(playerX - sprite.hitboxX + 16, playerY + 36);
         Vector2f sgVector = new Vector2f(xhair.x - (getBottomLeft().x + 12), -xhair.y + (getBottomLeft().y + 36));
 
         // TODO refactor to avoid code duplication
         if (wallRight) {
             playerWidth *= -1;
-            playerX += sprite.width - sprite.offsetX - 4;
+            playerX += sprite.width - sprite.hitboxX - 4;
 
             if (xhair.x < getCenter().x) {
                 sgHeight *= -1;
@@ -217,7 +217,7 @@ public class Scout extends Character {
             }
         } else if (xhair.x < getCenter().x) {
             playerWidth *= -1;
-            playerX += sprite.width - sprite.offsetX;
+            playerX += sprite.width - sprite.hitboxX;
 
             sgHeight *= -1;
             sgY += 24;

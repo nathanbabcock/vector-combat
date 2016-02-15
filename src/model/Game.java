@@ -11,7 +11,7 @@ import network.ChatMessage;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -25,7 +25,7 @@ public class Game {
     public transient List<Object> garbage;
     public transient List<Particle> particles;
     public transient List<ChatMessage> chat;
-    public transient HashMap<String, Sprite> sprites;
+    public transient List<Sprite> sprites;
     public transient Map map;
     public String mapID;
     public float countdown;
@@ -99,6 +99,14 @@ public class Game {
         return score;
     }
 
+    public Sprite getSprite(String id) {
+        for (Sprite s : sprites)
+            if (s.name.equals(id))
+                return s;
+        System.err.println("Error: could not find requested sprite: " + id);
+        return null;
+    }
+
     private void setupSprites() {
         BufferedImage spriteSheet = null;
         try {
@@ -106,38 +114,145 @@ public class Game {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        sprites = new HashMap();
-        sprites.put("rocket_standing", new Sprite(spriteSheet, 0, 0, 24, 80));
-        sprites.put("rocket_walking", new Sprite(spriteSheet, 32, 0, 24, 80));
-        sprites.put("rocket_launcher", new Sprite(spriteSheet, 64, 0, 64, 24));
+        sprites = new ArrayList();
 
-        sprites.put("ninja_standing", new Sprite(spriteSheet, 0, 112, 40, 96, 0, 16));
-        sprites.put("ninja_walking", new Sprite(spriteSheet, 48, 112, 40, 96, 0, 16));
-        sprites.put("ninja_attack_1", new Sprite(spriteSheet, 96, 88, 24, 120, 0, 40));
-        sprites.put("ninja_attack_2", new Sprite(spriteSheet, 128, 112, 64, 96, 0, 16));
-        sprites.put("ninja_attack_3", new Sprite(spriteSheet, 200, 128, 80, 80, 0, 0));
+        // Rocketman
+        sprites.add(new Sprite("rocket_standing")
+                .setImage(spriteSheet, 0, 0, 24, 80));
+        sprites.add(new Sprite("rocket_walking_1")
+                .setImage(spriteSheet, 32, 0, 24, 80)
+                .setTime(0.25f)
+                .setNext("rocket_walking_2"));
+        sprites.add(new Sprite("rocket_walking_2")
+                .setImage(spriteSheet, 0, 0, 24, 80) // Same as rocket_standing
+                .setTime(0.25f)
+                .setNext("rocket_walking_1"));
+        sprites.add(new Sprite("rocket_launcher")
+                .setImage(spriteSheet, 64, 0, 64, 24));
 
-        sprites.put("soldier_standing", new Sprite(spriteSheet, 0, 216, 32, 80, -8, 0));
-        sprites.put("soldier_walking", new Sprite(spriteSheet, 40, 216, 32, 80, -8, 0));
-        sprites.put("soldier_gun", new Sprite(spriteSheet, 80, 216, 48, 24));
+        // Ninja
+        sprites.add(new Sprite("ninja_standing")
+                .setImage(spriteSheet, 0, 112, 40, 96)
+                .setHitboxOffset(0, 16));
+        sprites.add(new Sprite("ninja_walking_1")
+                .setImage(spriteSheet, 48, 112, 40, 96)
+                .setHitboxOffset(0, 16)
+                .setTime(0.25f)
+                .setNext("rocket_walking_2"));
+        sprites.add(new Sprite("ninja_walking_2")
+                .setImage(spriteSheet, 0, 112, 40, 96)
+                .setHitboxOffset(0, 16)
+                .setTime(0.25f)
+                .setNext("ninja_walking_1"));
+        sprites.add(new Sprite("ninja_attack_1")
+                .setImage(spriteSheet, 96, 88, 24, 120)
+                .setHitboxOffset(0, 40)
+                .setTime(0.1f)
+                .setNext("ninja_attack_2")
+                .setInterruptible(false));
+        sprites.add(new Sprite("ninja_attack_2")
+                .setImage(spriteSheet, 128, 112, 64, 96)
+                .setHitboxOffset(0, 16)
+                .setTime(0.05f)
+                .setNext("ninja_attack_3")
+                .setInterruptible(false));
+        sprites.add(new Sprite("ninja_attack_3")
+                .setImage(spriteSheet, 200, 128, 80, 80)
+                .setTime(0.1f)
+                .setInterruptible(false));
 
-        sprites.put("scout_standing", new Sprite(spriteSheet, 0, 304, 24, 80));
-        sprites.put("scout_walking", new Sprite(spriteSheet, 32, 304, 24, 80));
-        sprites.put("scout_walljump", new Sprite(spriteSheet, 64, 304, 40, 80, -12, 0));
-        sprites.put("scout_gun", new Sprite(spriteSheet, 112, 304, 48, 24));
+        // Soldier
+        sprites.add(new Sprite("soldier_standing")
+                .setImage(spriteSheet, 0, 216, 32, 80)
+                .setHitboxOffset(-8, 0));
+        sprites.add(new Sprite("soldier_walking_1")
+                .setImage(spriteSheet, 40, 216, 32, 80)
+                .setHitboxOffset(-8, 0)
+                .setTime(0.25f)
+                .setNext("soldier_walking_2"));
+        sprites.add(new Sprite("soldier_walking_2")
+                .setImage(spriteSheet, 0, 216, 32, 80)
+                .setHitboxOffset(-8, 0)
+                .setTime(0.25f)
+                .setNext("soldier_walking_1"));
+        sprites.add(new Sprite("soldier_gun")
+                .setImage(spriteSheet, 80, 216, 48, 24));
 
-        sprites.put("ninja2_standing", new Sprite(spriteSheet, 0, 392, 74, 52, -11, 0));
-        sprites.put("ninja2_run1", new Sprite(spriteSheet, 81, 400, 52, 44, -22, 0).setNext("ninja2_run2").setTime(0.1f));
-        sprites.put("ninja2_run2", new Sprite(spriteSheet, 142, 390, 40, 54, -11, 0).setNext("ninja2_run3").setTime(0.1f));
-        sprites.put("ninja2_run3", new Sprite(spriteSheet, 187, 396, 54, 48, -22, 0).setNext("ninja2_run4").setTime(0.1f));
-        sprites.put("ninja2_run4", new Sprite(spriteSheet, 249, 390, 40, 54, -11, 0).setNext("ninja2_run1").setTime(0.1f));
-        sprites.put("ninja2_parry", new Sprite(spriteSheet, 298, 378, 58, 66, -22, -16).setTime(1f));
-        sprites.put("ninja2_kick", new Sprite(spriteSheet, 367, 386, 58, 58, -8, -7));
-        sprites.put("ninja2_grapple", new Sprite(spriteSheet, 436, 395, 54, 49, -13, 0));
-        sprites.put("ninja2_attack1", new Sprite(spriteSheet, 7, 485, 60, 66, -32, 12).setNext("ninja2_attack2").setTime(0.1f));
-        sprites.put("ninja2_attack2", new Sprite(spriteSheet, 77, 459, 58, 92, 0, 38).setNext("ninja2_attack3").setTime(0.1f));
-        sprites.put("ninja2_attack3", new Sprite(spriteSheet, 139, 495, 97, 84, -23, 2).setNext("ninja2_attack4").setTime(0.1f));
-        sprites.put("ninja2_attack4", new Sprite(spriteSheet, 243, 495, 82, 56, -52, 2).setNext("ninja2_attack1").setTime(0.1f));
+        // Scout
+        sprites.add(new Sprite("scout_standing")
+                .setImage(spriteSheet, 0, 304, 24, 80));
+        sprites.add(new Sprite("scout_walking_1")
+                .setImage(spriteSheet, 32, 304, 24, 80)
+                .setTime(0.25f)
+                .setNext("scout_walking_2"));
+        sprites.add(new Sprite("scout_walking_2")
+                .setImage(spriteSheet, 0, 304, 24, 80)
+                .setTime(0.25f)
+                .setNext("scout_walking_1"));
+        sprites.add(new Sprite("scout_walljump")
+                .setImage(spriteSheet, 64, 304, 40, 80)
+                .setHitboxOffset(-12, 0));
+        sprites.add(new Sprite("scout_gun")
+                .setImage(spriteSheet, 112, 304, 48, 24));
+
+        // Ninja2
+        sprites.add(new Sprite("ninja2_standing")
+                .setImage(spriteSheet, 0, 392, 74, 52)
+                .setHitboxOffset(-11, 0));
+        sprites.add(new Sprite("ninja2_walking_1")
+                .setImage(spriteSheet, 81, 400, 52, 44)
+                .setHitboxOffset(-22, 0)
+                .setNext("ninja2_walking_2")
+                .setTime(0.1f));
+        sprites.add(new Sprite("ninja2_walking_2")
+                .setImage(spriteSheet, 142, 390, 40, 54)
+                .setHitboxOffset(-11, 0)
+                .setNext("ninja2_walking_3")
+                .setTime(0.1f));
+        sprites.add(new Sprite("ninja2_walking_3")
+                .setImage(spriteSheet, 187, 396, 54, 48)
+                .setHitboxOffset(-22, 0)
+                .setNext("ninja2_walking_4")
+                .setTime(0.1f));
+        sprites.add(new Sprite("ninja2_walking_4")
+                .setImage(spriteSheet, 249, 390, 40, 54)
+                .setHitboxOffset(-11, 0)
+                .setNext("ninja2_walking_1")
+                .setTime(0.1f));
+        sprites.add(new Sprite("ninja2_attack_1")
+                .setImage(spriteSheet, 7, 485, 60, 66)
+                .setHitboxOffset(-32, 12)
+                .setNext("ninja2_attack_2")
+                .setTime(0.1f)
+                .setInterruptible(false));
+        sprites.add(new Sprite("ninja2_attack_2")
+                .setImage(spriteSheet, 77, 459, 58, 92)
+                .setHitboxOffset(0, 38)
+                .setNext("ninja2_attack_3")
+                .setTime(0.1f)
+                .setInterruptible(false));
+        sprites.add(new Sprite("ninja2_attack_3")
+                .setImage(spriteSheet, 139, 495, 97, 84)
+                .setHitboxOffset(-23, 2)
+                .setNext("ninja2_attack_4")
+                .setTime(0.1f)
+                .setInterruptible(false));
+        sprites.add(new Sprite("ninja2_attack_4")
+                .setImage(spriteSheet, 243, 495, 82, 56)
+                .setHitboxOffset(-52, 2)
+                .setTime(0.1f)
+                .setInterruptible(false));
+        sprites.add(new Sprite("ninja2_parry")
+                .setImage(spriteSheet, 298, 378, 58, 66)
+                .setHitboxOffset(-22, 16)
+                .setTime(1f)
+                .setInterruptible(false));
+        sprites.add(new Sprite("ninja2_kick")
+                .setImage(spriteSheet, 367, 386, 58, 58)
+                .setHitboxOffset(-8, -7));
+        sprites.add(new Sprite("ninja2_grapple")
+                .setImage(spriteSheet, 436, 395, 54, 49)
+                .setHitboxOffset(-13, 0));
     }
 
     /**

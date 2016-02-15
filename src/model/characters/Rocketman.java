@@ -26,17 +26,19 @@ public class Rocketman extends Character {
 
     @Override
     public void updateSprite(float deltaTime) {
+        if (sprite == null)
+            sprite = game.getSprite("scout_standing");
+
         if (movingLeft || movingRight) {
-            float spriteInterval = 0.25f;
-            if (spriteTime >= spriteInterval) {
-                if (sprite == game.sprites.get("rocket_standing")) {
-                    sprite = game.sprites.get("rocket_walking");
-                } else if (sprite == game.sprites.get("rocket_walking"))
-                    sprite = game.sprites.get("rocket_standing");
+            if (!sprite.name.startsWith("rocket_walking")) {
+                sprite = game.getSprite("rocket_walking_1");
+                spriteTime = 0;
+            } else if (spriteTime >= sprite.time) {
+                sprite = game.getSprite(sprite.next);
                 spriteTime = 0;
             }
         } else {
-            sprite = game.sprites.get("rocket_standing");
+            sprite = game.getSprite("rocket_standing");
         }
         spriteTime += deltaTime;
     }
@@ -66,14 +68,14 @@ public class Rocketman extends Character {
 //            g2.fillRect((int) player.getBottomLeft().x + cameraOffsetX, (int) (height - cameraOffsetY - player.getBottomLeft().y - player.height), (int) player.width, (int) player.height);
 
         // Player
-        int playerX = (int) getBottomLeft().x + canvas.cameraOffsetX + sprite.offsetX;
-        int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - height - sprite.offsetY);
+        int playerX = (int) getBottomLeft().x + canvas.cameraOffsetX + sprite.hitboxX;
+        int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - height - sprite.hitboxY);
         int playerWidth = sprite.width;
         int playerHeight = sprite.height;
 
         // Rocket launcher
         // Draw rocket
-        Sprite rl = game.sprites.get("rocket_launcher");
+        Sprite rl = game.getSprite("rocket_launcher");
         int rlWidth = rl.width;
         int rlHeight = rl.height;
         int rlX = playerX - 8;

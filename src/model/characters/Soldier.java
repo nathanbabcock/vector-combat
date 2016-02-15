@@ -30,17 +30,19 @@ public class Soldier extends Character {
 
     @Override
     public void updateSprite(float deltaTime) {
+        if (sprite == null)
+            sprite = game.getSprite("soldier_standing");
+
         if (movingLeft || movingRight) {
-            float spriteInterval = 0.25f;
-            if (spriteTime >= spriteInterval) {
-                if (sprite == game.sprites.get("soldier_standing")) {
-                    sprite = game.sprites.get("soldier_walking");
-                } else if (sprite == game.sprites.get("soldier_walking"))
-                    sprite = game.sprites.get("soldier_standing");
+            if (!sprite.name.startsWith("soldier_walking")) {
+                sprite = game.getSprite("soldier_walking_1");
+                spriteTime = 0;
+            } else if (spriteTime >= sprite.time) {
+                sprite = game.getSprite(sprite.next);
                 spriteTime = 0;
             }
         } else {
-            sprite = game.sprites.get("soldier_standing");
+            sprite = game.getSprite("soldier_standing");
         }
         spriteTime += deltaTime;
     }
@@ -114,14 +116,14 @@ public class Soldier extends Character {
 //            g2.fillRect((int) player.getBottomLeft().x + cameraOffsetX, (int) (height - cameraOffsetY - player.getBottomLeft().y - player.height), (int) player.width, (int) player.height);
 
         // Player
-        int playerX = (int) getBottomLeft().x + canvas.cameraOffsetX + sprite.offsetX;
-        int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - height - sprite.offsetY);
+        int playerX = (int) getBottomLeft().x + canvas.cameraOffsetX + sprite.hitboxX;
+        int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - height - sprite.hitboxY);
         int playerWidth = sprite.width;
         int playerHeight = sprite.height;
 
         // Rocket launcher
         // Draw rocket
-        Sprite mg = game.sprites.get("soldier_gun");
+        Sprite mg = game.getSprite("soldier_gun");
         int mgWidth = mg.width;
         int mgHeight = mg.height;
         int mgX = playerX + 16;
@@ -131,7 +133,7 @@ public class Soldier extends Character {
 
         if (xhair.x < getCenter().x) {
             playerWidth *= -1;
-            playerX += sprite.width - sprite.offsetX;
+            playerX += sprite.width - sprite.hitboxX;
 
 //            mgWidth *= -1;
             mgHeight *= -1;

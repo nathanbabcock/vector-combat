@@ -40,32 +40,47 @@ public class Ninja extends Character {
 
     @Override
     public void updateSprite(float deltaTime) {
-        if (attacking) {
-            if (sprite == game.sprites.get("ninja2_attack1") || sprite == game.sprites.get("ninja2_attack2") || sprite == game.sprites.get("ninja2_attack3") || sprite == game.sprites.get("ninja2_attack4")) {
-                if (spriteTime >= sprite.time) {
-                    sprite = game.sprites.get(sprite.next);
-                    spriteTime = 0;
-                }
-            } else {
-                sprite = game.sprites.get("ninja2_attack1");
+        if (sprite == null)
+            sprite = game.getSprite("ninja_standing");
+
+        if (!sprite.interruptible) {
+            if (spriteTime < sprite.time) {
+                spriteTime += deltaTime;
+                return;
+            } else if (sprite.next != null) {
+                sprite = game.getSprite(sprite.next);
                 spriteTime = 0;
+                return;
             }
-        } else if (grapple != null && grapple.grappleChar != null) {
-            sprite = game.sprites.get("ninja2_kick");
-        } else if (!onGround) {
-            sprite = game.sprites.get("ninja2_grapple");
-        } else if (movingLeft || movingRight) {
-            if (sprite == game.sprites.get("ninja2_run1") || sprite == game.sprites.get("ninja2_run2") || sprite == game.sprites.get("ninja2_run3") || sprite == game.sprites.get("ninja2_run4")) {
-                if (spriteTime >= sprite.time) {
-                    sprite = game.sprites.get(sprite.next);
+        }
+
+        if (grapple != null && grapple.grappleChar != null) {
+            sprite = game.getSprite("ninja2_kick");
+        } else if (attacking) {
+            if (!sprite.name.startsWith("ninja2_attack")) {
+                sprite = game.getSprite("ninja2_attack_1");
+                spriteTime = 0;
+            } else if (spriteTime >= sprite.time) {
+                if (sprite.next != null) {
+                    sprite = game.getSprite(sprite.next);
                     spriteTime = 0;
-                }
-            } else {
-                sprite = game.sprites.get("ninja2_run1");
+                } else
+                    sprite = game.getSprite("ninja2_standing");
+            }
+        } else if (movingDown) {
+            sprite = game.getSprite("ninja2_parry");
+        } else if (!onGround) {
+            sprite = game.getSprite("ninja2_grapple");
+        } else if (movingLeft || movingRight) {
+            if (!sprite.name.startsWith("ninja2_walking")) {
+                sprite = game.getSprite("ninja2_walking_1");
+                spriteTime = 0;
+            } else if (spriteTime >= sprite.time) {
+                sprite = game.getSprite(sprite.next);
                 spriteTime = 0;
             }
         } else {
-            sprite = game.sprites.get("ninja2_standing");
+            sprite = game.getSprite("ninja2_standing");
         }
         spriteTime += deltaTime;
 
@@ -268,18 +283,19 @@ public class Ninja extends Character {
 //            g2.fillRect((int) player.getBottomLeft().x + cameraOffsetX, (int) (height - cameraOffsetY - player.getBottomLeft().y - player.height), (int) player.width, (int) player.height);
 
         // Player
-        int playerX = (int) getBottomLeft().x + canvas.cameraOffsetX + sprite.offsetX;
-        int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - height - sprite.offsetY);
+        int playerX = (int) getBottomLeft().x + canvas.cameraOffsetX + sprite.hitboxX;
+        int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - height - sprite.hitboxY);
         int playerWidth = sprite.width;
         int playerHeight = sprite.height;
 
-        if (xhair.x < getCenter().x) {
+        if ((sprite.name.startsWith("ninja2_attack") || sprite.name.startsWith("ninja2_parry")) && xhair.x < getCenter().x
+                || sprite.name.startsWith("ninja2_walking") && movingLeft) {
             playerWidth *= -1;
-            playerX += width + sprite.offsetX - 0;
+            playerX += sprite.width - sprite.hitboxX;
         }
 
         // Velocity debugging
-        if (true) {
+        if (false) {
             g2.setColor(Color.RED);
             g2.drawLine((int) playerX + playerWidth / 2, (int) playerY + playerHeight / 2, (int) (playerX + playerWidth / 2 + velocity.x), (int) (playerY + playerHeight / 2 - velocity.y));
         }
