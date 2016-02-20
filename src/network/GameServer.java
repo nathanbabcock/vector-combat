@@ -119,10 +119,13 @@ public class GameServer {
                 else {
                     if (o instanceof InputState) {
                         InputState i = (InputState) o;
+
+                        // Ping
                         while (con.player.pings.peek().tick < i.lastTick)
                             con.player.pings.remove();
                         con.player.ping = (int) (System.currentTimeMillis() - con.player.pings.remove().time);
 
+                        // Input
                         if (con.player.character != null) con.player.character.importState(i);
                     } else if (o instanceof SpawnParams) {
                         con.player.importSpawnParams((SpawnParams) o);

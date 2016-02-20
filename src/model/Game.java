@@ -256,15 +256,13 @@ public class Game {
                 .setOffset(-13, 0));*/
 
         // Newest ninja
-        final float NINJA_RUN_TIME = 0.1f;
+        final float NINJA_RUN_TIME = 0.05f;
 
         sprites.add(new Sprite("ninja_crouch")
                 .setImage()
-                .setTime(NINJA_RUN_TIME)
                 .setOffset(-14, 0));
         sprites.add(new Sprite("ninja_body")
                 .setImage()
-                .setTime(NINJA_RUN_TIME)
                 .setOffset(1, 18));
 
         // Run cycle - first half
@@ -291,7 +289,7 @@ public class Game {
         sprites.add(new Sprite("ninja_legs_5")
                 .setImage()
                 .setTime(NINJA_RUN_TIME)
-                .setOffset(-5, 0)
+                .setOffset(4, 0)
                 .setNext("ninja_legs_6"));
         sprites.add(new Sprite("ninja_legs_6")
                 .setImage()
@@ -328,7 +326,7 @@ public class Game {
         sprites.add(new Sprite("ninja_legs_12")
                 .setImage()
                 .setTime(NINJA_RUN_TIME)
-                .setOffset(-5, 0)
+                .setOffset(4, 0)
                 .setNext("ninja_legs_13"));
         sprites.add(new Sprite("ninja_legs_13")
                 .setImage()
@@ -340,6 +338,59 @@ public class Game {
                 .setTime(NINJA_RUN_TIME)
                 .setOffset(-12, 0)
                 .setNext("ninja_legs_1"));
+
+        // Attack cycle
+        final float NINJA_ATTACK_TIME = 0.04f;
+        sprites.add(new Sprite("ninja_arm")
+                .setImage()
+                .setOffset(-55, 25));
+        sprites.add(new Sprite("ninja_arm_attack_1")
+                .setImage()
+                .setOffset(-6, 32)
+                .setTime(NINJA_ATTACK_TIME)
+                .setNext("ninja_arm_attack_2")
+                .setInterruptible(false));
+        sprites.add(new Sprite("ninja_arm_attack_2")
+                .setImage()
+                .setOffset(36, 24)
+                .setTime(NINJA_ATTACK_TIME)
+                .setNext("ninja_arm_attack_3")
+                .setInterruptible(false));
+        sprites.add(new Sprite("ninja_arm_attack_3")
+                .setImage()
+                .setOffset(33, 11)
+                .setTime(NINJA_ATTACK_TIME)
+                .setNext("ninja_arm_attack_4")
+                .setInterruptible(false));
+        sprites.add(new Sprite("ninja_arm_attack_4")
+                .setImage()
+                .setOffset(29, 7)
+                .setTime(NINJA_ATTACK_TIME)
+                .setNext("ninja_arm_attack_5")
+                .setInterruptible(false));
+        sprites.add(new Sprite("ninja_arm_attack_5")
+                .setImage()
+                .setOffset(15, -21)
+                .setTime(NINJA_ATTACK_TIME)
+                .setNext("ninja_arm_attack_1")
+                .setInterruptible(false));
+        sprites.add(new Sprite("ninja_arm_grapple")
+                .setImage()
+                .setOffset(28, 15));
+
+        // Others
+        sprites.add(new Sprite("ninja_stand")
+                .setImage()
+                .setOffset(4, 0));
+        sprites.add(new Sprite("ninja_parry")
+                .setImage()
+                .setOffset(0, 0));
+        sprites.add(new Sprite("ninja_kick")
+                .setImage()
+                .setOffset(-35, 0));
+        sprites.add(new Sprite("ninja_jump")
+                .setImage()
+                .setOffset(-6, 0));
 
     }
 

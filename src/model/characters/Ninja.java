@@ -27,6 +27,12 @@ public class Ninja extends Character {
     public static transient final float DIVE_SPEED = 1500;
     public static transient final int SWORD_DAMAGE = 70;
 
+    public transient float armSpriteTime, legSpriteTime;
+    public transient Sprite arms, legs;
+    public transient Direction direction;
+
+    private static enum Direction {LEFT, RIGHT;}
+
     public Ninja() {
     }
 
@@ -44,60 +50,51 @@ public class Ninja extends Character {
         if (sprite == null)
             sprite = game.getSprite("ninja_crouch");
 
-        if (movingLeft || movingRight) {
-            if (!sprite.name.startsWith("ninja_legs_")) {
-                sprite = game.getSprite("ninja_legs_1");
-                spriteTime = 0;
-            } else if (spriteTime >= sprite.time) {
-                sprite = game.getSprite(sprite.next);
-                spriteTime = 0;
+        if (!onGround) {
+            if (!sprite.name.equals("ninja_jump")) {
+                sprite = game.getSprite("ninja_jump");
+                arms = game.getSprite("ninja_arm_grapple");
+                legs = null;
             }
-        } else
-            sprite = game.getSprite("ninja_crouch");
-        spriteTime += deltaTime;
-
-        /*
-
-        if (!sprite.interruptible) {
-            if (spriteTime < sprite.time) {
-                spriteTime += deltaTime;
-                return;
-            } else if (sprite.next != null) {
-                sprite = game.getSprite(sprite.next);
-                spriteTime = 0;
-                return;
-            }
-        }
-
-        if (grapple != null && grapple.grappleChar != null) {
-            sprite = game.getSprite("ninja2_kick");
-        } else if (attacking) {
-            if (!sprite.name.startsWith("ninja2_attack")) {
-                sprite = game.getSprite("ninja2_attack_1");
-                spriteTime = 0;
-            } else if (spriteTime >= sprite.time) {
-                if (sprite.next != null) {
-                    sprite = game.getSprite(sprite.next);
-                    spriteTime = 0;
-                } else
-                    sprite = game.getSprite("ninja2_standing");
-            }
-        } else if (movingDown) {
-            sprite = game.getSprite("ninja2_parry");
-        } else if (!onGround) {
-            sprite = game.getSprite("ninja2_grapple");
         } else if (movingLeft || movingRight) {
-            if (!sprite.name.startsWith("ninja2_walking")) {
-                sprite = game.getSprite("ninja2_walking_1");
-                spriteTime = 0;
-            } else if (spriteTime >= sprite.time) {
-                sprite = game.getSprite(sprite.next);
-                spriteTime = 0;
+            // Preserve direction to make crouch look more natural
+            if (movingLeft)
+                direction = Direction.LEFT;
+            else
+                direction = Direction.RIGHT;
+
+            // Initialize sprite
+            if (!sprite.name.equals("ninja_body"))
+                sprite = game.getSprite("ninja_body");
+
+            // Handle legs
+            if (legs == null) {
+                legs = game.getSprite("ninja_legs_1");
+                legSpriteTime = 0;
+            } else if (legSpriteTime >= legs.time) {
+                legs = game.getSprite(legs.next);
+                legSpriteTime = 0;
             }
-        } else {
-            sprite = game.getSprite("ninja2_standing");
+            legSpriteTime += deltaTime;
+
+            // Handle running arms
+            if (attacking) {
+                if (arms == null || !arms.name.startsWith("ninja_arm_attack")) {
+                    arms = game.getSprite("ninja_arm_attack_1");
+                    armSpriteTime = 0;
+                } else if (armSpriteTime >= arms.time) {
+                    arms = game.getSprite(arms.next);
+                    armSpriteTime = 0;
+                }
+                armSpriteTime += deltaTime;
+            } else if (arms == null || !arms.name.equals("ninja_arm"))
+                arms = game.getSprite("ninja_arm");
+        } else if (!sprite.name.equals("ninja_crouch")) {
+            legs = null;
+            arms = null;
+            sprite = game.getSprite("ninja_crouch");
         }
-        spriteTime += deltaTime;*/
+        spriteTime += deltaTime;
     }
 
     @Override
@@ -257,8 +254,48 @@ public class Ninja extends Character {
     }
 
     @Override
-    public void draw(Canvas canvas, Graphics2D g2) {
+    public void merge(Character other) {
+        super.merge(other);
+        if (!(other instanceof Ninja))
+            return;
+        final Ninja otherNinja = (Ninja) other;
+        legs = otherNinja.legs;
+        legSpriteTime = otherNinja.legSpriteTime;
+        arms = otherNinja.arms;
+        armSpriteTime = otherNinja.armSpriteTime;
+        direction = otherNinja.direction;
+    }
+
+    public void draw(Graphics2D g2) {
         // Draw hitbox
+        g2.setColor(Color.RED);
+        g2.drawRect(0, (int) -height, (int) width, (int) height);
+
+        // Flip horizontally
+        if ((sprite.name.equals("ninja_crouch") || sprite.name.equals("ninja_body")) && direction == Direction.LEFT) {
+            g2.scale(-1, 1);
+            g2.translate(-width, 0);
+        }
+
+        // Draw legs
+        if (legs != null)
+            g2.drawImage(legs.image, legs.offsetX + 2, -(legs.offsetY + legs.height), legs.width, legs.height, null);
+
+        if (arms != null)
+            g2.drawImage(arms.image, arms.offsetX + 2, -(arms.offsetY + arms.height), arms.width, arms.height, null);
+
+        // Draw main sprite
+        g2.drawImage(sprite.image, sprite.offsetX + 2, -(sprite.offsetY + sprite.height), sprite.width, sprite.height, null);
+    }
+
+    @Override
+    public void draw(Canvas canvas, Graphics2D g2) {
+        g2 = (Graphics2D) g2.create();
+        g2.translate(getBottomLeft().x + canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y);
+        draw(g2);
+
+
+        /*// Draw hitbox
         g2.setColor(Color.GREEN);
         g2.drawRect((int) getBottomLeft().x + canvas.cameraOffsetX, (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - height), (int) width, (int) height);
 
@@ -272,11 +309,11 @@ public class Ninja extends Character {
             Sprite body = game.getSprite("ninja_body");
         }
 
-        /*if ((sprite.name.startsWith("ninja2_attack") || sprite.name.startsWith("ninja2_parry")) && xhair.x < getCenter().x
+        *//*if ((sprite.name.startsWith("ninja2_attack") || sprite.name.startsWith("ninja2_parry")) && xhair.x < getCenter().x
                 || sprite.name.startsWith("ninja2_walking") && movingLeft) {
             playerWidth *= -1;
             playerX += sprite.width - sprite.offsetX;
-        }*/
+        }*//*
 
         // Velocity debugging
         if (false) {
@@ -285,6 +322,6 @@ public class Ninja extends Character {
         }
 
         g2.drawImage(sprite.image, playerX, playerY, playerWidth, playerHeight, null);
-        g2.setTransform(canvas.backup);
+        g2.setTransform(canvas.backup);*/
     }
 }
