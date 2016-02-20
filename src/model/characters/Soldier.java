@@ -116,8 +116,8 @@ public class Soldier extends Character {
 //            g2.fillRect((int) player.getBottomLeft().x + cameraOffsetX, (int) (height - cameraOffsetY - player.getBottomLeft().y - player.height), (int) player.width, (int) player.height);
 
         // Player
-        int playerX = (int) getBottomLeft().x + canvas.cameraOffsetX + sprite.hitboxX;
-        int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - height - sprite.hitboxY);
+        int playerX = (int) getBottomLeft().x + canvas.cameraOffsetX + sprite.offsetX;
+        int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - height - sprite.offsetY);
         int playerWidth = sprite.width;
         int playerHeight = sprite.height;
 
@@ -133,7 +133,7 @@ public class Soldier extends Character {
 
         if (xhair.x < getCenter().x) {
             playerWidth *= -1;
-            playerX += sprite.width - sprite.hitboxX;
+            playerX += sprite.width - sprite.offsetX;
 
 //            mgWidth *= -1;
             mgHeight *= -1;

@@ -182,8 +182,8 @@ public class Scout extends Character {
 //            g2.fillRect((int) player.getBottomLeft().x + cameraOffsetX, (int) (height - cameraOffsetY - player.getBottomLeft().y - player.height), (int) player.width, (int) player.height);
 
         // Player
-        int playerX = (int) getBottomLeft().x + canvas.cameraOffsetX + sprite.hitboxX;
-        int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - height - sprite.hitboxY);
+        int playerX = (int) getBottomLeft().x + canvas.cameraOffsetX + sprite.offsetX;
+        int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - height - sprite.offsetY);
         int playerWidth = sprite.width;
         int playerHeight = sprite.height;
 
@@ -192,15 +192,15 @@ public class Scout extends Character {
         Sprite sg = game.getSprite("scout_gun");
         int sgWidth = sg.width;
         int sgHeight = sg.height;
-        int sgX = playerX - sprite.hitboxX + 8;
+        int sgX = playerX - sprite.offsetX + 8;
         int sgY = playerY + 24;
-        Point2f sgOrigin = new Point2f(playerX - sprite.hitboxX + 16, playerY + 36);
+        Point2f sgOrigin = new Point2f(playerX - sprite.offsetX + 16, playerY + 36);
         Vector2f sgVector = new Vector2f(xhair.x - (getBottomLeft().x + 12), -xhair.y + (getBottomLeft().y + 36));
 
         // TODO refactor to avoid code duplication
         if (wallRight) {
             playerWidth *= -1;
-            playerX += sprite.width - sprite.hitboxX - 4;
+            playerX += sprite.width - sprite.offsetX - 4;
 
             if (xhair.x < getCenter().x) {
                 sgHeight *= -1;
@@ -217,7 +217,7 @@ public class Scout extends Character {
             }
         } else if (xhair.x < getCenter().x) {
             playerWidth *= -1;
-            playerX += sprite.width - sprite.hitboxX;
+            playerX += sprite.width - sprite.offsetX;
 
             sgHeight *= -1;
             sgY += 24;

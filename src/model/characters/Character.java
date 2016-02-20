@@ -215,7 +215,7 @@ abstract public class Character extends AABB {
     public void draw(Canvas canvas, Graphics2D g2, String clientName) {
         // Draw client name
         // Player
-        int playerX = (int) getBottomLeft().x + canvas.cameraOffsetX + sprite.hitboxX;
+        int playerX = (int) getBottomLeft().x + canvas.cameraOffsetX;
         int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - height);
         int playerWidth = 24;
 

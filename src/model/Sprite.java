@@ -1,12 +1,14 @@
 package model;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
 
 /**
  * Created by Nathan on 8/30/2015.
  */
 public class Sprite {
-    public int width, height, hitboxX, hitboxY, hitboxWidth, hitboxHeight;
+    public int width, height, offsetX, offsetY;
     public String name, next;
     public boolean interruptible;
     public float time;
@@ -18,21 +20,39 @@ public class Sprite {
     }
 
     public Sprite setImage(BufferedImage spriteSheet, int x, int y, int width, int height) {
-        this.width = hitboxWidth = width;
-        this.height = hitboxHeight = height;
+        this.width = width;
+        this.height = height;
         image = spriteSheet.getSubimage(x, y, width, height);
         return this;
     }
 
-    public Sprite setHitboxOffset(int hitboxX, int hitboxY) {
-        this.hitboxX = hitboxX;
-        this.hitboxY = hitboxY;
+    /**
+     * Convenience, debug only function allowing individual sprite images instead of a spritesheet
+     *
+     * @return
+     */
+    public Sprite setImage() {
+        try {
+            image = ImageIO.read(new File("res/" + name + ".png"));
+            width = image.getWidth();
+            height = image.getHeight();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return this;
     }
 
-    public Sprite setHitboxSize(int hitboxWidth, int hitboxHeight) {
-        this.hitboxWidth = hitboxWidth;
-        this.hitboxHeight = hitboxHeight;
+    /**
+     * Defines the offset between the BOTTOM LEFT CORNER of hitbox and sprite. (offsetX, offsetY) should be a vector
+     * pointing from the hitbox to the sprite
+     *
+     * @param hitboxX
+     * @param hitboxY
+     * @return
+     */
+    public Sprite setOffset(int hitboxX, int hitboxY) {
+        this.offsetX = hitboxX;
+        this.offsetY = hitboxY;
         return this;
     }
 

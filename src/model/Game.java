@@ -133,26 +133,26 @@ public class Game {
         // Ninja
         sprites.add(new Sprite("ninja_standing")
                 .setImage(spriteSheet, 0, 112, 40, 96)
-                .setHitboxOffset(0, 16));
+                .setOffset(0, 16));
         sprites.add(new Sprite("ninja_walking_1")
                 .setImage(spriteSheet, 48, 112, 40, 96)
-                .setHitboxOffset(0, 16)
+                .setOffset(0, 16)
                 .setTime(0.25f)
                 .setNext("rocket_walking_2"));
         sprites.add(new Sprite("ninja_walking_2")
                 .setImage(spriteSheet, 0, 112, 40, 96)
-                .setHitboxOffset(0, 16)
+                .setOffset(0, 16)
                 .setTime(0.25f)
                 .setNext("ninja_walking_1"));
         sprites.add(new Sprite("ninja_attack_1")
                 .setImage(spriteSheet, 96, 88, 24, 120)
-                .setHitboxOffset(0, 40)
+                .setOffset(0, 40)
                 .setTime(0.1f)
                 .setNext("ninja_attack_2")
                 .setInterruptible(false));
         sprites.add(new Sprite("ninja_attack_2")
                 .setImage(spriteSheet, 128, 112, 64, 96)
-                .setHitboxOffset(0, 16)
+                .setOffset(0, 16)
                 .setTime(0.05f)
                 .setNext("ninja_attack_3")
                 .setInterruptible(false));
@@ -164,15 +164,15 @@ public class Game {
         // Soldier
         sprites.add(new Sprite("soldier_standing")
                 .setImage(spriteSheet, 0, 216, 32, 80)
-                .setHitboxOffset(-8, 0));
+                .setOffset(-8, 0));
         sprites.add(new Sprite("soldier_walking_1")
                 .setImage(spriteSheet, 40, 216, 32, 80)
-                .setHitboxOffset(-8, 0)
+                .setOffset(-8, 0)
                 .setTime(0.25f)
                 .setNext("soldier_walking_2"));
         sprites.add(new Sprite("soldier_walking_2")
                 .setImage(spriteSheet, 0, 216, 32, 80)
-                .setHitboxOffset(-8, 0)
+                .setOffset(-8, 0)
                 .setTime(0.25f)
                 .setNext("soldier_walking_1"));
         sprites.add(new Sprite("soldier_gun")
@@ -191,68 +191,156 @@ public class Game {
                 .setNext("scout_walking_1"));
         sprites.add(new Sprite("scout_walljump")
                 .setImage(spriteSheet, 64, 304, 40, 80)
-                .setHitboxOffset(-12, 0));
+                .setOffset(-12, 0));
         sprites.add(new Sprite("scout_gun")
                 .setImage(spriteSheet, 112, 304, 48, 24));
 
         // Ninja2
+        /*
         sprites.add(new Sprite("ninja2_standing")
                 .setImage(spriteSheet, 0, 392, 74, 52)
-                .setHitboxOffset(-11, 0));
+                .setOffset(-11, 0));
         sprites.add(new Sprite("ninja2_walking_1")
                 .setImage(spriteSheet, 81, 400, 52, 44)
-                .setHitboxOffset(-22, 0)
+                .setOffset(-22, 0)
                 .setNext("ninja2_walking_2")
                 .setTime(0.1f));
         sprites.add(new Sprite("ninja2_walking_2")
                 .setImage(spriteSheet, 142, 390, 40, 54)
-                .setHitboxOffset(-11, 0)
+                .setOffset(-11, 0)
                 .setNext("ninja2_walking_3")
                 .setTime(0.1f));
         sprites.add(new Sprite("ninja2_walking_3")
                 .setImage(spriteSheet, 187, 396, 54, 48)
-                .setHitboxOffset(-22, 0)
+                .setOffset(-22, 0)
                 .setNext("ninja2_walking_4")
                 .setTime(0.1f));
         sprites.add(new Sprite("ninja2_walking_4")
                 .setImage(spriteSheet, 249, 390, 40, 54)
-                .setHitboxOffset(-11, 0)
+                .setOffset(-11, 0)
                 .setNext("ninja2_walking_1")
                 .setTime(0.1f));
         sprites.add(new Sprite("ninja2_attack_1")
                 .setImage(spriteSheet, 7, 485, 60, 66)
-                .setHitboxOffset(-32, 12)
+                .setOffset(-32, 12)
                 .setNext("ninja2_attack_2")
                 .setTime(0.1f)
                 .setInterruptible(false));
         sprites.add(new Sprite("ninja2_attack_2")
                 .setImage(spriteSheet, 77, 459, 58, 92)
-                .setHitboxOffset(0, 38)
+                .setOffset(0, 38)
                 .setNext("ninja2_attack_3")
                 .setTime(0.1f)
                 .setInterruptible(false));
         sprites.add(new Sprite("ninja2_attack_3")
                 .setImage(spriteSheet, 139, 495, 97, 84)
-                .setHitboxOffset(-23, 2)
+                .setOffset(-23, 2)
                 .setNext("ninja2_attack_4")
                 .setTime(0.1f)
                 .setInterruptible(false));
         sprites.add(new Sprite("ninja2_attack_4")
                 .setImage(spriteSheet, 243, 495, 82, 56)
-                .setHitboxOffset(-52, 2)
+                .setOffset(-52, 2)
                 .setTime(0.1f)
                 .setInterruptible(false));
         sprites.add(new Sprite("ninja2_parry")
                 .setImage(spriteSheet, 298, 378, 58, 66)
-                .setHitboxOffset(-22, 16)
+                .setOffset(-22, 16)
                 .setTime(1f)
                 .setInterruptible(false));
         sprites.add(new Sprite("ninja2_kick")
                 .setImage(spriteSheet, 367, 386, 58, 58)
-                .setHitboxOffset(-8, -7));
+                .setOffset(-8, -7));
         sprites.add(new Sprite("ninja2_grapple")
                 .setImage(spriteSheet, 436, 395, 54, 49)
-                .setHitboxOffset(-13, 0));
+                .setOffset(-13, 0));*/
+
+        // Newest ninja
+        final float NINJA_RUN_TIME = 0.1f;
+
+        sprites.add(new Sprite("ninja_crouch")
+                .setImage()
+                .setTime(NINJA_RUN_TIME)
+                .setOffset(-14, 0));
+        sprites.add(new Sprite("ninja_body")
+                .setImage()
+                .setTime(NINJA_RUN_TIME)
+                .setOffset(1, 18));
+
+        // Run cycle - first half
+        sprites.add(new Sprite("ninja_legs_1")
+                .setImage()
+                .setTime(NINJA_RUN_TIME)
+                .setOffset(-11, 0)
+                .setNext("ninja_legs_2"));
+        sprites.add(new Sprite("ninja_legs_2")
+                .setImage()
+                .setTime(NINJA_RUN_TIME)
+                .setOffset(-10, 2)
+                .setNext("ninja_legs_3"));
+        sprites.add(new Sprite("ninja_legs_3")
+                .setImage()
+                .setTime(NINJA_RUN_TIME)
+                .setOffset(-16, 0)
+                .setNext("ninja_legs_4"));
+        sprites.add(new Sprite("ninja_legs_4")
+                .setImage()
+                .setTime(NINJA_RUN_TIME)
+                .setOffset(-4, 0)
+                .setNext("ninja_legs_5"));
+        sprites.add(new Sprite("ninja_legs_5")
+                .setImage()
+                .setTime(NINJA_RUN_TIME)
+                .setOffset(-5, 0)
+                .setNext("ninja_legs_6"));
+        sprites.add(new Sprite("ninja_legs_6")
+                .setImage()
+                .setTime(NINJA_RUN_TIME)
+                .setOffset(-5, 0)
+                .setNext("ninja_legs_7"));
+        sprites.add(new Sprite("ninja_legs_7")
+                .setImage()
+                .setTime(NINJA_RUN_TIME)
+                .setOffset(-12, 0)
+                .setNext("ninja_legs_8"));
+
+        // Run cycle - second half
+        sprites.add(new Sprite("ninja_legs_8")
+                .setImage()
+                .setTime(NINJA_RUN_TIME)
+                .setOffset(-11, 0)
+                .setNext("ninja_legs_9"));
+        sprites.add(new Sprite("ninja_legs_9")
+                .setImage()
+                .setTime(NINJA_RUN_TIME)
+                .setOffset(-10, 2)
+                .setNext("ninja_legs_10"));
+        sprites.add(new Sprite("ninja_legs_10")
+                .setImage()
+                .setTime(NINJA_RUN_TIME)
+                .setOffset(-16, 0)
+                .setNext("ninja_legs_11"));
+        sprites.add(new Sprite("ninja_legs_11")
+                .setImage()
+                .setTime(NINJA_RUN_TIME)
+                .setOffset(-4, 0)
+                .setNext("ninja_legs_12"));
+        sprites.add(new Sprite("ninja_legs_12")
+                .setImage()
+                .setTime(NINJA_RUN_TIME)
+                .setOffset(-5, 0)
+                .setNext("ninja_legs_13"));
+        sprites.add(new Sprite("ninja_legs_13")
+                .setImage()
+                .setTime(NINJA_RUN_TIME)
+                .setOffset(-5, 0)
+                .setNext("ninja_legs_14"));
+        sprites.add(new Sprite("ninja_legs_14")
+                .setImage()
+                .setTime(NINJA_RUN_TIME)
+                .setOffset(-12, 0)
+                .setNext("ninja_legs_1"));
+
     }
 
     /**

@@ -234,7 +234,7 @@ public class GameServer {
         GameClient client = new GameClient("excalo", "68.230.58.93", Config.TCP_PORT, Config.UDP_PORT);
         new GameClient("asdf", "68.230.58.93", Config.TCP_PORT, Config.UDP_PORT);
         try {
-            Thread.sleep(105);
+            Thread.sleep(200);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
