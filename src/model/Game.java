@@ -21,7 +21,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Game {
     public List<Player> players;
     public List<Entity> entities;
-
     public transient List<Object> garbage;
     public transient List<Particle> particles;
     public transient List<ChatMessage> chat;
@@ -41,8 +40,6 @@ public class Game {
     public int net_tick;
 
     public Game() {
-        setupSprites();
-
         // TODO CopyOnWriteArrayList cannot possibly be the most efficient data structure for this...
         players = new CopyOnWriteArrayList();
         entities = new CopyOnWriteArrayList();
@@ -110,7 +107,9 @@ public class Game {
         return null;
     }
 
-    private void setupSprites() {
+    public void initSprites() {
+        System.out.println("Begginning sprite init");
+
         BufferedImage spriteSheet = null;
         try {
             spriteSheet = ImageIO.read(new File("res/spritesheet.png"));
@@ -428,6 +427,7 @@ public class Game {
                 .setImage()
                 .setOffset(-6, 0));
 
+        System.out.println("Finished sprite init");
     }
 
     /**

@@ -90,10 +90,11 @@ public class GameServer {
 
     private void init_game() {
         game = new Game();
+        game.initSprites();
         game.setMap("Map2");
 //        new GameUpdater().start();
 
-        final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
+        final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(10);
         scheduler.scheduleAtFixedRate(new GameTick(), 0, 1000 / VID_FPS, TimeUnit.MILLISECONDS);
         scheduler.scheduleAtFixedRate(new NetworkTick(), 0, 1000 / NET_FPS, TimeUnit.MILLISECONDS);
     }
@@ -121,9 +122,11 @@ public class GameServer {
                         InputState i = (InputState) o;
 
                         // Ping
-                        while (con.player.pings.peek().tick < i.lastTick)
-                            con.player.pings.remove();
-                        con.player.ping = (int) (System.currentTimeMillis() - con.player.pings.remove().time);
+                        if (!con.player.pings.isEmpty()) {
+                            while (con.player.pings.peek().tick < i.lastTick)
+                                con.player.pings.remove();
+                            con.player.ping = (int) (System.currentTimeMillis() - con.player.pings.remove().time);
+                        }
 
                         // Input
                         if (con.player.character != null) con.player.character.importState(i);

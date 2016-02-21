@@ -108,4 +108,12 @@ public class AABB extends Entity {
         return collision;
     }
 
+    public boolean contains(Point2f p) {
+        if (p.x < getBottomLeft().x || p.x > getBottomLeft().x + width)
+            return false;
+        else if (p.y < getBottomLeft().y || p.y > getBottomLeft().y + height)
+            return false;
+        return true;
+    }
+
 }

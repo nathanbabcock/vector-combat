@@ -57,7 +57,7 @@ public class Bullet extends AABB {
         if (collision.collider instanceof Character) {
             // Damage
             Character player = (Character) collision.collider;
-            player.damage(Bullet.DAMAGE, game.getPlayer(owner));
+            player.damage(Bullet.DAMAGE, collision.position, game.getPlayer(owner));
 
             // Knockback
             Vector2f knockback = new Vector2f(player.getCenter().x - getCenter().x, player.getCenter().y - getCenter().y);

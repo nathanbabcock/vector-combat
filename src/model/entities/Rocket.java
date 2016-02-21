@@ -99,7 +99,7 @@ public class Rocket extends Circle {
 
                 // Damage
                 if (player.clientID != owner)
-                    player.character.damage(Rocket.DAMAGE, game.getPlayer(owner));
+                    player.character.damage(Rocket.DAMAGE, collision.position, game.getPlayer(owner));
             }
         }
 

@@ -68,6 +68,7 @@ public class GameClient extends JFrame {
         chatQueue = new ArrayList();
 
         this.game = new Game();
+        this.game.initSprites();
         this.game.setMap(game.mapID);
         this.game.importGame(game);
 
@@ -93,7 +94,11 @@ public class GameClient extends JFrame {
                     if (object instanceof Game) {
                         if (game == null) { // First time game received
                             initGame((Game) object);
-                            if (debug) client.sendTCP(new SpawnParams(Team.BLUE, CharClass.ROCKETMAN));
+                            if (debug) {
+                                inputState.xhair = new Point2f(1000, 30);
+                                inputState.attacking = true;
+                                client.sendTCP(new SpawnParams(Team.BLUE, CharClass.ROCKETMAN));
+                            }
                         } else {
 //                        if (game.sent > ((Game) object).sent) {
 //                            System.out.println("Ignoring stale packet");
@@ -131,7 +136,7 @@ public class GameClient extends JFrame {
     private void initGUI() {
         setSize(PREF_WIDTH, PREF_HEIGHT);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        if (debug)
+        if (false)//debug)
             setVisible(false); // DEBUG
         else
             setVisible(true);

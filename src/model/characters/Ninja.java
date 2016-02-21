@@ -1,5 +1,6 @@
 package model.characters;
 
+import model.Collision;
 import model.Player;
 import model.Sprite;
 import model.entities.Grapple;
@@ -245,16 +246,45 @@ public class Ninja extends Character {
         if (!attacking || currentAttackDelay > 0)
             return;
 
-        AABB hitbox = new AABB(game, getBottomLeft().x, getBottomLeft().y, 60, 60);
-        if (direction == Direction.LEFT)
-            hitbox.position.x -= 60;
+        AABB hitbox = getAttackHitbox();
 
         for (Player player : game.players) {
             if (player.clientName.equals(this.player.clientName) || player.character == null) continue;
-            if (player.character.collision(hitbox) != null)
-                player.character.damage(SWORD_DAMAGE, player);
+            Collision collision = player.character.collision(hitbox);
+            if (collision != null)
+                player.character.damage(SWORD_DAMAGE, collision.position, player);
         }
         currentAttackDelay = attackInterval;
+    }
+
+    @Override
+    public void damage(int damage, Point2f position, Player dealer) {
+        if (currentParryDelay >= parryInterval - parryWindow) {
+            AABB parry = getParryHitbox();
+
+            System.out.println("collision position = " + position);
+            System.out.println("parry box = (" + parry.position.x + ", " + parry.position.y + ") - " + parry.width + "x" + parry.height);
+
+            if (parry.contains(position)) {
+                System.out.println("parried");
+                return;
+            }
+        }
+        super.damage(damage, position, dealer);
+    }
+
+    public AABB getParryHitbox() {
+        AABB parry = new AABB(game, getBottomLeft().x + 29, getBottomLeft().y, 35, 69);
+        if (direction == Direction.LEFT)
+            parry.position.x = getBottomLeft().x - 16;
+        return parry;
+    }
+
+    public AABB getAttackHitbox() {
+        AABB hitbox = new AABB(game, getBottomLeft().x + width / 2, getBottomLeft().y + width / 2, 60, 60);
+        if (direction == Direction.LEFT)
+            hitbox.position.x -= 60;
+        return hitbox;
     }
 
     @Override
@@ -347,6 +377,18 @@ public class Ninja extends Character {
 
     @Override
     public void draw(Canvas canvas, Graphics2D g2) {
+        // DEBUG HITBOXES
+        Graphics2D g3 = (Graphics2D) g2.create();
+        g3.translate(canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY);
+        if (currentAttackDelay > 0) { // Attack hitbox
+            AABB attack = getAttackHitbox();
+            g3.drawRect(((int) attack.getBottomLeft().x), -(int) (attack.getBottomLeft().y + attack.height), (int) attack.width, (int) attack.height);
+        }
+        if (currentParryDelay >= parryInterval - parryWindow) { // Parry hitbox
+            AABB parry = getParryHitbox();
+            g3.drawRect(((int) parry.getBottomLeft().x), -(int) (parry.getBottomLeft().y + parry.height), (int) parry.width, (int) parry.height);
+        }
+
         g2 = (Graphics2D) g2.create();
         g2.translate(getBottomLeft().x + canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y);
         draw(g2);

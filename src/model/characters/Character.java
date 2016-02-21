@@ -148,7 +148,7 @@ abstract public class Character extends AABB {
         }
     }
 
-    public void damage(int damage, Player dealer) {
+    public void damage(int damage, Point2f position, Player dealer) {
         health -= damage;
         generateBloodParticles();
         checkHealth();
