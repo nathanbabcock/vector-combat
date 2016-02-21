@@ -55,7 +55,22 @@ public class Ninja extends Character {
             sprite = game.getSprite("ninja_crouch");
 
         if (!onGround && grapple != null) {
-            if (!sprite.name.equals("ninja_jump")) {
+            // Player grapple
+            if (grapple.grappleChar != null && grapple.velocity.isZero()) {
+                if (grapple.grappleChar.position.x < position.x)
+                    direction = Direction.LEFT;
+                else
+                    direction = Direction.RIGHT;
+
+                if (!sprite.name.equals("ninja_kick")) {
+                    sprite = game.getSprite("ninja_kick");
+                    arms = null;
+                    legs = null;
+                }
+            }
+
+            // Normal grapple
+            else if (!sprite.name.equals("ninja_jump")) {
                 sprite = game.getSprite("ninja_jump");
                 arms = game.getSprite("ninja_arm_grapple");
                 legs = null;
@@ -255,6 +270,13 @@ public class Ninja extends Character {
     }
 
     @Override
+    public void jump(float deltaTime) {
+        if (currentParryDelay >= parryInterval - parryWindow)
+            return;
+        super.jump(deltaTime);
+    }
+
+    @Override
     public void altAttack(float deltaTime) {
         if (currentGrappleDelay > 0)
             currentGrappleDelay -= deltaTime;
@@ -304,7 +326,9 @@ public class Ninja extends Character {
         if ((sprite.name.equals("ninja_crouch")
                 || sprite.name.equals("ninja_body")
                 || sprite.name.equals("ninja_stand")
-                || sprite.name.equals("ninja_parry")) && direction == Direction.LEFT) {
+                || sprite.name.equals("ninja_parry")
+                || sprite.name.equals("ninja_kick"))
+                && direction == Direction.LEFT) {
             g2.scale(-1, 1);
             g2.translate(-width, 0);
         }
