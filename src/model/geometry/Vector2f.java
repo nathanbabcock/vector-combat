@@ -62,6 +62,9 @@ public class Vector2f {
         return this;
     }
 
+    /**
+     * @return angle in radians
+     */
     public float getDirection() {
 //        float angle = (float) Math.atan(y / x);
 //        double _360 = Math.toRadians(360);

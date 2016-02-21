@@ -55,7 +55,7 @@ public class GameClient extends JFrame {
     JTextArea health;
     JTextField respawn, winner;
 
-    private final boolean debug = true;
+    private final boolean debug = false;
 
     public GameClient(String clientName, String server, int tcp_port, int udp_port) {
         this.clientName = clientName;
@@ -136,7 +136,7 @@ public class GameClient extends JFrame {
     private void initGUI() {
         setSize(PREF_WIDTH, PREF_HEIGHT);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        if (false)//debug)
+        if (debug)
             setVisible(false); // DEBUG
         else
             setVisible(true);

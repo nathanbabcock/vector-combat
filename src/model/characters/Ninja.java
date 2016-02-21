@@ -73,7 +73,7 @@ public class Ninja extends Character {
             // Normal grapple
             else if (!sprite.name.equals("ninja_jump")) {
                 sprite = game.getSprite("ninja_jump");
-                arms = game.getSprite("ninja_arm_grapple");
+                arms = game.getSprite("ninja_arm_grapple_2");
                 legs = null;
             }
         } else if (currentParryDelay >= parryInterval - parryWindow) {
@@ -349,8 +349,8 @@ public class Ninja extends Character {
 
     public void draw(Graphics2D g2) {
         // Draw hitbox
-        g2.setColor(Color.RED);
-        g2.drawRect(0, (int) -height, (int) width, (int) height);
+//        g2.setColor(Color.RED);
+//        g2.drawRect(0, (int) -height, (int) width, (int) height);
 
         // Flip horizontally
         if ((sprite.name.equals("ninja_crouch")
@@ -371,23 +371,31 @@ public class Ninja extends Character {
         g2.drawImage(sprite.image, sprite.offsetX + 2, -(sprite.offsetY + sprite.height), sprite.width, sprite.height, null);
 
         // Draw arms
-        if (arms != null)
-            g2.drawImage(arms.image, arms.offsetX + 2, -(arms.offsetY + arms.height), arms.width, arms.height, null);
+        if (arms != null) {
+            g2.translate(arms.offsetX + 2, -(arms.offsetY + arms.height));
+            if (sprite.name.equals("ninja_jump")) {
+                if (grapple != null)
+                    g2.rotate(new Vector2f(position, grapple.position).getDirection());
+                else
+                    g2.rotate(Math.toRadians(45));
+            }
+            g2.drawImage(arms.image, 0, 0, arms.width, arms.height, null);
+        }
     }
 
     @Override
     public void draw(Canvas canvas, Graphics2D g2) {
         // DEBUG HITBOXES
-        Graphics2D g3 = (Graphics2D) g2.create();
-        g3.translate(canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY);
-        if (currentAttackDelay > 0) { // Attack hitbox
-            AABB attack = getAttackHitbox();
-            g3.drawRect(((int) attack.getBottomLeft().x), -(int) (attack.getBottomLeft().y + attack.height), (int) attack.width, (int) attack.height);
-        }
-        if (currentParryDelay >= parryInterval - parryWindow) { // Parry hitbox
-            AABB parry = getParryHitbox();
-            g3.drawRect(((int) parry.getBottomLeft().x), -(int) (parry.getBottomLeft().y + parry.height), (int) parry.width, (int) parry.height);
-        }
+//        Graphics2D g3 = (Graphics2D) g2.create();
+//        g3.translate(canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY);
+//        if (currentAttackDelay > 0) { // Attack hitbox
+//            AABB attack = getAttackHitbox();
+//            g3.drawRect(((int) attack.getBottomLeft().x), -(int) (attack.getBottomLeft().y + attack.height), (int) attack.width, (int) attack.height);
+//        }
+//        if (currentParryDelay >= parryInterval - parryWindow) { // Parry hitbox
+//            AABB parry = getParryHitbox();
+//            g3.drawRect(((int) parry.getBottomLeft().x), -(int) (parry.getBottomLeft().y + parry.height), (int) parry.width, (int) parry.height);
+//        }
 
         g2 = (Graphics2D) g2.create();
         g2.translate(getBottomLeft().x + canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y);

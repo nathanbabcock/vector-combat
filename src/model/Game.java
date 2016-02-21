@@ -414,6 +414,9 @@ public class Game {
         sprites.add(new Sprite("ninja_arm_grapple")
                 .setImage()
                 .setOffset(28, 15));
+        sprites.add(new Sprite("ninja_arm_grapple_2")
+                .setImage()
+                .setOffset(28, 15));
         sprites.add(new Sprite("ninja_stand")
                 .setImage()
                 .setOffset(4, 0));
@@ -425,6 +428,7 @@ public class Game {
                 .setOffset(-35, 0));
         sprites.add(new Sprite("ninja_jump")
                 .setImage()
+                .setRotationOrigin(30, 36)
                 .setOffset(-6, 0));
 
         System.out.println("Finished sprite init");
