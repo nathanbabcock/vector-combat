@@ -19,7 +19,7 @@ public class Ninja extends Character {
     //public Point2f grapplePoint;
     //public Character grappleChar;
 
-    public float grappleInterval = 0.5f;
+    public transient final float grappleInterval = 0.5f;
     public float currentGrappleDelay = 0;
 
     public static transient final float KNOCKBACK = 300;
@@ -31,14 +31,11 @@ public class Ninja extends Character {
     public transient Sprite arms, legs;
     public transient Direction direction;
 
-//    public float attackDuration = 0.5f;
-//    public float currentAttackDuration = 0;
-//    public float parryDuration = 0.2f;
-//    public float currentParryDuration = 0f;
-//    public float parryInterval = 0.8f;
-//    public float currentParryInterval = 0f;
+    public float currentParryDelay;
+    public transient final float parryInterval = 1.5f;
+    public transient final float parryWindow = 0.35f; // Time during which the parry hitbox is active
 
-    private static enum Direction {LEFT, RIGHT;}
+    private static enum Direction {LEFT, RIGHT}
 
     public Ninja() {
     }
@@ -61,6 +58,12 @@ public class Ninja extends Character {
             if (!sprite.name.equals("ninja_jump")) {
                 sprite = game.getSprite("ninja_jump");
                 arms = game.getSprite("ninja_arm_grapple");
+                legs = null;
+            }
+        } else if (currentParryDelay >= parryInterval - parryWindow) {
+            if (!sprite.name.equals("ninja_parry")) {
+                sprite = game.getSprite("ninja_parry");
+                arms = null;
                 legs = null;
             }
         } else if (movingLeft || movingRight) {
@@ -241,7 +244,12 @@ public class Ninja extends Character {
 
     @Override
     public void move(float deltaTime) {
+        currentParryDelay -= deltaTime;
         if (grapple != null && grapple.velocity.isZero())
+            return;
+        if (movingDown && currentParryDelay <= 0)
+            currentParryDelay = parryInterval;
+        if (currentParryDelay >= parryInterval - parryWindow)
             return;
         super.move(deltaTime);
     }
@@ -293,7 +301,10 @@ public class Ninja extends Character {
         g2.drawRect(0, (int) -height, (int) width, (int) height);
 
         // Flip horizontally
-        if ((sprite.name.equals("ninja_crouch") || sprite.name.equals("ninja_body") || sprite.name.equals("ninja_stand")) && direction == Direction.LEFT) {
+        if ((sprite.name.equals("ninja_crouch")
+                || sprite.name.equals("ninja_body")
+                || sprite.name.equals("ninja_stand")
+                || sprite.name.equals("ninja_parry")) && direction == Direction.LEFT) {
             g2.scale(-1, 1);
             g2.translate(-width, 0);
         }
@@ -302,11 +313,12 @@ public class Ninja extends Character {
         if (legs != null)
             g2.drawImage(legs.image, legs.offsetX + 2, -(legs.offsetY + legs.height), legs.width, legs.height, null);
 
-        if (arms != null)
-            g2.drawImage(arms.image, arms.offsetX + 2, -(arms.offsetY + arms.height), arms.width, arms.height, null);
-
         // Draw main sprite
         g2.drawImage(sprite.image, sprite.offsetX + 2, -(sprite.offsetY + sprite.height), sprite.width, sprite.height, null);
+
+        // Draw arms
+        if (arms != null)
+            g2.drawImage(arms.image, arms.offsetX + 2, -(arms.offsetY + arms.height), arms.width, arms.height, null);
     }
 
     @Override
