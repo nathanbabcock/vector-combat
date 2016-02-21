@@ -31,6 +31,13 @@ public class Ninja extends Character {
     public transient Sprite arms, legs;
     public transient Direction direction;
 
+//    public float attackDuration = 0.5f;
+//    public float currentAttackDuration = 0;
+//    public float parryDuration = 0.2f;
+//    public float currentParryDuration = 0f;
+//    public float parryInterval = 0.8f;
+//    public float currentParryInterval = 0f;
+
     private static enum Direction {LEFT, RIGHT;}
 
     public Ninja() {
@@ -38,7 +45,7 @@ public class Ninja extends Character {
 
     public Ninja(Player player) {
         super(player);
-        attackInterval = 0.3f;
+        attackInterval = 0.5f;
 
         width = 50;
         height = 50;
@@ -50,7 +57,7 @@ public class Ninja extends Character {
         if (sprite == null)
             sprite = game.getSprite("ninja_crouch");
 
-        if (!onGround) {
+        if (!onGround && grapple != null) {
             if (!sprite.name.equals("ninja_jump")) {
                 sprite = game.getSprite("ninja_jump");
                 arms = game.getSprite("ninja_arm_grapple");
@@ -89,6 +96,20 @@ public class Ninja extends Character {
                 armSpriteTime += deltaTime;
             } else if (arms == null || !arms.name.equals("ninja_arm"))
                 arms = game.getSprite("ninja_arm");
+        } else if (attacking) {
+            if (!sprite.name.equals("ninja_stand")) {
+                sprite = game.getSprite("ninja_stand");
+                legs = null;
+            }
+
+            if (arms == null || !arms.name.startsWith("ninja_stand_arm_attack")) {
+                arms = game.getSprite("ninja_stand_arm_attack_1");
+                armSpriteTime = 0;
+            } else if (armSpriteTime >= arms.time) {
+                arms = game.getSprite(arms.next);
+                armSpriteTime = 0;
+            }
+            armSpriteTime += deltaTime;
         } else if (!sprite.name.equals("ninja_crouch")) {
             legs = null;
             arms = null;
@@ -206,9 +227,9 @@ public class Ninja extends Character {
         if (!attacking || currentAttackDelay > 0)
             return;
 
-        AABB hitbox = new AABB(game, getBottomLeft().x, getBottomLeft().y + 40, 80, 80);
-        if (xhair.x < getCenter().x)
-            hitbox.position.x -= (80 - width);
+        AABB hitbox = new AABB(game, getBottomLeft().x, getBottomLeft().y, 60, 60);
+        if (direction == Direction.LEFT)
+            hitbox.position.x -= 60;
 
         for (Player player : game.players) {
             if (player.clientName.equals(this.player.clientName) || player.character == null) continue;
@@ -272,7 +293,7 @@ public class Ninja extends Character {
         g2.drawRect(0, (int) -height, (int) width, (int) height);
 
         // Flip horizontally
-        if ((sprite.name.equals("ninja_crouch") || sprite.name.equals("ninja_body")) && direction == Direction.LEFT) {
+        if ((sprite.name.equals("ninja_crouch") || sprite.name.equals("ninja_body") || sprite.name.equals("ninja_stand")) && direction == Direction.LEFT) {
             g2.scale(-1, 1);
             g2.translate(-width, 0);
         }

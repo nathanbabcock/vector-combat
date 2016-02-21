@@ -8,7 +8,7 @@ import java.io.File;
  * Created by Nathan on 8/30/2015.
  */
 public class Sprite {
-    public int width, height, offsetX, offsetY;
+    public int width, height, offsetX, offsetY, rotationX, rotationY;
     public String name, next;
     public boolean interruptible;
     public float time;
@@ -39,6 +39,12 @@ public class Sprite {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return this;
+    }
+
+    public Sprite setRotationOrigin(int x, int y) {
+        rotationX = x;
+        rotationY = y;
         return this;
     }
 

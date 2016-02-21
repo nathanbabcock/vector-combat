@@ -339,8 +339,8 @@ public class Game {
                 .setOffset(-12, 0)
                 .setNext("ninja_legs_1"));
 
-        // Attack cycle
-        final float NINJA_ATTACK_TIME = 0.04f;
+        // Attack cycle - running
+        final float NINJA_ATTACK_TIME = 0.5f / 8;
         sprites.add(new Sprite("ninja_arm")
                 .setImage()
                 .setOffset(-55, 25));
@@ -371,14 +371,47 @@ public class Game {
         sprites.add(new Sprite("ninja_arm_attack_5")
                 .setImage()
                 .setOffset(15, -21)
-                .setTime(NINJA_ATTACK_TIME)
+                .setTime(NINJA_ATTACK_TIME * 3)
                 .setNext("ninja_arm_attack_1")
                 .setInterruptible(false));
+
+        // TODO this is redundant
+        // Attack cycle - standing
+        sprites.add(new Sprite("ninja_stand_arm_attack_1")
+                .setImage()
+                .setOffset(-14, 39)//(-6, 32)
+                .setTime(NINJA_ATTACK_TIME)
+                .setNext("ninja_stand_arm_attack_2")
+                .setInterruptible(false));
+        sprites.add(new Sprite("ninja_stand_arm_attack_2")
+                .setImage()
+                .setOffset(23, 31)//(36, 24) // (-13, +7)
+                .setTime(NINJA_ATTACK_TIME)
+                .setNext("ninja_stand_arm_attack_3")
+                .setInterruptible(false));
+        sprites.add(new Sprite("ninja_stand_arm_attack_3")
+                .setImage()
+                .setOffset(20, 18)
+                .setTime(NINJA_ATTACK_TIME)
+                .setNext("ninja_stand_arm_attack_4")
+                .setInterruptible(false));
+        sprites.add(new Sprite("ninja_stand_arm_attack_4")
+                .setImage()
+                .setOffset(13, 14)
+                .setTime(NINJA_ATTACK_TIME)
+                .setNext("ninja_stand_arm_attack_5")
+                .setInterruptible(false));
+        sprites.add(new Sprite("ninja_stand_arm_attack_5")
+                .setImage()
+                .setOffset(2, -14)
+                .setTime(NINJA_ATTACK_TIME * 3)
+                .setNext("ninja_stand_arm_attack_1")
+                .setInterruptible(false));
+
+        // Others
         sprites.add(new Sprite("ninja_arm_grapple")
                 .setImage()
                 .setOffset(28, 15));
-
-        // Others
         sprites.add(new Sprite("ninja_stand")
                 .setImage()
                 .setOffset(4, 0));
