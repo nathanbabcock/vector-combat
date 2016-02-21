@@ -100,6 +100,9 @@ public class Game {
     }
 
     public Sprite getSprite(String id) {
+        if (id == null)
+            return null;
+
         for (Sprite s : sprites)
             if (s.name.equals(id))
                 return s;
@@ -372,7 +375,7 @@ public class Game {
                 .setImage()
                 .setOffset(15, -21)
                 .setTime(NINJA_ATTACK_TIME * 3)
-                .setNext("ninja_arm_attack_1")
+                //.setNext("ninja_arm_attack_1")
                 .setInterruptible(false));
 
         // TODO this is redundant
@@ -405,7 +408,7 @@ public class Game {
                 .setImage()
                 .setOffset(2, -14)
                 .setTime(NINJA_ATTACK_TIME * 3)
-                .setNext("ninja_stand_arm_attack_1")
+                //.setNext("ninja_stand_arm_attack_1")
                 .setInterruptible(false));
 
         // Others

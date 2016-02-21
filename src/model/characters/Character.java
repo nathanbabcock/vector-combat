@@ -168,7 +168,7 @@ abstract public class Character extends AABB {
 
     public void generateBloodParticles() {
         // Particle effects
-        final int AVG_PARTICLES = 4;
+        final int AVG_PARTICLES = 6;
         final int AVG_SIZE = 5;
         final int MAX_DEVIATION = 3;
         final int AVG_VELOCITY = 100;

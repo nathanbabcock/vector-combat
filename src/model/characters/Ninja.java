@@ -85,7 +85,7 @@ public class Ninja extends Character {
             legSpriteTime += deltaTime;
 
             // Handle running arms
-            if (attacking) {
+            if (currentAttackDelay > 0) {
                 if (arms == null || !arms.name.startsWith("ninja_arm_attack")) {
                     arms = game.getSprite("ninja_arm_attack_1");
                     armSpriteTime = 0;
@@ -96,7 +96,7 @@ public class Ninja extends Character {
                 armSpriteTime += deltaTime;
             } else if (arms == null || !arms.name.equals("ninja_arm"))
                 arms = game.getSprite("ninja_arm");
-        } else if (attacking) {
+        } else if (currentAttackDelay > 0) {
             if (!sprite.name.equals("ninja_stand")) {
                 sprite = game.getSprite("ninja_stand");
                 legs = null;
