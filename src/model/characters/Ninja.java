@@ -199,7 +199,12 @@ public class Ninja extends Character {
                 super.applyPhysics(deltaTime);
 
                 // Handle longer radii
-                if (position.distance(grapple.position) > radius.getMagnitude()) {
+                System.out.println("Now is " + position.distance(grapple.position) + ", before was " + position.distance(grapple.position));
+
+                //final float EPSILON = 0f;
+                //if (position.distance(grapple.position) + EPSILON > radius.getMagnitude()) {
+                //    System.out.println("Radius was too long (" + position.distance(grapple.position) + ")");
+
                     // Position
                     Vector2f newRadius = new Vector2f(getCenter(), grapple.position);
                     newRadius.setMagnitude(newRadius.getMagnitude() - radius.getMagnitude());
@@ -211,9 +216,10 @@ public class Ninja extends Character {
                     velocity = velocity.project(radius.normal());
 
                     // Correct for loss of magnitude from the projection, but be careful not to cause equilibrium conditions at small values
-                    if (velocity.getMagnitude() > 7f)
-                        velocity.setMagnitude(oldMag);
-                }
+                //if (velocity.getMagnitude() > 7f)
+                //    velocity.setMagnitude(oldMag);
+                System.out.println("Radius corrected to " + radius.getMagnitude());
+                //}
 
                 //System.out.println("adjusted vel = " + velocity + " = " + velocity.getMagnitude());
                 //System.out.println("acc = " + acceleration +" = " + acceleration.getMagnitude());
@@ -375,7 +381,7 @@ public class Ninja extends Character {
             g2.translate(arms.offsetX + 2, -(arms.offsetY + arms.height));
             if (sprite.name.equals("ninja_jump")) {
                 if (grapple != null)
-                    g2.rotate(new Vector2f(position, grapple.position).getDirection());
+                    g2.rotate(-new Vector2f(position, grapple.position).getDirection());
                 else
                     g2.rotate(Math.toRadians(45));
             }
