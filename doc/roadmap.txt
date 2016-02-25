@@ -1,0 +1,72 @@
+SPRITES
+Scout
+- Run cycle
+- Roll animation
+- Stand
+Commando
+- Walk cycle
+- Grenade throw animation
+- Stand
+Rocketman
+- Walk cycle (same as commando)
+- Stand
+Defender/Brute/Tank
+- Walk cycle
+- Stand
+- Jump
+- Attack
+- Block
+- Falling attack
+Archer
+- Walk cycle
+- Stand
+- Attack
+
+=== SPRING BREAK ===
+
+CLASS ABILITIES (~4 days)
+Scout
+- Roll (dynamic hitbox?)
+Commando
+- Grenade (bouncing physics, timed/on hit explosion)
+Defender
+- Block
+- Charge-up leap
+- Charge-up attack
+- Falling attack (Screen shake, AOE on landing?)
+Archer
+- Bow draw
+- Persistent arrows (hitbox issues!)
+
+ENGINE/UI (~7 days)
+- Health system (regen? shield? health packs?)
+- Team sprite variations
+- Gamemodes
+    - TDM
+    - CTF
+    - FFA
+- 2-3 polished maps per gamemode
+- UI design
+    - Pause menu
+    - Scoreboard
+    - HUD
+    - Main menu
+=== END OF SPRING BREAK ===
+- Sound
+- Netcode optimization again
+- Bugfixes
+
+MARKETING
+- Web presence
+    - Promo site
+    - Dev blog
+    - Email list
+    - Social media accounts
+    - Issue tracker/forum
+- Rent java server
+- Video capture
+- Start writing dev updates, teasers, hype
+- Send copy to Youtubers, bloggers
+- Reddit alpha test
+- Bug fixes and balancing
+- Greenlight submission
