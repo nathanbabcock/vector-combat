@@ -184,7 +184,7 @@ public class Ninja extends Character {
 
                 // Shorten or lengthen rope if necessary
                 if (movingDown || movingUp) {
-                    Vector2f deltaRope = radius.copy().setMagnitude(moveSpeed * deltaTime * 1.2f);
+                    Vector2f deltaRope = radius.copy().setMagnitude(200f * deltaTime * 1.2f);
                     if (movingDown)
                         deltaRope.scale(-1);
                     position.translate(deltaRope);
@@ -199,7 +199,7 @@ public class Ninja extends Character {
                 super.applyPhysics(deltaTime);
 
                 // Handle longer radii
-                System.out.println("Now is " + position.distance(grapple.position) + ", before was " + position.distance(grapple.position));
+                //System.out.println("Now is " + position.distance(grapple.position) + ", before was " + position.distance(grapple.position));
 
                 //final float EPSILON = 0f;
                 //if (position.distance(grapple.position) + EPSILON > radius.getMagnitude()) {
@@ -218,7 +218,7 @@ public class Ninja extends Character {
                     // Correct for loss of magnitude from the projection, but be careful not to cause equilibrium conditions at small values
                 //if (velocity.getMagnitude() > 7f)
                 //    velocity.setMagnitude(oldMag);
-                System.out.println("Radius corrected to " + radius.getMagnitude());
+                //System.out.println("Radius corrected to " + radius.getMagnitude());
                 //}
 
                 //System.out.println("adjusted vel = " + velocity + " = " + velocity.getMagnitude());
