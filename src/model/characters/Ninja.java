@@ -406,35 +406,5 @@ public class Ninja extends Character {
         g2 = (Graphics2D) g2.create();
         g2.translate(getBottomLeft().x + canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y);
         draw(g2);
-
-
-        /*// Draw hitbox
-        g2.setColor(Color.GREEN);
-        g2.drawRect((int) getBottomLeft().x + canvas.cameraOffsetX, (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - height), (int) width, (int) height);
-
-        // Player
-        int playerX = (int) getBottomLeft().x + canvas.cameraOffsetX + sprite.offsetX;
-        int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - sprite.height - sprite.offsetY);
-        int playerWidth = sprite.width;
-        int playerHeight = sprite.height;
-
-        if (sprite.name.startsWith("ninja_run_")) {
-            Sprite body = game.getSprite("ninja_body");
-        }
-
-        *//*if ((sprite.name.startsWith("ninja2_attack") || sprite.name.startsWith("ninja2_parry")) && xhair.x < getCenter().x
-                || sprite.name.startsWith("ninja2_walking") && movingLeft) {
-            playerWidth *= -1;
-            playerX += sprite.width - sprite.offsetX;
-        }*//*
-
-        // Velocity debugging
-        if (false) {
-            g2.setColor(Color.RED);
-            g2.drawLine((int) playerX + playerWidth / 2, (int) playerY + playerHeight / 2, (int) (playerX + playerWidth / 2 + velocity.x), (int) (playerY + playerHeight / 2 - velocity.y));
-        }
-
-        g2.drawImage(sprite.image, playerX, playerY, playerWidth, playerHeight, null);
-        g2.setTransform(canvas.backup);*/
     }
 }

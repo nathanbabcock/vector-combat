@@ -64,7 +64,7 @@ public class Player {
         else if (charClass == CharClass.NINJA)
             character = new Ninja(this);
         else if (charClass == CharClass.SOLDIER)
-            character = new Soldier(this);
+            character = new Commando(this);
         else if (charClass == CharClass.SCOUT)
             character = new Scout(this);
         else

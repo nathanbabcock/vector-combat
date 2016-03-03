@@ -51,7 +51,7 @@ public class Config {
         kryo.register(Ninja.class);
         kryo.register(Rocketman.class);
         kryo.register(Scout.class);
-        kryo.register(Soldier.class);
+        kryo.register(Commando.class);
         kryo.register(Team.class);
 
         // Entities

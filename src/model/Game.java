@@ -197,66 +197,6 @@ public class Game {
         sprites.add(new Sprite("scout_gun")
                 .setImage(spriteSheet, 112, 304, 48, 24));
 
-        // Ninja2
-        /*
-        sprites.add(new Sprite("ninja2_standing")
-                .setImage(spriteSheet, 0, 392, 74, 52)
-                .setOffset(-11, 0));
-        sprites.add(new Sprite("ninja2_walking_1")
-                .setImage(spriteSheet, 81, 400, 52, 44)
-                .setOffset(-22, 0)
-                .setNext("ninja2_walking_2")
-                .setTime(0.1f));
-        sprites.add(new Sprite("ninja2_walking_2")
-                .setImage(spriteSheet, 142, 390, 40, 54)
-                .setOffset(-11, 0)
-                .setNext("ninja2_walking_3")
-                .setTime(0.1f));
-        sprites.add(new Sprite("ninja2_walking_3")
-                .setImage(spriteSheet, 187, 396, 54, 48)
-                .setOffset(-22, 0)
-                .setNext("ninja2_walking_4")
-                .setTime(0.1f));
-        sprites.add(new Sprite("ninja2_walking_4")
-                .setImage(spriteSheet, 249, 390, 40, 54)
-                .setOffset(-11, 0)
-                .setNext("ninja2_walking_1")
-                .setTime(0.1f));
-        sprites.add(new Sprite("ninja2_attack_1")
-                .setImage(spriteSheet, 7, 485, 60, 66)
-                .setOffset(-32, 12)
-                .setNext("ninja2_attack_2")
-                .setTime(0.1f)
-                .setInterruptible(false));
-        sprites.add(new Sprite("ninja2_attack_2")
-                .setImage(spriteSheet, 77, 459, 58, 92)
-                .setOffset(0, 38)
-                .setNext("ninja2_attack_3")
-                .setTime(0.1f)
-                .setInterruptible(false));
-        sprites.add(new Sprite("ninja2_attack_3")
-                .setImage(spriteSheet, 139, 495, 97, 84)
-                .setOffset(-23, 2)
-                .setNext("ninja2_attack_4")
-                .setTime(0.1f)
-                .setInterruptible(false));
-        sprites.add(new Sprite("ninja2_attack_4")
-                .setImage(spriteSheet, 243, 495, 82, 56)
-                .setOffset(-52, 2)
-                .setTime(0.1f)
-                .setInterruptible(false));
-        sprites.add(new Sprite("ninja2_parry")
-                .setImage(spriteSheet, 298, 378, 58, 66)
-                .setOffset(-22, 16)
-                .setTime(1f)
-                .setInterruptible(false));
-        sprites.add(new Sprite("ninja2_kick")
-                .setImage(spriteSheet, 367, 386, 58, 58)
-                .setOffset(-8, -7));
-        sprites.add(new Sprite("ninja2_grapple")
-                .setImage(spriteSheet, 436, 395, 54, 49)
-                .setOffset(-13, 0));*/
-
         // Newest ninja
         final float NINJA_RUN_TIME = 0.05f;
 
@@ -410,7 +350,7 @@ public class Game {
                 //.setNext("ninja_stand_arm_attack_1")
                 .setInterruptible(false));
 
-        // Others
+        // Ninja miscellaneous
         sprites.add(new Sprite("ninja_arm_grapple")
                 .setImage()
                 .setOffset(28, 15));
@@ -430,6 +370,61 @@ public class Game {
                 .setImage()
                 .setRotationOrigin(29, 0) // ??
                 .setOffset(-6, 0));
+
+        // Generic legs
+        final float LEG_TIME = 0.7f / 8;
+        sprites.add(new Sprite("legs_stand")
+                .setImage()
+                .setOffset(0, 0));
+        sprites.add(new Sprite("legs_walk_1")
+                .setImage()
+                .setOffset(0, 0)
+                .setNext("legs_walk_2")
+                .setTime(LEG_TIME));
+        sprites.add(new Sprite("legs_walk_2")
+                .setImage()
+                .setOffset(-7, 0)
+                .setNext("legs_walk_3")
+                .setTime(LEG_TIME));
+        sprites.add(new Sprite("legs_walk_3")
+                .setImage()
+                .setOffset(-7, 0)
+                .setNext("legs_walk_4")
+                .setTime(LEG_TIME));
+        sprites.add(new Sprite("legs_walk_4")
+                .setImage()
+                .setOffset(-4, 0)
+                .setNext("legs_walk_5")
+                .setTime(LEG_TIME));
+        sprites.add(new Sprite("legs_walk_5")
+                .setImage()
+                .setOffset(0, 0)
+                .setNext("legs_walk_6")
+                .setTime(LEG_TIME));
+        sprites.add(new Sprite("legs_walk_6")
+                .setImage()
+                .setOffset(-7, 0)
+                .setNext("legs_walk_7")
+                .setTime(LEG_TIME));
+        sprites.add(new Sprite("legs_walk_7")
+                .setImage()
+                .setOffset(-7, 0)
+                .setNext("legs_walk_8")
+                .setTime(LEG_TIME));
+        sprites.add(new Sprite("legs_walk_8")
+                .setImage()
+                .setOffset(-4, 0)
+                .setNext("legs_walk_1")
+                .setTime(LEG_TIME));
+
+        // Commando
+        sprites.add(new Sprite("commando_red_body")
+                .setImage()
+                .setOffset(-6, 31));
+        sprites.add(new Sprite("commando_red_gun")
+                .setImage()
+                .setOffset(-2, 35));
+
 
         System.out.println("Finished sprite init");
     }

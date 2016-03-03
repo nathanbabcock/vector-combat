@@ -10,41 +10,50 @@ import model.particles.Particle;
 import view.Canvas;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.util.Random;
 
 /**
  * Created by Nathan on 8/31/2015.
  */
-public class Soldier extends Character {
+public class Commando extends Character {
     public float jetpackVelocity = 250f;
 
-    public Soldier() {
+    public transient float armSpriteTime, legSpriteTime;
+    public transient Sprite arms, legs;
+
+    public Commando() {
     }
 
-    public Soldier(Player player) {
+    public Commando(Player player) {
         super(player);
-
+        width = 16;
+        height = 80;
         attackInterval = 0.1f;
     }
 
     @Override
     public void updateSprite(float deltaTime) {
-        if (sprite == null)
-            sprite = game.getSprite("soldier_standing");
-
-        if (movingLeft || movingRight) {
-            if (!sprite.name.startsWith("soldier_walking")) {
-                sprite = game.getSprite("soldier_walking_1");
-                spriteTime = 0;
-            } else if (spriteTime >= sprite.time) {
-                sprite = game.getSprite(sprite.next);
-                spriteTime = 0;
-            }
-        } else {
-            sprite = game.getSprite("soldier_standing");
+        if (sprite == null) {
+            sprite = game.getSprite("commando_red_body");
+            legs = game.getSprite("legs_stand");
+            arms = game.getSprite("commando_red_gun");
+            return;
         }
-        spriteTime += deltaTime;
+
+        if (onGround && (movingLeft || movingRight)) {
+            // Handle legs
+            if (legs == null) {
+                legs = game.getSprite("legs_walk_1");
+                legSpriteTime = 0;
+            } else if (legSpriteTime >= legs.time) {
+                legs = game.getSprite(legs.next);
+                legSpriteTime = 0;
+            }
+            legSpriteTime += deltaTime;
+        } else {
+            if (legs == null || !legs.name.equals("legs_stand"))
+                legs = game.getSprite("legs_stand");
+        }
     }
 
     @Override
@@ -103,12 +112,12 @@ public class Soldier extends Character {
         Point2f point = getBottomLeft().copy();
         point.y += 40;
         if (xhair.x < getCenter().x)
-            point.x += 28;
+            point.x += 21;
         else
             point.x -= 4;
         return point;
     }
-
+/*
     @Override
     public void draw(Canvas canvas, Graphics2D g2) {
         // Draw hitbox
@@ -150,5 +159,57 @@ public class Soldier extends Character {
 
         g2.drawImage(mg.image, mgX, mgY, mgWidth, mgHeight, null);
         g2.setTransform(canvas.backup);
+    }*/
+
+    public void draw(Graphics2D g2) {
+        // Draw hitbox
+        g2.setColor(Color.RED);
+        g2.drawRect(0, (int) -height, (int) width, (int) height);
+
+        // Setup arm coordinate space
+        final Point2f ARM_ORIGIN = new Point2f(11, 1); // The arms rotation center, in canvas coordinates, relative to the arm sprite
+        Graphics2D g3 = (Graphics2D) g2.create();
+        g3.translate(arms.offsetX + 1, -(arms.offsetY + arms.height));
+        g3.rotate(-new Vector2f(position, xhair).getDirection(), ARM_ORIGIN.x, ARM_ORIGIN.y);
+
+        // Flip horizontally
+        if (xhair.x < position.x) {
+            g2.scale(-1, 1);
+            g2.translate(-width, 0);
+
+            g3.scale(1, -1);
+//            g3.translate(-width, 0);
+        }
+
+        // Draw legs
+        if (legs != null)
+            g2.drawImage(legs.image, legs.offsetX + 1, -(legs.offsetY + legs.height), legs.width, legs.height, null);
+
+        // Draw main sprite
+        if (sprite != null)
+            g2.drawImage(sprite.image, sprite.offsetX + 1, -(sprite.offsetY + sprite.height), sprite.width, sprite.height, null);
+
+        // Draw arms
+        if (arms != null)
+            g3.drawImage(arms.image, 0, 0, arms.width, arms.height, null);
+    }
+
+    @Override
+    public void draw(Canvas canvas, Graphics2D g2) {
+        g2 = (Graphics2D) g2.create();
+        g2.translate(getBottomLeft().x + canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y);
+        draw(g2);
+    }
+
+    @Override
+    public void merge(Character other) {
+        super.merge(other);
+        if (!(other instanceof Commando))
+            return;
+        final Commando otherCommando = (Commando) other;
+        legs = otherCommando.legs;
+        legSpriteTime = otherCommando.legSpriteTime;
+        arms = otherCommando.arms;
+        armSpriteTime = otherCommando.armSpriteTime;
     }
 }
