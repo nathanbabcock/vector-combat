@@ -118,6 +118,7 @@ public class Game {
         }
         sprites = new ArrayList();
 
+        /*
         // Rocketman
         sprites.add(new Sprite("rocket_standing")
                 .setImage(spriteSheet, 0, 0, 24, 80));
@@ -196,7 +197,7 @@ public class Game {
                 .setOffset(-12, 0));
         sprites.add(new Sprite("scout_gun")
                 .setImage(spriteSheet, 112, 304, 48, 24));
-
+ */
         // Newest ninja
         final float NINJA_RUN_TIME = 0.05f;
 
@@ -464,7 +465,7 @@ public class Game {
                 .setNext("scout_legs_run_3"));
         sprites.add(new Sprite("scout_legs_run_3")
                 .setImage()
-                .setOffset(-23, 14)
+                .setOffset(-23, 15)
                 .setTime(NINJA_RUN_TIME)
                 .setNext("scout_legs_run_4"));
         sprites.add(new Sprite("scout_legs_run_4")

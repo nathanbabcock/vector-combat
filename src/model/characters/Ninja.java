@@ -406,6 +406,5 @@ public class Ninja extends Character {
         g2 = (Graphics2D) g2.create();
         g2.translate(getBottomLeft().x + canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y);
         draw(g2);
-
     }
 }

@@ -9,7 +9,6 @@ import model.particles.Particle;
 import view.Canvas;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.util.Random;
 
 /**
@@ -36,10 +35,65 @@ public class Scout extends Character {
 
         extraJump = true;
         attackInterval = 1f;
-        moveSpeed = 300f;
+        moveSpeed = 400f;
+        width = 31;
+        height = 81;
     }
 
     @Override
+    public void updateSprite(float deltaTime) {
+        // Init
+        if (sprite == null) {
+            sprite = game.getSprite("scout_red_body");
+            legs = game.getSprite("scout_legs_stand");
+            arms = game.getSprite("scout_gun");
+        }
+
+        // Preserve direction
+        if (movingLeft)
+            direction = Direction.LEFT;
+        else
+            direction = Direction.RIGHT;
+
+        if (!onGround) {
+            sprite = game.getSprite("scout_red_run_body");
+            legs = game.getSprite("scout_legs_run_3");
+        } else if (movingLeft || movingRight) {
+            // Initialize sprite
+            if (!sprite.name.equals("scout_red_run_body"))
+                sprite = game.getSprite("scout_red_run_body");
+
+            // Handle legs
+            if (legs == null) {
+                legs = game.getSprite("scout_legs_run_1");
+                legSpriteTime = 0;
+            } else if (legSpriteTime >= legs.time) {
+                legs = game.getSprite(legs.next);
+                legSpriteTime = 0;
+            }
+            legSpriteTime += deltaTime;
+
+            /*// Handle running arms
+            if (currentAttackDelay > 0) {
+                if (arms == null || !arms.name.startsWith("ninja_arm_attack")) {
+                    arms = game.getSprite("ninja_arm_attack_1");
+                    armSpriteTime = 0;
+                } else if (armSpriteTime >= arms.time) {
+                    arms = game.getSprite(arms.next);
+                    armSpriteTime = 0;
+                }
+                armSpriteTime += deltaTime;
+            } else if (arms == null || !arms.name.equals("ninja_arm"))
+                arms = game.getSprite("ninja_arm");*/
+        } else {
+            sprite = game.getSprite("scout_red_body");
+            legs = game.getSprite("scout_legs_stand");
+        }
+
+        spriteTime += deltaTime;
+    }
+
+    /*@Override
     public void updateSprite(float deltaTime) {
         if (sprite == null)
             sprite = game.getSprite("scout_standing");
@@ -58,7 +112,7 @@ public class Scout extends Character {
             sprite = game.getSprite("scout_standing");
         }
         spriteTime += deltaTime;
-    }
+    }*/
 
     @Override
     public void update(float deltaTime) {
@@ -182,63 +236,79 @@ public class Scout extends Character {
     }
 
     @Override
-    public void draw(Canvas canvas, Graphics2D g2) {
+    public void merge(Character other) {
+        super.merge(other);
+        if (!(other instanceof Scout))
+            return;
+        final Scout otherScout = (Scout) other;
+        legs = otherScout.legs;
+        legSpriteTime = otherScout.legSpriteTime;
+        arms = otherScout.arms;
+        armSpriteTime = otherScout.armSpriteTime;
+        direction = otherScout.direction;
+    }
+
+    public void draw(Graphics2D g2) {
         // Draw hitbox
-//            g2.setColor(randColor);
-//            g2.fillRect((int) player.getBottomLeft().x + cameraOffsetX, (int) (height - cameraOffsetY - player.getBottomLeft().y - player.height), (int) player.width, (int) player.height);
+//        g2.setColor(Color.RED);
+//        g2.drawRect(0, (int) -height, (int) width, (int) height);
 
-        // Player
-        int playerX = (int) getBottomLeft().x + canvas.cameraOffsetX + sprite.offsetX;
-        int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - height - sprite.offsetY);
-        int playerWidth = sprite.width;
-        int playerHeight = sprite.height;
 
-        // Rocket launcher
-        // Draw rocket
-        Sprite sg = game.getSprite("scout_gun");
-        int sgWidth = sg.width;
-        int sgHeight = sg.height;
-        int sgX = playerX - sprite.offsetX + 8;
-        int sgY = playerY + 24;
-        Point2f sgOrigin = new Point2f(playerX - sprite.offsetX + 16, playerY + 36);
-        Vector2f sgVector = new Vector2f(xhair.x - (getBottomLeft().x + 12), -xhair.y + (getBottomLeft().y + 36));
+        // Setup coordinate spaces
+        Sprite head = game.getSprite("scout_head");
+        Point2f ARM_ORIGIN = new Point2f(14, 4); // The arms rotation center, in canvas coordinates, relative to the arm sprite
+        Graphics2D armCanvas = (Graphics2D) g2.create();
+        armCanvas.translate(arms.offsetX + 1, -(arms.offsetY + arms.height));
+        armCanvas.rotate(-new Vector2f(position, xhair).getDirection(), ARM_ORIGIN.x, ARM_ORIGIN.y);
+        Graphics2D headCanvas = (Graphics2D) g2.create();
+        headCanvas.translate(head.offsetX + 1, -(head.offsetY + head.height));
 
-        // TODO refactor to avoid code duplication
-        if (wallRight) {
-            playerWidth *= -1;
-            playerX += sprite.width - sprite.offsetX - 4;
+        // Looking left
+        if (xhair.x < position.x) {
+            armCanvas.scale(1, -1);
+            armCanvas.translate(-16, -9);
 
-            if (xhair.x < getCenter().x) {
-                sgHeight *= -1;
-                sgY += 24;
-                sgX += 8;
-            }
-        } else if (wallLeft) {
-            sgX += 4;
-
-            if (xhair.x < getCenter().x) {
-                sgHeight *= -1;
-                sgY += 24;
-                sgX += 8;
-            }
-        } else if (xhair.x < getCenter().x) {
-            playerWidth *= -1;
-            playerX += sprite.width - sprite.offsetX;
-
-            sgHeight *= -1;
-            sgY += 24;
-            sgX += 8;
-
+            headCanvas.scale(-1, 1);
         }
 
-        g2.drawImage(sprite.image, playerX, playerY, playerWidth, playerHeight, null);
+        // Moving left
+        if (direction == Direction.LEFT) {
+            g2.scale(-1, 1);
+            g2.translate(-width, 0);
+        }
 
-        AffineTransform trans = new AffineTransform();
-        trans.rotate(sgVector.getDirection(), sgOrigin.x, sgOrigin.y); // the points to rotate around (the center in my example, your left side for your problem)
-        g2.transform(trans);
-//            g2d.drawImage( image, sprite.x, sprite.y );  // the actual location of the sprite
+        // Draw legs
+        if (legs != null)
+            g2.drawImage(legs.image, legs.offsetX + 2, -(legs.offsetY + legs.height), legs.width, legs.height, null);
 
-        g2.drawImage(sg.image, sgX, sgY, sgWidth, sgHeight, null);
-        g2.setTransform(canvas.backup);
+        // Draw main sprite
+        g2.drawImage(sprite.image, sprite.offsetX + 2, -(sprite.offsetY + sprite.height), sprite.width, sprite.height, null);
+
+        // Draw head
+        headCanvas.drawImage(head.image, 0, 0, head.width, head.height, null);
+
+        // Draw arms
+        if (arms != null)
+            armCanvas.drawImage(arms.image, 0, 0, arms.width, arms.height, null);
+
+    }
+
+    @Override
+    public void draw(Canvas canvas, Graphics2D g2) {
+        // DEBUG HITBOXES
+//        Graphics2D g3 = (Graphics2D) g2.create();
+//        g3.translate(canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY);
+//        if (currentAttackDelay > 0) { // Attack hitbox
+//            AABB attack = getAttackHitbox();
+//            g3.drawRect(((int) attack.getBottomLeft().x), -(int) (attack.getBottomLeft().y + attack.height), (int) attack.width, (int) attack.height);
+//        }
+//        if (currentParryDelay >= parryInterval - parryWindow) { // Parry hitbox
+//            AABB parry = getParryHitbox();
+//            g3.drawRect(((int) parry.getBottomLeft().x), -(int) (parry.getBottomLeft().y + parry.height), (int) parry.width, (int) parry.height);
+//        }
+
+        g2 = (Graphics2D) g2.create();
+        g2.translate(getBottomLeft().x + canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y);
+        draw(g2);
     }
 }
