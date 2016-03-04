@@ -117,49 +117,24 @@ public class Commando extends Character {
             point.x -= 4;
         return point;
     }
-/*
-    @Override
-    public void draw(Canvas canvas, Graphics2D g2) {
-        // Draw hitbox
-//            g2.setColor(randColor);
-//            g2.fillRect((int) player.getBottomLeft().x + cameraOffsetX, (int) (height - cameraOffsetY - player.getBottomLeft().y - player.height), (int) player.width, (int) player.height);
 
-        // Player
-        int playerX = (int) getBottomLeft().x + canvas.cameraOffsetX + sprite.offsetX;
-        int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - height - sprite.offsetY);
-        int playerWidth = sprite.width;
-        int playerHeight = sprite.height;
+    private Point2f getProjectileOrigin() {
+        Point2f proj_origin = getBottomLeft().copy();
+        proj_origin.y += 46;
+        if (xhair.x < position.x)
+            proj_origin.x -= 29;
+        else
+            proj_origin.x += 45;
 
-        // Rocket launcher
-        // Draw rocket
-        Sprite mg = game.getSprite("soldier_gun");
-        int mgWidth = mg.width;
-        int mgHeight = mg.height;
-        int mgX = playerX + 16;
-        int mgY = playerY + 24;
-        Point2f mgOrigin = new Point2f(playerX + 16, playerY + 36);
-        Vector2f mgVector = new Vector2f(xhair.x - (getBottomLeft().x + 12), -xhair.y + (getBottomLeft().y + 36));
+        Point2f arm_origin = getBottomLeft().copy();
+        arm_origin.x += 9;
+        arm_origin.y += 58;
 
-        if (xhair.x < getCenter().x) {
-            playerWidth *= -1;
-            playerX += sprite.width - sprite.offsetX;
+        Vector2f vec = new Vector2f(arm_origin, xhair);
+        proj_origin.rotate(vec.getDirection(), arm_origin);
 
-//            mgWidth *= -1;
-            mgHeight *= -1;
-            mgY += 24;
-            mgX -= 8;
-        }
-
-        g2.drawImage(sprite.image, playerX, playerY, playerWidth, playerHeight, null);
-
-        AffineTransform trans = new AffineTransform();
-        trans.rotate(mgVector.getDirection(), mgOrigin.x, mgOrigin.y); // the points to rotate around (the center in my example, your left side for your problem)
-        g2.transform(trans);
-//            g2d.drawImage( image, sprite.x, sprite.y );  // the actual location of the sprite
-
-        g2.drawImage(mg.image, mgX, mgY, mgWidth, mgHeight, null);
-        g2.setTransform(canvas.backup);
-    }*/
+        return proj_origin;
+    }
 
     public void draw(Graphics2D g2) {
         // Draw hitbox
@@ -197,6 +172,14 @@ public class Commando extends Character {
     @Override
     public void draw(Canvas canvas, Graphics2D g2) {
         g2 = (Graphics2D) g2.create();
+
+        // Debug hitboxes
+        Point2f proj = getProjectileOrigin();
+        Graphics2D g3 = (Graphics2D) g2.create();
+        g3.setColor(Color.RED);
+        g3.translate(canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY);
+        g3.drawRect(((int) proj.x), -((int) proj.y), 5, 5);
+
         g2.translate(getBottomLeft().x + canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y);
         draw(g2);
     }

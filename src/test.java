@@ -1,5 +1,3 @@
-import java.util.Scanner;
-
 /**
  * Created by Nathan on 8/21/2015.
  */
@@ -12,13 +10,12 @@ public class test {
 //        System.out.println(v2);
 //        System.out.println(Math.toDegrees(v2.getDirection()));
 
+//        Point2f point = new Point2f(5, 10);
+//        Point2f origin = new Point2f(3, 7);
+//
+//        model.geometry.Point2f pointB = new model.geometry.Point2f(5, 10);
+//        model.geometry.Point2f originB = new model.geometry.Point2f(3, 7);
 
-        Scanner fileScan = new Scanner("Here is a sentence: it has some strange punctuation, and some random-@#% &^@! in it.").useDelimiter("[ \n]");
-        String word;
-        while (fileScan.hasNext()) {
-            word = fileScan.next();
-            System.out.println(word);
-        }
 
     }
 }
