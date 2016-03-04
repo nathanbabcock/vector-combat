@@ -108,7 +108,7 @@ public class Game {
     }
 
     public void initSprites() {
-        System.out.println("Begginning sprite init");
+        System.out.println("Beginning sprite init");
 
         BufferedImage spriteSheet = null;
         try {
@@ -425,6 +425,73 @@ public class Game {
                 .setImage()
                 .setOffset(-2, 35));
 
+
+        // Rocketman
+        sprites.add(new Sprite("rocketman_red_body")
+                .setImage()
+                .setOffset(-1, 31));
+        sprites.add(new Sprite("rocketman_red_launcher")
+                .setImage()
+                .setOffset(-11, 41));
+
+        // Scout
+        sprites.add(new Sprite("scout_red_body")
+                .setImage()
+                .setOffset(3, 30));
+        sprites.add(new Sprite("scout_red_run_body")
+                .setImage()
+                .setOffset(1, 31));
+        sprites.add(new Sprite("scout_gun")
+                .setImage()
+                .setOffset(-9, 37));
+        sprites.add(new Sprite("scout_head")
+                .setImage()
+                .setOffset(1, 67));
+
+        // Scout legs
+        sprites.add(new Sprite("scout_legs_stand")
+                .setImage()
+                .setOffset(1, -4));
+        sprites.add(new Sprite("scout_legs_run_1")
+                .setImage()
+                .setOffset(-23, 0)
+                .setTime(NINJA_RUN_TIME)
+                .setNext("scout_legs_run_2"));
+        sprites.add(new Sprite("scout_legs_run_2")
+                .setImage()
+                .setOffset(-22, 11)
+                .setTime(NINJA_RUN_TIME)
+                .setNext("scout_legs_run_3"));
+        sprites.add(new Sprite("scout_legs_run_3")
+                .setImage()
+                .setOffset(-23, 14)
+                .setTime(NINJA_RUN_TIME)
+                .setNext("scout_legs_run_4"));
+        sprites.add(new Sprite("scout_legs_run_4")
+                .setImage()
+                .setOffset(-19, 0)
+                .setTime(NINJA_RUN_TIME)
+                .setNext("scout_legs_run_5"));
+        sprites.add(new Sprite("scout_legs_run_5")
+                .setImage()
+                .setOffset(-10, -1)
+                .setTime(NINJA_RUN_TIME)
+                .setNext("scout_legs_run_6"));
+        sprites.add(new Sprite("scout_legs_run_6")
+                .setImage()
+                .setOffset(-6, 0)
+                .setTime(NINJA_RUN_TIME)
+                .setNext("scout_legs_run_7"));
+        sprites.add(new Sprite("scout_legs_run_7")
+                .setImage()
+                .setOffset(1, -1)
+                .setTime(NINJA_RUN_TIME)
+                .setNext("scout_legs_run_8"));
+        sprites.add(new Sprite("scout_legs_run_8")
+                .setImage()
+                .setOffset(-3, 0)
+                .setTime(NINJA_RUN_TIME)
+                .setNext("scout_legs_run_1"));
 
         System.out.println("Finished sprite init");
     }

@@ -22,6 +22,12 @@ public class Scout extends Character {
     public boolean extraJump;
     public float jumpDelay;
 
+    public transient float armSpriteTime, legSpriteTime;
+    public transient Sprite arms, legs;
+    public transient Direction direction;
+
+    private static enum Direction {LEFT, RIGHT}
+
     public Scout() {
     }
 

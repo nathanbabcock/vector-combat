@@ -8,7 +8,6 @@ import model.geometry.Vector2f;
 import view.Canvas;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 
 /**
  * Created by Nathan on 8/31/2015.
@@ -16,31 +15,42 @@ import java.awt.geom.AffineTransform;
 public class Rocketman extends Character {
     public transient static final float ATTACK_INTERVAL = 0.8f;
 
+    public transient float armSpriteTime, legSpriteTime;
+    public transient Sprite arms, legs;
+
     public Rocketman() {
     }
 
     public Rocketman(Player player) {
         super(player);
+        width = 16;
+        height = 74;
         attackInterval = ATTACK_INTERVAL;
     }
 
     @Override
     public void updateSprite(float deltaTime) {
-        if (sprite == null)
-            sprite = game.getSprite("scout_standing");
-
-        if (movingLeft || movingRight) {
-            if (!sprite.name.startsWith("rocket_walking")) {
-                sprite = game.getSprite("rocket_walking_1");
-                spriteTime = 0;
-            } else if (spriteTime >= sprite.time) {
-                sprite = game.getSprite(sprite.next);
-                spriteTime = 0;
-            }
-        } else {
-            sprite = game.getSprite("rocket_standing");
+        if (sprite == null) {
+            sprite = game.getSprite("rocketman_red_body");
+            legs = game.getSprite("legs_stand");
+            arms = game.getSprite("rocketman_red_launcher");
+            return;
         }
-        spriteTime += deltaTime;
+
+        if (onGround && (movingLeft || movingRight)) {
+            // Handle legs
+            if (legs == null) {
+                legs = game.getSprite("legs_walk_1");
+                legSpriteTime = 0;
+            } else if (legSpriteTime >= legs.time) {
+                legs = game.getSprite(legs.next);
+                legSpriteTime = 0;
+            }
+            legSpriteTime += deltaTime;
+        } else {
+            if (legs == null || !legs.name.equals("legs_stand"))
+                legs = game.getSprite("legs_stand");
+        }
     }
 
     @Override
@@ -61,45 +71,56 @@ public class Rocketman extends Character {
         currentAttackDelay = attackInterval;
     }
 
-    @Override
-    public void draw(Canvas canvas, Graphics2D g2) {
+    public void draw(Graphics2D g2) {
         // Draw hitbox
-//            g2.setColor(randColor);
-//            g2.fillRect((int) player.getBottomLeft().x + cameraOffsetX, (int) (height - cameraOffsetY - player.getBottomLeft().y - player.height), (int) player.width, (int) player.height);
+        g2.setColor(Color.RED);
+        g2.drawRect(0, (int) -height, (int) width, (int) height);
 
-        // Player
-        int playerX = (int) getBottomLeft().x + canvas.cameraOffsetX + sprite.offsetX;
-        int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - height - sprite.offsetY);
-        int playerWidth = sprite.width;
-        int playerHeight = sprite.height;
+        // Setup arm coordinate space
+        final Point2f ARM_ORIGIN = new Point2f(16, 17); // The arms rotation center, in canvas coordinates, relative to the arm sprite
+        Graphics2D g3 = (Graphics2D) g2.create();
+        g3.translate(arms.offsetX + 1, -(arms.offsetY + arms.height));
+        g3.rotate(-new Vector2f(position, xhair).getDirection(), ARM_ORIGIN.x, ARM_ORIGIN.y);
 
-        // Rocket launcher
-        // Draw rocket
-        Sprite rl = game.getSprite("rocket_launcher");
-        int rlWidth = rl.width;
-        int rlHeight = rl.height;
-        int rlX = playerX - 8;
-        int rlY = playerY + 16;
-        Point2f rlOrigin = new Point2f(playerX + 12, playerY + 36);
-        Vector2f rlVector = new Vector2f(xhair.x - (getBottomLeft().x + 12), -xhair.y + (getBottomLeft().y + 36));
+        // Flip horizontally
+        if (xhair.x < position.x) {
+            g2.scale(-1, 1);
+            g2.translate(-width, 0);
 
-        if (xhair.x < getCenter().x) {
-            playerWidth *= -1;
-            playerX += sprite.width;
-
-            rlHeight *= -1;
-//            rlX += 40;
-            rlY += 40;
+            g3.scale(1, -1);
+            g3.translate(0, -34);
+//            g3.translate(-width, 0);
         }
 
-        g2.drawImage(sprite.image, playerX, playerY, playerWidth, playerHeight, null);
+        // Draw legs
+        if (legs != null)
+            g2.drawImage(legs.image, legs.offsetX + 1, -(legs.offsetY + legs.height), legs.width, legs.height, null);
 
-        AffineTransform trans = new AffineTransform();
-        trans.rotate(rlVector.getDirection(), rlOrigin.x, rlOrigin.y); // the points to rotate around (the center in my example, your left side for your problem)
-        g2.transform(trans);
-//            g2d.drawImage( image, sprite.x, sprite.y );  // the actual location of the sprite
+        // Draw main sprite
+        if (sprite != null)
+            g2.drawImage(sprite.image, sprite.offsetX + 1, -(sprite.offsetY + sprite.height), sprite.width, sprite.height, null);
 
-        g2.drawImage(rl.image, rlX, rlY, rlWidth, rlHeight, null);
-        g2.setTransform(canvas.backup);
+        // Draw arms
+        if (arms != null)
+            g3.drawImage(arms.image, 0, 0, arms.width, arms.height, null);
+    }
+
+    @Override
+    public void draw(Canvas canvas, Graphics2D g2) {
+        g2 = (Graphics2D) g2.create();
+        g2.translate(getBottomLeft().x + canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y);
+        draw(g2);
+    }
+
+    @Override
+    public void merge(Character other) {
+        super.merge(other);
+        if (!(other instanceof Rocketman))
+            return;
+        final Rocketman otherRocketman = (Rocketman) other;
+        legs = otherRocketman.legs;
+        legSpriteTime = otherRocketman.legSpriteTime;
+        arms = otherRocketman.arms;
+        armSpriteTime = otherRocketman.armSpriteTime;
     }
 }
