@@ -64,8 +64,8 @@ public class Commando extends Character {
         if (!attacking || currentAttackDelay > 0)
             return;
 
-        Bullet bullet = new Bullet(game, getCenter().x, getCenter().y, Bullet.SIZE);
-        Point2f origin = getCenter();
+        Point2f origin = getProjectileOrigin();
+        Bullet bullet = new Bullet(game, origin.x, origin.y, Bullet.SIZE);
         bullet.owner = player.clientID;
         bullet.velocity = new Vector2f(xhair.x - origin.x, xhair.y - origin.y);
         bullet.velocity.setMagnitude(Bullet.VELOCITY);
@@ -119,21 +119,41 @@ public class Commando extends Character {
     }
 
     private Point2f getProjectileOrigin() {
-        Point2f proj_origin = getBottomLeft().copy();
-        proj_origin.y += 46;
-        if (xhair.x < position.x)
-            proj_origin.x -= 29;
-        else
-            proj_origin.x += 45;
+        final float GUN_LENGTH = 37;
+        Point2f rot = getRotationOrigin();
+        Vector2f delta = new Vector2f(rot, xhair).setMagnitude(GUN_LENGTH);
+        return rot.translate(delta);
 
-        Point2f arm_origin = getBottomLeft().copy();
-        arm_origin.x += 9;
-        arm_origin.y += 58;
+//        Point2f proj_origin = getBottomLeft().copy();
+//        proj_origin.y += 46;
+//        if (xhair.x < position.x)
+//            proj_origin.x -= 29;
+//        else
+//            proj_origin.x += 45;
+//
+//        Point2f arm_origin = getBottomLeft().copy();
+//        arm_origin.x += 9;
+//        arm_origin.y += 58;
+//
+//        Vector2f vec = new Vector2f(arm_origin, xhair);
+//        proj_origin.rotate(vec.getDirection(), arm_origin);
+//
+//        return proj_origin;
+    }
 
-        Vector2f vec = new Vector2f(arm_origin, xhair);
-        proj_origin.rotate(vec.getDirection(), arm_origin);
+    private Point2f getRotationOrigin() {
+        final Point2f RELATIVE_ORIGIN = new Point2f(10, 4);
+        Sprite gun = game.getSprite("commando_red_gun");
+        Point2f origin = getBottomLeft().copy();
+        origin.x += gun.offsetX + RELATIVE_ORIGIN.x;
+        origin.y += gun.offsetY + gun.height - RELATIVE_ORIGIN.y;
 
-        return proj_origin;
+        // Flip horizontally
+        if (xhair.x < position.x) {
+            origin.x -= 3;
+        }
+
+        return origin;
     }
 
     public void draw(Graphics2D g2) {
@@ -142,16 +162,17 @@ public class Commando extends Character {
         g2.drawRect(0, (int) -height, (int) width, (int) height);
 
         // Setup arm coordinate space
-        final Point2f ARM_ORIGIN = new Point2f(11, 1); // The arms rotation center, in canvas coordinates, relative to the arm sprite
+        final Point2f ARM_ORIGIN = new Point2f(10, 4); // The arms rotation center, in canvas coordinates, relative to the arm sprite
         Graphics2D g3 = (Graphics2D) g2.create();
         g3.translate(arms.offsetX + 1, -(arms.offsetY + arms.height));
-        g3.rotate(-new Vector2f(position, xhair).getDirection(), ARM_ORIGIN.x, ARM_ORIGIN.y);
+        g3.rotate(-new Vector2f(getRotationOrigin(), xhair).getDirection(), ARM_ORIGIN.x, ARM_ORIGIN.y);
 
         // Flip horizontally
         if (xhair.x < position.x) {
             g2.scale(-1, 1);
             g2.translate(-width, 0);
 
+            g3.translate(3, 8);
             g3.scale(1, -1);
 //            g3.translate(-width, 0);
         }
@@ -174,14 +195,18 @@ public class Commando extends Character {
         g2 = (Graphics2D) g2.create();
 
         // Debug hitboxes
+        Point2f rot = getRotationOrigin();
         Point2f proj = getProjectileOrigin();
         Graphics2D g3 = (Graphics2D) g2.create();
-        g3.setColor(Color.RED);
+        g3.setColor(Color.GREEN);
         g3.translate(canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY);
-        g3.drawRect(((int) proj.x), -((int) proj.y), 5, 5);
+
 
         g2.translate(getBottomLeft().x + canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y);
         draw(g2);
+
+        g3.fillRect(((int) rot.x), -((int) rot.y), 3, 3);
+        g3.fillRect(((int) proj.x), -((int) proj.y), 3, 3);
     }
 
     @Override

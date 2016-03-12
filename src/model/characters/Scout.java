@@ -256,7 +256,7 @@ public class Scout extends Character {
 
         // Setup coordinate spaces
         Sprite head = game.getSprite("scout_head");
-        Point2f ARM_ORIGIN = new Point2f(14, 4); // The arms rotation center, in canvas coordinates, relative to the arm sprite
+        Point2f ARM_ORIGIN = new Point2f(9, 3); // The arms rotation center, in canvas coordinates, relative to the arm sprite
         Graphics2D armCanvas = (Graphics2D) g2.create();
         armCanvas.translate(arms.offsetX + 1, -(arms.offsetY + arms.height));
         armCanvas.rotate(-new Vector2f(position, xhair).getDirection(), ARM_ORIGIN.x, ARM_ORIGIN.y);

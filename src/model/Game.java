@@ -424,7 +424,7 @@ public class Game {
                 .setOffset(-6, 31));
         sprites.add(new Sprite("commando_red_gun")
                 .setImage()
-                .setOffset(-2, 35));
+                .setOffset(-1, 42));
 
 
         // Rocketman
@@ -444,7 +444,7 @@ public class Game {
                 .setOffset(1, 31));
         sprites.add(new Sprite("scout_gun")
                 .setImage()
-                .setOffset(-9, 37));
+                .setOffset(-3, 48));
         sprites.add(new Sprite("scout_head")
                 .setImage()
                 .setOffset(1, 67));
