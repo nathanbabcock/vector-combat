@@ -52,7 +52,7 @@ public class Scout extends Character {
         // Preserve direction
         if (movingLeft)
             direction = Direction.LEFT;
-        else
+        else if (movingRight)
             direction = Direction.RIGHT;
 
         if (!onGround) {
@@ -259,23 +259,59 @@ public class Scout extends Character {
         Point2f ARM_ORIGIN = new Point2f(9, 3); // The arms rotation center, in canvas coordinates, relative to the arm sprite
         Graphics2D armCanvas = (Graphics2D) g2.create();
         armCanvas.translate(arms.offsetX + 1, -(arms.offsetY + arms.height));
-        armCanvas.rotate(-new Vector2f(position, xhair).getDirection(), ARM_ORIGIN.x, ARM_ORIGIN.y);
+
         Graphics2D headCanvas = (Graphics2D) g2.create();
         headCanvas.translate(head.offsetX + 1, -(head.offsetY + head.height));
 
-        // Looking left
-        if (xhair.x < position.x) {
-            armCanvas.scale(1, -1);
-            armCanvas.translate(-16, -9);
+        final float GUN_LENGTH = 41;
 
-            headCanvas.scale(-1, 1);
-        }
 
         // Moving left
         if (direction == Direction.LEFT) {
+
+        }
+
+        boolean bodyFlipped = movingLeft || (!movingRight && xhair.x < position.x);
+        // Looking left
+        if (bodyFlipped) {
+            // Flip body
             g2.scale(-1, 1);
             g2.translate(-width, 0);
+
+            armCanvas.translate(4, 0);
+            headCanvas.translate(2, 0);
         }
+
+        if (xhair.x < position.x) {
+            // Flip arms and head
+            ARM_ORIGIN.x += 13;
+            armCanvas.rotate(-new Vector2f(position, xhair).getDirection(), ARM_ORIGIN.x, ARM_ORIGIN.y);
+            armCanvas.scale(1, -1);
+            armCanvas.translate(12, -6);
+
+            headCanvas.scale(-1, 1);
+            headCanvas.translate(-30, 0);
+
+//            if (bodyFlipped && legs != null && legs.name.startsWith("scout_legs_run")) {
+//                System.out.println("Hello world");
+//                armCanvas.translate(15, 0);
+//                headCanvas.translate(15, 0);
+//            }
+        } else {
+            armCanvas.rotate(-new Vector2f(position, xhair).getDirection(), ARM_ORIGIN.x, ARM_ORIGIN.y);
+        }
+
+        if (movingRight && xhair.x < position.x || movingLeft && xhair.x > position.x) {
+            armCanvas.translate(-15, 0);
+            headCanvas.translate(-15, 0);
+        }
+
+
+        if (legs != null && legs.name.startsWith("scout_legs_run")) {
+            armCanvas.translate(8, 0);
+            headCanvas.translate(8, 0);
+        }
+
 
         // Draw legs
         if (legs != null)

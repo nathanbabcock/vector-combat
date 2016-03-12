@@ -447,7 +447,7 @@ public class Game {
                 .setOffset(-3, 48));
         sprites.add(new Sprite("scout_head")
                 .setImage()
-                .setOffset(1, 67));
+                .setOffset(2, 67));
 
         // Scout legs
         sprites.add(new Sprite("scout_legs_stand")
