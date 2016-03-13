@@ -10,7 +10,6 @@ import network.ChatMessage;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -112,7 +111,7 @@ public class Game {
 
         BufferedImage spriteSheet = null;
         try {
-            spriteSheet = ImageIO.read(new File("res/spritesheet.png"));
+            spriteSheet = ImageIO.read(Game.class.getResourceAsStream("/res/spritesheet.png"));
         } catch (Exception e) {
             e.printStackTrace();
         }

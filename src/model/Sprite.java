@@ -2,7 +2,6 @@ package model;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 
 /**
  * Created by Nathan on 8/30/2015.
@@ -33,7 +32,7 @@ public class Sprite {
      */
     public Sprite setImage() {
         try {
-            image = ImageIO.read(new File("res/" + name + ".png"));
+            image = ImageIO.read(Game.class.getResourceAsStream("/res/" + name + ".png"));
             width = image.getWidth();
             height = image.getHeight();
         } catch (Exception e) {
