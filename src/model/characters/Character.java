@@ -42,6 +42,7 @@ abstract public class Character extends AABB {
 
     public Character(Player player) {
         super(player.game, 0, 0, 24, 80);
+        this.player = player;
 //        position = hitbox.position;// = new Point2D(400, 850);
 //        width = hitbox.width;
 //        height = hitbox.height;
@@ -209,6 +210,8 @@ abstract public class Character extends AABB {
 
     public void altAttack(float deltaTime) {
     } // Unused by default(?)
+
+    abstract public void draw(Graphics2D g2);
 
     abstract public void draw(Canvas canvas, Graphics2D g2);
 

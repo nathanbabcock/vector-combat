@@ -24,7 +24,7 @@ public class Game {
     public transient List<Object> garbage;
     public transient List<Particle> particles;
     public transient List<ChatMessage> chat;
-    public transient List<Sprite> sprites;
+    public static transient List<Sprite> sprites;
     public transient Map map;
     public String mapID;
     public float countdown;
@@ -96,7 +96,7 @@ public class Game {
         return score;
     }
 
-    public Sprite getSprite(String id) {
+    public static Sprite getSprite(String id) {
         if (id == null)
             return null;
 

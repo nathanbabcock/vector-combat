@@ -1,6 +1,9 @@
 package view;
 
-import model.characters.CharClass;
+import model.Player;
+import model.characters.*;
+import model.characters.Character;
+import model.geometry.Point2f;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,24 +15,23 @@ import java.awt.event.MouseEvent;
  */
 public class ClassSelector extends JPanel {
     public CharClass selectedClass;
-    private CharClass[] classes;
-    private JTextField portraits[];
-
+    static private CharClass[] classes = new CharClass[]{CharClass.ROCKETMAN, CharClass.NINJA, CharClass.COMMANDO, CharClass.SCOUT};
+    private ClassPortrait portraits[];
     private final Color HIGHLIGHT = new Color(219, 219, 219);
     private final Color DEFAULT = new Color(255, 255, 255);
 
     public ClassSelector() {
-        portraits = new JTextField[]{
-                new JTextField("Rocketman"),
-                new JTextField("Ninja"),
-                new JTextField("Soldier"),
-                new JTextField("Scout")
+        portraits = new ClassPortrait[]{
+                new ClassPortrait(new Rocketman(new Player())),
+                new ClassPortrait(new Ninja(new Player())),
+                new ClassPortrait(new Commando(new Player())),
+                new ClassPortrait(new Scout(new Player()))
         };
-        classes = new CharClass[]{CharClass.ROCKETMAN, CharClass.NINJA, CharClass.SOLDIER, CharClass.SCOUT};
+
 
         for (int i = 0; i < classes.length; i++) {
             final CharClass newClass = classes[i];
-            JTextField current = portraits[i];
+            ClassPortrait current = portraits[i];
             current.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -51,12 +53,12 @@ public class ClassSelector extends JPanel {
             });
         }
         setLayout(new GridLayout(1, portraits.length));
-        for (JTextField p : portraits) {
+        for (ClassPortrait p : portraits) {
             p.setBackground(Color.WHITE);
             p.setBorder(null);
-            p.setEditable(false);
+            //p.setEditable(false);
             p.setFocusable(false);
-            p.setHorizontalAlignment(SwingConstants.CENTER);
+            //p.setHorizontalAlignment(SwingConstants.CENTER);
             add(p);
         }
         highlight();
@@ -71,23 +73,47 @@ public class ClassSelector extends JPanel {
         }
     }
 
-/*    private class ClassPortrait extends JPanel{
-        private Player character;
+    private class ClassPortrait extends JPanel {
+        final int width = 500 / classes.length;
+        final int height = 300 / 2;
 
-        public ClassPortrait(Player character) {
+        private Character character;
+
+        public String getName() {
+            if (character instanceof Rocketman)
+                return "Rocketman";
+            if (character instanceof Ninja)
+                return "Ninja";
+            if (character instanceof Commando)
+                return "Commando";
+            if (character instanceof Scout)
+                return "Scout";
+            return null;
+        }
+
+        public ClassPortrait(Character character) {
             this.character = character;
-            character.hitbox.position = new Point2D(0, 0);
-            character.xhair = new Point2D(Integer.MAX_VALUE, 0);
+            character.player.team = Team.RED;
+            character.xhair = new Point2f(Integer.MAX_VALUE, 0);
+            character.position.x = (width - character.width) / 2; // TODO the 500 is the hardcoded pause menu width
+            character.position.y = (height - character.height) / 2;
+            character.onGround = true;
+            character.updateSprite(0);
+
+            System.out.println("class thing width = " + getWidth());
+
+            add(new JTextField(getName()));
+            //character.hitbox.position = new Point2f(0, 0);
+            //character.xhair = new Point2D(Integer.MAX_VALUE, 0);
 //            setBackground(Color.YELLOW);
         }
 
         @Override
         public void paintComponent(Graphics g) {
-            Graphics2D g2 = (Graphics2D) g;
-            AffineTransform backup = g2.getTransform();
             super.paintComponent(g);
-
-//            character.draw()
+            Graphics2D g2 = (Graphics2D) g;
+            g2.translate(character.getBottomLeft().x, getHeight() - character.getBottomLeft().y);
+            character.draw(g2);
         }
-    }*/
+    }
 }

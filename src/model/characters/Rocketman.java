@@ -1,5 +1,6 @@
 package model.characters;
 
+import model.Game;
 import model.Player;
 import model.Sprite;
 import model.entities.Rocket;
@@ -32,32 +33,30 @@ public class Rocketman extends Character {
     public void updateSprite(float deltaTime) {
         if (player == null) return;
 
-        String team = null;
+        String team = "red";
         if (player.team == Team.BLUE)
             team = "blue";
-        else if (player.team == Team.RED)
-            team = "red";
 
         if (sprite == null) {
-            sprite = game.getSprite("rocketman_body_" + team);
-            legs = game.getSprite("legs_stand");
-            arms = game.getSprite("rocketman_launcher_" + team);
+            sprite = Game.getSprite("rocketman_body_" + team);
+            legs = Game.getSprite("legs_stand");
+            arms = Game.getSprite("rocketman_launcher_" + team);
             return;
         }
 
         if (onGround && (movingLeft || movingRight)) {
             // Handle legs
             if (legs == null) {
-                legs = game.getSprite("legs_walk_1");
+                legs = Game.getSprite("legs_walk_1");
                 legSpriteTime = 0;
             } else if (legSpriteTime >= legs.time) {
-                legs = game.getSprite(legs.next);
+                legs = Game.getSprite(legs.next);
                 legSpriteTime = 0;
             }
             legSpriteTime += deltaTime;
         } else {
             if (legs == null || !legs.name.equals("legs_stand"))
-                legs = game.getSprite("legs_stand");
+                legs = Game.getSprite("legs_stand");
         }
     }
 
@@ -91,7 +90,7 @@ public class Rocketman extends Character {
 
     private Point2f getRotationOrigin() {
         final Point2f RELATIVE_ORIGIN = new Point2f(16, 17);
-        Sprite gun = game.getSprite("rocketman_launcher_red");
+        Sprite gun = Game.getSprite("rocketman_launcher_red");
         Point2f origin = getBottomLeft().copy();
         origin.x += gun.offsetX + RELATIVE_ORIGIN.x;
         origin.y += gun.offsetY + gun.height - RELATIVE_ORIGIN.y;
