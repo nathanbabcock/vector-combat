@@ -4,8 +4,10 @@ import model.Collision;
 import model.Game;
 import model.Player;
 import model.characters.Character;
+import model.characters.Ninja;
 import model.geometry.AABB;
 import model.geometry.Circle;
+import model.geometry.Point2f;
 import view.Canvas;
 
 import java.awt.*;
@@ -92,8 +94,9 @@ public class Grapple extends Circle {
         int y = (int) (canvas.getHeight() - canvas.cameraOffsetY - getCenter().y - Grapple.RADIUS);
         int size = (int) (2 * radius);
         g2.fillOval(x, y, size, size);
-        Character character = game.getPlayer(owner).character;
-        g2.drawLine((int) character.getCenter().x + canvas.cameraOffsetX, (int) (canvas.getHeight() - canvas.cameraOffsetY - character.getCenter().y), (int) (getCenter().x + canvas.cameraOffsetX), (int) (canvas.getHeight() - canvas.cameraOffsetY - getCenter().y));
+        Ninja character = (Ninja) game.getPlayer(owner).character;
+        Point2f origin = character.getProjectileOrigin();
+        g2.drawLine((int) origin.x + canvas.cameraOffsetX, (int) (canvas.getHeight() - canvas.cameraOffsetY - origin.y), (int) (getCenter().x + canvas.cameraOffsetX), (int) (canvas.getHeight() - canvas.cameraOffsetY - getCenter().y));
     }
 
 }

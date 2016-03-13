@@ -205,17 +205,17 @@ public class Ninja extends Character {
                 //if (position.distance(grapple.position) + EPSILON > radius.getMagnitude()) {
                 //    System.out.println("Radius was too long (" + position.distance(grapple.position) + ")");
 
-                    // Position
-                    Vector2f newRadius = new Vector2f(getCenter(), grapple.position);
-                    newRadius.setMagnitude(newRadius.getMagnitude() - radius.getMagnitude());
-                    position.translate(newRadius);
+                // Position
+                Vector2f newRadius = new Vector2f(getCenter(), grapple.position);
+                newRadius.setMagnitude(newRadius.getMagnitude() - radius.getMagnitude());
+                position.translate(newRadius);
 
-                    // Tangential velocity
-                    //System.out.println("radius normal = " + radius.normal());
-                    float oldMag = velocity.getMagnitude();
-                    velocity = velocity.project(radius.normal());
+                // Tangential velocity
+                //System.out.println("radius normal = " + radius.normal());
+                float oldMag = velocity.getMagnitude();
+                velocity = velocity.project(radius.normal());
 
-                    // Correct for loss of magnitude from the projection, but be careful not to cause equilibrium conditions at small values
+                // Correct for loss of magnitude from the projection, but be careful not to cause equilibrium conditions at small values
                 //if (velocity.getMagnitude() > 7f)
                 //    velocity.setMagnitude(oldMag);
                 //System.out.println("Radius corrected to " + radius.getMagnitude());
@@ -329,11 +329,10 @@ public class Ninja extends Character {
 
         // Spawn grapple entity for first time
         if (grapple == null && currentGrappleDelay <= 0) {
-            grapple = new Grapple(game, getCenter().x, getCenter().y, Grapple.RADIUS);
+            Point2f origin = getRotationOrigin();
+            grapple = new Grapple(game, origin.x, origin.y, Grapple.RADIUS);
             grapple.owner = player.clientID;
-            Point2f origin = getCenter();
             grapple.velocity = new Vector2f(xhair.x - origin.x, xhair.y - origin.y).setMagnitude(Rocket.VELOCITY);
-            //        .add(velocity);
             grapple.acceleration = new Vector2f(0, 0);
             game.entities.add(grapple);
         }
@@ -351,6 +350,33 @@ public class Ninja extends Character {
         arms = otherNinja.arms;
         armSpriteTime = otherNinja.armSpriteTime;
         direction = otherNinja.direction;
+    }
+
+
+    public Point2f getProjectileOrigin() {
+        final float ARM_LENGTH = 27;
+        Point2f rot = getRotationOrigin();
+        Vector2f delta;
+        if (grapple == null)
+            delta = new Vector2f(rot, xhair).setMagnitude(ARM_LENGTH);
+        else
+            delta = new Vector2f(getRotationOrigin(), grapple.getCenter()).setMagnitude(ARM_LENGTH);
+        return rot.translate(delta);
+    }
+
+    public Point2f getRotationOrigin() {
+        final Point2f RELATIVE_ORIGIN = new Point2f(0, 4);
+        Sprite arm = game.getSprite("ninja_arm_grapple_2");
+        Point2f origin = getBottomLeft().copy();
+        origin.x += arm.offsetX + RELATIVE_ORIGIN.x;
+        origin.y += arm.offsetY + arm.height - RELATIVE_ORIGIN.y;
+
+//        // Flip horizontally
+//        if (xhair.x < position.x) {
+//            origin.x -= 3;
+//        }
+
+        return origin;
     }
 
     public void draw(Graphics2D g2) {
@@ -381,7 +407,7 @@ public class Ninja extends Character {
             g2.translate(arms.offsetX + 2, -(arms.offsetY + arms.height));
             if (sprite.name.equals("ninja_jump")) {
                 if (grapple != null)
-                    g2.rotate(-new Vector2f(position, grapple.position).getDirection());
+                    g2.rotate(-new Vector2f(getRotationOrigin(), grapple.position).getDirection(), 0, 4);
                 else
                     g2.rotate(Math.toRadians(45));
             }
@@ -403,8 +429,17 @@ public class Ninja extends Character {
 //            g3.drawRect(((int) parry.getBottomLeft().x), -(int) (parry.getBottomLeft().y + parry.height), (int) parry.width, (int) parry.height);
 //        }
 
+        Point2f rot = getRotationOrigin();
+        //Point2f proj = getProjectileOrigin();
+        Graphics2D g3 = (Graphics2D) g2.create();
+        g3.setColor(Color.GREEN);
+        g3.translate(canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY);
+
         g2 = (Graphics2D) g2.create();
         g2.translate(getBottomLeft().x + canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y);
         draw(g2);
+
+        g3.fillRect(((int) rot.x), -((int) rot.y), 3, 3);
+        //g3.fillRect(((int) proj.x), -((int) proj.y), 3, 3);
     }
 }
