@@ -61,9 +61,10 @@ public class Rocketman extends Character {
         if (!attacking || currentAttackDelay > 0)
             return;
 
-        Rocket rocket = new Rocket(game, getCenter().x, getCenter().y, Rocket.RADIUS);
+
+        Point2f origin = getProjectileOrigin();
+        Rocket rocket = new Rocket(game, origin.x, origin.y, Rocket.RADIUS);
         rocket.owner = player.clientID;
-        Point2f origin = getCenter();
         rocket.velocity = new Vector2f(xhair.x - origin.x, xhair.y - origin.y);
         rocket.velocity.setMagnitude(Rocket.VELOCITY);
         rocket.acceleration = new Vector2f(0, 0);
@@ -71,16 +72,40 @@ public class Rocketman extends Character {
         currentAttackDelay = attackInterval;
     }
 
+    private Point2f getProjectileOrigin() {
+        final float GUN_LENGTH = 40;
+        Point2f rot = getRotationOrigin();
+        Vector2f delta = new Vector2f(rot, xhair).setMagnitude(GUN_LENGTH);
+        rot.translate(delta);
+        rot.y += 9;
+        return rot;
+    }
+
+    private Point2f getRotationOrigin() {
+        final Point2f RELATIVE_ORIGIN = new Point2f(16, 17);
+        Sprite gun = game.getSprite("rocketman_red_launcher");
+        Point2f origin = getBottomLeft().copy();
+        origin.x += gun.offsetX + RELATIVE_ORIGIN.x;
+        origin.y += gun.offsetY + gun.height - RELATIVE_ORIGIN.y;
+
+//        // Flip horizontally
+//        if (xhair.x < position.x) {
+//            origin.x -= 3;
+//        }
+
+        return origin;
+    }
+
     public void draw(Graphics2D g2) {
         // Draw hitbox
-        g2.setColor(Color.RED);
-        g2.drawRect(0, (int) -height, (int) width, (int) height);
+//        g2.setColor(Color.RED);
+//        g2.drawRect(0, (int) -height, (int) width, (int) height);
 
         // Setup arm coordinate space
         final Point2f ARM_ORIGIN = new Point2f(16, 17); // The arms rotation center, in canvas coordinates, relative to the arm sprite
         Graphics2D g3 = (Graphics2D) g2.create();
         g3.translate(arms.offsetX + 1, -(arms.offsetY + arms.height));
-        g3.rotate(-new Vector2f(position, xhair).getDirection(), ARM_ORIGIN.x, ARM_ORIGIN.y);
+        g3.rotate(-new Vector2f(getRotationOrigin(), xhair).getDirection(), ARM_ORIGIN.x, ARM_ORIGIN.y);
 
         // Flip horizontally
         if (xhair.x < position.x) {
@@ -107,9 +132,19 @@ public class Rocketman extends Character {
 
     @Override
     public void draw(Canvas canvas, Graphics2D g2) {
+        // Debug hitboxes
+//        Point2f rot = getRotationOrigin();
+//        Point2f proj = getProjectileOrigin();
+//        Graphics2D g3 = (Graphics2D) g2.create();
+//        g3.setColor(Color.GREEN);
+//        g3.translate(canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY);
+
         g2 = (Graphics2D) g2.create();
         g2.translate(getBottomLeft().x + canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y);
         draw(g2);
+
+//        g3.fillRect(((int) rot.x - 1), -((int) rot.y - 1), 2, 2);
+//        g3.fillRect(((int) proj.x - 1), -((int) proj.y - 1), 2, 2);
     }
 
     @Override

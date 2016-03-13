@@ -371,11 +371,6 @@ public class Ninja extends Character {
         origin.x += arm.offsetX + RELATIVE_ORIGIN.x;
         origin.y += arm.offsetY + arm.height - RELATIVE_ORIGIN.y;
 
-//        // Flip horizontally
-//        if (xhair.x < position.x) {
-//            origin.x -= 3;
-//        }
-
         return origin;
     }
 
@@ -429,17 +424,17 @@ public class Ninja extends Character {
 //            g3.drawRect(((int) parry.getBottomLeft().x), -(int) (parry.getBottomLeft().y + parry.height), (int) parry.width, (int) parry.height);
 //        }
 
-        Point2f rot = getRotationOrigin();
-        //Point2f proj = getProjectileOrigin();
-        Graphics2D g3 = (Graphics2D) g2.create();
-        g3.setColor(Color.GREEN);
-        g3.translate(canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY);
+//        Point2f rot = getRotationOrigin();
+//        Point2f proj = getProjectileOrigin();
+//        Graphics2D g3 = (Graphics2D) g2.create();
+//        g3.setColor(Color.GREEN);
+//        g3.translate(canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY);
 
         g2 = (Graphics2D) g2.create();
         g2.translate(getBottomLeft().x + canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y);
         draw(g2);
 
-        g3.fillRect(((int) rot.x), -((int) rot.y), 3, 3);
-        //g3.fillRect(((int) proj.x), -((int) proj.y), 3, 3);
+//        g3.fillRect(((int) rot.x), -((int) rot.y), 3, 3);
+//        g3.fillRect(((int) proj.x), -((int) proj.y), 3, 3);
     }
 }
