@@ -6,6 +6,7 @@ import model.characters.Character;
 import model.geometry.Point2f;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -91,6 +92,11 @@ public class ClassSelector extends JPanel {
             return null;
         }
 
+        void setTeam(Team team) {
+            character.player.team = team;
+            repaint();
+        }
+
         public ClassPortrait(Character character) {
             this.character = character;
             character.player.team = Team.RED;
@@ -102,7 +108,13 @@ public class ClassSelector extends JPanel {
 
             System.out.println("class thing width = " + getWidth());
 
-            add(new JTextField(getName()));
+            setLayout(new BorderLayout());
+            JTextField name = new JTextField(getName());
+            name.setOpaque(false);
+            name.setHorizontalAlignment(SwingConstants.CENTER);
+            name.setBorder(new EmptyBorder(0, 0, 10, 0));
+            name.setCursor(Cursor.getDefaultCursor());
+            add(name, BorderLayout.SOUTH);
             //character.hitbox.position = new Point2f(0, 0);
             //character.xhair = new Point2D(Integer.MAX_VALUE, 0);
 //            setBackground(Color.YELLOW);
@@ -111,7 +123,7 @@ public class ClassSelector extends JPanel {
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
-            Graphics2D g2 = (Graphics2D) g;
+            Graphics2D g2 = (Graphics2D) g.create();
             g2.translate(character.getBottomLeft().x, getHeight() - character.getBottomLeft().y);
             character.draw(g2);
         }
