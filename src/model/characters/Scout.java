@@ -55,7 +55,10 @@ public class Scout extends Character {
         else if (movingRight)
             direction = Direction.RIGHT;
 
-        if (!onGround) {
+        if (wallLeft || wallRight) {
+            sprite = game.getSprite("scout_red_walljump_body");
+            legs = null;
+        } else if (!onGround) {
             sprite = game.getSprite("scout_red_run_body");
             legs = game.getSprite("scout_legs_run_3");
         } else if (movingLeft || movingRight) {
@@ -298,22 +301,7 @@ public class Scout extends Character {
         Graphics2D headCanvas = (Graphics2D) g2.create();
         headCanvas.translate(head.offsetX + 1, -(head.offsetY + head.height));
 
-        // TODO clean up this clusterfuck
-//        if (legs != null && legs.name.startsWith("scout_legs_run")) {
-//            if (xhair.x > position.x)
-//                ARM_ORIGIN.x += 8;
-//            else
-//                ARM_ORIGIN.x += 4;
-//        }
-//
-//        if (movingLeft) {
-//            if (xhair.x < position.x)
-//                ARM_ORIGIN.x -= 8;
-//            else
-//                ARM_ORIGIN.x += 4;
-//        }
-
-        boolean bodyFlipped = movingLeft || (!movingRight && xhair.x < position.x);
+        boolean bodyFlipped = wallRight || !wallLeft && movingLeft || (!wallLeft && !movingRight && xhair.x < position.x);
         // Looking left
         if (bodyFlipped) {
             // Flip body
@@ -333,26 +321,18 @@ public class Scout extends Character {
 
             headCanvas.scale(-1, 1);
             headCanvas.translate(-30, 0);
-
-//            if (bodyFlipped && legs != null && legs.name.startsWith("scout_legs_run")) {
-//                System.out.println("Hello world");
-//                armCanvas.translate(15, 0);
-//                headCanvas.translate(15, 0);
-//            }
         } else
             armCanvas.rotate(-new Vector2f(getRotationOrigin(), xhair).getDirection(), ARM_ORIGIN.x, ARM_ORIGIN.y);
 
-        if (movingRight && xhair.x < position.x || movingLeft && xhair.x > position.x) {
+        if (!wallRight && movingRight && xhair.x < position.x || !wallLeft && movingLeft && xhair.x > position.x) {
             armCanvas.translate(-15, 0);
             headCanvas.translate(-15, 0);
         }
-
 
         if (legs != null && legs.name.startsWith("scout_legs_run")) {
             armCanvas.translate(8, 0);
             headCanvas.translate(8, 0);
         }
-
 
         // Draw legs
         if (legs != null)
@@ -373,17 +353,17 @@ public class Scout extends Character {
     @Override
     public void draw(Canvas canvas, Graphics2D g2) {
         // Debug hitboxes
-        Point2f rot = getRotationOrigin();
-        Point2f proj = getProjectileOrigin();
-        Graphics2D g3 = (Graphics2D) g2.create();
-        g3.setColor(Color.GREEN);
-        g3.translate(canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY);
+//        Point2f rot = getRotationOrigin();
+//        Point2f proj = getProjectileOrigin();
+//        Graphics2D g3 = (Graphics2D) g2.create();
+//        g3.setColor(Color.GREEN);
+//        g3.translate(canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY);
 
         g2 = (Graphics2D) g2.create();
         g2.translate(getBottomLeft().x + canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y);
         draw(g2);
 
-        g3.fillRect(((int) rot.x), -((int) rot.y), 3, 3);
-        g3.fillRect(((int) proj.x), -((int) proj.y), 3, 3);
+//        g3.fillRect(((int) rot.x), -((int) rot.y), 3, 3);
+//        g3.fillRect(((int) proj.x), -((int) proj.y), 3, 3);
     }
 }

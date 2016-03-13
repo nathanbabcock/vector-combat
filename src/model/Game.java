@@ -118,86 +118,6 @@ public class Game {
         }
         sprites = new ArrayList();
 
-        /*
-        // Rocketman
-        sprites.add(new Sprite("rocket_standing")
-                .setImage(spriteSheet, 0, 0, 24, 80));
-        sprites.add(new Sprite("rocket_walking_1")
-                .setImage(spriteSheet, 32, 0, 24, 80)
-                .setTime(0.25f)
-                .setNext("rocket_walking_2"));
-        sprites.add(new Sprite("rocket_walking_2")
-                .setImage(spriteSheet, 0, 0, 24, 80) // Same as rocket_standing
-                .setTime(0.25f)
-                .setNext("rocket_walking_1"));
-        sprites.add(new Sprite("rocket_launcher")
-                .setImage(spriteSheet, 64, 0, 64, 24));
-
-        // Ninja
-        sprites.add(new Sprite("ninja_standing")
-                .setImage(spriteSheet, 0, 112, 40, 96)
-                .setOffset(0, 16));
-        sprites.add(new Sprite("ninja_walking_1")
-                .setImage(spriteSheet, 48, 112, 40, 96)
-                .setOffset(0, 16)
-                .setTime(0.25f)
-                .setNext("rocket_walking_2"));
-        sprites.add(new Sprite("ninja_walking_2")
-                .setImage(spriteSheet, 0, 112, 40, 96)
-                .setOffset(0, 16)
-                .setTime(0.25f)
-                .setNext("ninja_walking_1"));
-        sprites.add(new Sprite("ninja_attack_1")
-                .setImage(spriteSheet, 96, 88, 24, 120)
-                .setOffset(0, 40)
-                .setTime(0.1f)
-                .setNext("ninja_attack_2")
-                .setInterruptible(false));
-        sprites.add(new Sprite("ninja_attack_2")
-                .setImage(spriteSheet, 128, 112, 64, 96)
-                .setOffset(0, 16)
-                .setTime(0.05f)
-                .setNext("ninja_attack_3")
-                .setInterruptible(false));
-        sprites.add(new Sprite("ninja_attack_3")
-                .setImage(spriteSheet, 200, 128, 80, 80)
-                .setTime(0.1f)
-                .setInterruptible(false));
-
-        // Soldier
-        sprites.add(new Sprite("soldier_standing")
-                .setImage(spriteSheet, 0, 216, 32, 80)
-                .setOffset(-8, 0));
-        sprites.add(new Sprite("soldier_walking_1")
-                .setImage(spriteSheet, 40, 216, 32, 80)
-                .setOffset(-8, 0)
-                .setTime(0.25f)
-                .setNext("soldier_walking_2"));
-        sprites.add(new Sprite("soldier_walking_2")
-                .setImage(spriteSheet, 0, 216, 32, 80)
-                .setOffset(-8, 0)
-                .setTime(0.25f)
-                .setNext("soldier_walking_1"));
-        sprites.add(new Sprite("soldier_gun")
-                .setImage(spriteSheet, 80, 216, 48, 24));
-
-        // Scout
-        sprites.add(new Sprite("scout_standing")
-                .setImage(spriteSheet, 0, 304, 24, 80));
-        sprites.add(new Sprite("scout_walking_1")
-                .setImage(spriteSheet, 32, 304, 24, 80)
-                .setTime(0.25f)
-                .setNext("scout_walking_2"));
-        sprites.add(new Sprite("scout_walking_2")
-                .setImage(spriteSheet, 0, 304, 24, 80)
-                .setTime(0.25f)
-                .setNext("scout_walking_1"));
-        sprites.add(new Sprite("scout_walljump")
-                .setImage(spriteSheet, 64, 304, 40, 80)
-                .setOffset(-12, 0));
-        sprites.add(new Sprite("scout_gun")
-                .setImage(spriteSheet, 112, 304, 48, 24));
- */
         // Newest ninja
         final float NINJA_RUN_TIME = 0.05f;
 
@@ -436,6 +356,9 @@ public class Game {
                 .setOffset(-11, 41));
 
         // Scout
+        sprites.add(new Sprite("scout_red_walljump_body")
+                .setImage()
+                .setOffset(-4, -3));
         sprites.add(new Sprite("scout_red_body")
                 .setImage()
                 .setOffset(3, 30));
@@ -443,6 +366,9 @@ public class Game {
                 .setImage()
                 .setOffset(1, 31));
         sprites.add(new Sprite("scout_gun")
+                .setImage()
+                .setOffset(-3, 48));
+        sprites.add(new Sprite("scout_gun_onehand")
                 .setImage()
                 .setOffset(-3, 48));
         sprites.add(new Sprite("scout_head")

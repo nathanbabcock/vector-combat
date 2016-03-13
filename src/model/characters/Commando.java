@@ -179,18 +179,18 @@ public class Commando extends Character {
         g2 = (Graphics2D) g2.create();
 
         // Debug hitboxes
-        Point2f rot = getRotationOrigin();
-        Point2f proj = getProjectileOrigin();
-        Graphics2D g3 = (Graphics2D) g2.create();
-        g3.setColor(Color.GREEN);
-        g3.translate(canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY);
+//        Point2f rot = getRotationOrigin();
+//        Point2f proj = getProjectileOrigin();
+//        Graphics2D g3 = (Graphics2D) g2.create();
+//        g3.setColor(Color.GREEN);
+//        g3.translate(canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY);
 
 
         g2.translate(getBottomLeft().x + canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y);
         draw(g2);
 
-        g3.fillRect(((int) rot.x), -((int) rot.y), 3, 3);
-        g3.fillRect(((int) proj.x), -((int) proj.y), 3, 3);
+//        g3.fillRect(((int) rot.x), -((int) rot.y), 3, 3);
+//        g3.fillRect(((int) proj.x), -((int) proj.y), 3, 3);
     }
 
     @Override
