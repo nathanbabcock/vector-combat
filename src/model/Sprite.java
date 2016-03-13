@@ -32,7 +32,7 @@ public class Sprite {
      */
     public Sprite setImage() {
         try {
-            image = ImageIO.read(Game.class.getResourceAsStream("/res/" + name + ".png"));
+            image = ImageIO.read(Game.class.getResourceAsStream("/res/sprites/" + name + ".png"));
             width = image.getWidth();
             height = image.getHeight();
         } catch (Exception e) {

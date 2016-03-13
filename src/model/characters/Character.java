@@ -220,8 +220,10 @@ abstract public class Character extends AABB {
         // Player
         int playerX = (int) getBottomLeft().x + canvas.cameraOffsetX;
         int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - height);
-        int playerWidth = 24;
+        int playerWidth = (int) width;//24;
 
+//        final int fontSize = 14;
+//        g2.setFont(GameClient.FONT_TEXT);
         final int fontSize = 12;
         g2.setFont(new Font("Lucida Sans", Font.PLAIN, fontSize));
         if (player.team == Team.BLUE)

@@ -106,8 +106,6 @@ public class ClassSelector extends JPanel {
             character.onGround = true;
             character.updateSprite(0);
 
-            System.out.println("class thing width = " + getWidth());
-
             setLayout(new BorderLayout());
             JTextField name = new JTextField(getName());
             name.setOpaque(false);

@@ -111,7 +111,7 @@ public class Game {
 
         BufferedImage spriteSheet = null;
         try {
-            spriteSheet = ImageIO.read(Game.class.getResourceAsStream("/res/spritesheet.png"));
+            spriteSheet = ImageIO.read(Game.class.getResourceAsStream("/res/sprites/spritesheet.png"));
         } catch (Exception e) {
             e.printStackTrace();
         }

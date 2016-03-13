@@ -3,6 +3,7 @@ package view;
 import model.Game;
 import model.Player;
 import model.characters.Team;
+import network.GameClient;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -28,19 +29,14 @@ public class ScorePanel extends JPanel {
 
         setVisible(false);
         setLayout(new GridLayout(1, 2));
-        setBackground(Color.LIGHT_GRAY);
+        //setBackground(Color.LIGHT_GRAY);
+        setOpaque(false);
 
-        blue = new ScoreColumn();
-        blue.team.setForeground(Color.BLUE);
-        blue.team.setText("Blue");
-        blue.score.setForeground(Color.BLUE);
-        add(blue, BorderLayout.WEST);
+        red = new ScoreColumn(Team.RED);
+        add(red);
 
-        red = new ScoreColumn();
-        red.team.setForeground(Color.RED);
-        red.team.setText("Red");
-        red.score.setForeground(Color.RED);
-        add(red, BorderLayout.EAST);
+        blue = new ScoreColumn(Team.BLUE);
+        add(blue);
     }
 
     public void open() {
@@ -58,32 +54,57 @@ public class ScorePanel extends JPanel {
         JPanel title, players;
         public JTextField team, score;
 
-        private ScoreColumn() {
+        static final float TEAMNAME_SIZE = 30;
+        static final float SCORE_SIZE = 50;
+
+        private ScoreColumn(Team teamID) {
             setLayout(new BorderLayout());
             setOpaque(false);
 
             title = new JPanel();
             title.setLayout(new BorderLayout());
-            title.setOpaque(false);
-            title.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+            if (teamID == Team.RED) {
+                title.setBackground(Color.RED);
+                title.setBorder(new EmptyBorder(5, 20, 0, 10));
+            } else {
+                title.setBackground(Color.BLUE);
+                title.setBorder(new EmptyBorder(5, 10, 0, 20));
+            }
 
             team = new JTextField();
             team.setEditable(false);
             team.setFocusable(false);
-            team.setFont(new Font("Lucida Sans", Font.BOLD, 20));
-            team.setHorizontalAlignment(SwingConstants.LEFT);
+            team.setFont(GameClient.FONT_HEADING.deriveFont(TEAMNAME_SIZE));
+            team.setForeground(Color.WHITE);
             team.setOpaque(false);
             team.setBorder(null);
-            title.add(team, BorderLayout.WEST);
+
+            if (teamID == Team.RED) {
+                team.setText("RED");
+                team.setHorizontalAlignment(SwingConstants.LEFT);
+                title.add(team, BorderLayout.WEST);
+            } else {
+                team.setText("BLUE");
+                team.setHorizontalAlignment(SwingConstants.RIGHT);
+                title.add(team, BorderLayout.EAST);
+            }
 
             score = new JTextField();
             score.setEditable(false);
             score.setFocusable(false);
-            score.setFont(new Font("Lucida Sans", Font.BOLD, 20));
-            score.setHorizontalAlignment(SwingConstants.RIGHT);
+            score.setFont(GameClient.FONT_HEADING.deriveFont(SCORE_SIZE));
+            score.setForeground(Color.WHITE);
             score.setOpaque(false);
             score.setBorder(null);
-            title.add(score, BorderLayout.EAST);
+
+            if (teamID == Team.RED) {
+                score.setHorizontalAlignment(SwingConstants.RIGHT);
+                title.add(score, BorderLayout.EAST);
+            } else {
+                score.setHorizontalAlignment(SwingConstants.LEFT);
+                title.add(score, BorderLayout.WEST);
+            }
 
             players = new JPanel();
             players.setOpaque(false);
@@ -109,7 +130,7 @@ public class ScorePanel extends JPanel {
                 text.setOpaque(false);
                 text.setBorder(null);
                 text.setHorizontalAlignment(SwingConstants.CENTER);
-                text.setFont(new Font("Lucida Sans", Font.PLAIN, 12));
+                text.setFont(GameClient.FONT_TEXT);
                 add(text);
             }
         }
@@ -122,12 +143,12 @@ public class ScorePanel extends JPanel {
         for (JPanel players : new JPanel[]{blue.players, red.players}) {
             players.removeAll();
             ScoreRow header = new ScoreRow();
-            header.name.setText("Player");
-            header.kills.setText("Kills");
-            header.deaths.setText("Deaths");
-            header.ping.setText("Ping");
+            header.name.setText("PLAYER");
+            header.kills.setText("K");
+            header.deaths.setText("D");
+            header.ping.setText("PING");
             for (JTextComponent text : new JTextComponent[]{header.name, header.kills, header.deaths, header.ping})
-                text.setFont(new Font("Lucida Sans", Font.BOLD, 12));
+                text.setFont(GameClient.FONT_TEXT.deriveFont(11f));
             players.add(header);
         }
 

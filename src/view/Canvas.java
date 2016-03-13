@@ -7,6 +7,7 @@ import model.entities.Entity;
 import model.geometry.AABB;
 import model.geometry.Point2f;
 import model.particles.Particle;
+import network.GameClient;
 
 import javax.swing.*;
 import java.awt.*;
@@ -111,7 +112,7 @@ public class Canvas extends JPanel {
         } catch (NullPointerException e) {
             health = 0;
         }
-        g2.setFont(new Font("Lucida Sans", Font.BOLD, 50));
+        g2.setFont(GameClient.FONT_HEADING.deriveFont(50f));
         if (health > 150)
             g2.setColor(Color.GREEN);
         else if (health > 100)

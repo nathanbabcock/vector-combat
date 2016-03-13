@@ -1,6 +1,7 @@
 package view;
 
 import model.characters.Team;
+import network.GameClient;
 
 import javax.swing.*;
 import java.awt.*;
@@ -73,7 +74,7 @@ public class TeamSelector extends JPanel {
         });
 
         // Common button settings
-        Font font = new Font("Lucida Sans", Font.BOLD, 25);
+        Font font = GameClient.FONT_HEADING.deriveFont(25f);
         for (JTextField text : new JTextField[]{blue, red}) {
             text.setFont(font);
             text.setFocusable(false);

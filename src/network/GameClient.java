@@ -55,6 +55,8 @@ public class GameClient extends JFrame {
     JTextArea health;
     JTextField respawn, winner;
 
+    public static Font FONT_HEADING, FONT_TEXT;
+
     private final boolean debug = false;
 
     public GameClient(String clientName, String server, int tcp_port, int udp_port) {
@@ -134,6 +136,7 @@ public class GameClient extends JFrame {
     }
 
     private void initGUI() {
+        // Window settings
         setSize(PREF_WIDTH, PREF_HEIGHT);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         if (debug)
@@ -146,6 +149,18 @@ public class GameClient extends JFrame {
         insets = getInsets();
         lp = getLayeredPane();
 
+        // Fonts
+        try {
+            FONT_HEADING = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getResourceAsStream("/res/fonts/Cornerstone.ttf")).deriveFont(12f);
+            FONT_TEXT = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getResourceAsStream("/res/fonts/OpenSans-Regular.ttf")).deriveFont(14f);
+
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(FONT_HEADING);
+            ge.registerFont(FONT_TEXT);
+        } catch (IOException | FontFormatException e) {
+            e.printStackTrace();
+        }
+
         // Game rendering canvas
         canvas = new Canvas(game, clientName);
         lp.add(canvas, LAYER_CANVAS);
@@ -153,14 +168,14 @@ public class GameClient extends JFrame {
         // Health HUD
         health = new JTextArea("200");
         health.setForeground(Color.GREEN);
-        health.setFont(new Font("Lucida Sans", Font.BOLD, 50));
+        health.setFont(FONT_HEADING.deriveFont(50f));
         health.setOpaque(false);
         health.setEditable(false);
         health.setFocusable(false);
         lp.add(health, LAYER_HUD);
 
         // Respawn HUD
-        respawn = new JTextField("Hello world");
+        respawn = new JTextField();
         respawn.setOpaque(false);
         respawn.setEditable(false);
         respawn.setFocusable(false);
@@ -172,7 +187,7 @@ public class GameClient extends JFrame {
 
         // Winner HUD
         winner = new JTextField("");
-        winner.setFont(new Font("Lucida Sans", Font.BOLD, 20));
+        winner.setFont(GameClient.FONT_HEADING.deriveFont(20f));
         winner.setOpaque(false);
         winner.setEditable(false);
         winner.setFocusable(false);
