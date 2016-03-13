@@ -144,8 +144,8 @@ public class Scout extends Character {
 
         Random r = new Random();
         for (int i = 0; i < NUM_PELLETS; i++) {
-            Bullet bullet = new Bullet(game, getCenter().x, getCenter().y, PELLET_SIZE);
-            Point2f origin = getCenter();
+            Point2f origin = getProjectileOrigin();
+            Bullet bullet = new Bullet(game, origin.x, origin.y, PELLET_SIZE);
             bullet.owner = player.clientID;
             bullet.velocity = new Vector2f(xhair.x - origin.x, xhair.y - origin.y);
             bullet.velocity.setMagnitude(PELLET_VELOCITY);
@@ -235,6 +235,41 @@ public class Scout extends Character {
         }
     }
 
+    private Point2f getProjectileOrigin() {
+        final float GUN_LENGTH = 41;
+        Point2f rot = getRotationOrigin();
+        Vector2f delta = new Vector2f(rot, xhair).setMagnitude(GUN_LENGTH);
+        return rot.translate(delta);
+    }
+
+    private Point2f getRotationOrigin() {
+        final Point2f RELATIVE_ORIGIN = new Point2f(9, 3);
+        Sprite gun = game.getSprite("scout_gun");
+        Point2f origin = getBottomLeft().copy();
+        origin.x += gun.offsetX + RELATIVE_ORIGIN.x;
+        origin.y += gun.offsetY + gun.height - RELATIVE_ORIGIN.y;
+
+        boolean bodyFlipped = movingLeft || (!movingRight && xhair.x < position.x);
+        if (xhair.x < position.x)
+            origin.x += 18;
+
+        if (legs != null && legs.name.startsWith("scout_legs_run")) {
+            if (xhair.x > position.x)
+                origin.x += 8;
+            else
+                origin.x += 4;
+        }
+
+        if (movingLeft) {
+            if (xhair.x < position.x)
+                origin.x -= 8;
+            else
+                origin.x += 4;
+        }
+
+        return origin;
+    }
+
     @Override
     public void merge(Character other) {
         super.merge(other);
@@ -263,13 +298,20 @@ public class Scout extends Character {
         Graphics2D headCanvas = (Graphics2D) g2.create();
         headCanvas.translate(head.offsetX + 1, -(head.offsetY + head.height));
 
-        final float GUN_LENGTH = 41;
-
-
-        // Moving left
-        if (direction == Direction.LEFT) {
-
-        }
+        // TODO clean up this clusterfuck
+//        if (legs != null && legs.name.startsWith("scout_legs_run")) {
+//            if (xhair.x > position.x)
+//                ARM_ORIGIN.x += 8;
+//            else
+//                ARM_ORIGIN.x += 4;
+//        }
+//
+//        if (movingLeft) {
+//            if (xhair.x < position.x)
+//                ARM_ORIGIN.x -= 8;
+//            else
+//                ARM_ORIGIN.x += 4;
+//        }
 
         boolean bodyFlipped = movingLeft || (!movingRight && xhair.x < position.x);
         // Looking left
@@ -285,7 +327,7 @@ public class Scout extends Character {
         if (xhair.x < position.x) {
             // Flip arms and head
             ARM_ORIGIN.x += 13;
-            armCanvas.rotate(-new Vector2f(position, xhair).getDirection(), ARM_ORIGIN.x, ARM_ORIGIN.y);
+            armCanvas.rotate(-new Vector2f(getRotationOrigin(), xhair).getDirection(), ARM_ORIGIN.x, ARM_ORIGIN.y);
             armCanvas.scale(1, -1);
             armCanvas.translate(12, -6);
 
@@ -297,9 +339,8 @@ public class Scout extends Character {
 //                armCanvas.translate(15, 0);
 //                headCanvas.translate(15, 0);
 //            }
-        } else {
-            armCanvas.rotate(-new Vector2f(position, xhair).getDirection(), ARM_ORIGIN.x, ARM_ORIGIN.y);
-        }
+        } else
+            armCanvas.rotate(-new Vector2f(getRotationOrigin(), xhair).getDirection(), ARM_ORIGIN.x, ARM_ORIGIN.y);
 
         if (movingRight && xhair.x < position.x || movingLeft && xhair.x > position.x) {
             armCanvas.translate(-15, 0);
@@ -331,20 +372,18 @@ public class Scout extends Character {
 
     @Override
     public void draw(Canvas canvas, Graphics2D g2) {
-        // DEBUG HITBOXES
-//        Graphics2D g3 = (Graphics2D) g2.create();
-//        g3.translate(canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY);
-//        if (currentAttackDelay > 0) { // Attack hitbox
-//            AABB attack = getAttackHitbox();
-//            g3.drawRect(((int) attack.getBottomLeft().x), -(int) (attack.getBottomLeft().y + attack.height), (int) attack.width, (int) attack.height);
-//        }
-//        if (currentParryDelay >= parryInterval - parryWindow) { // Parry hitbox
-//            AABB parry = getParryHitbox();
-//            g3.drawRect(((int) parry.getBottomLeft().x), -(int) (parry.getBottomLeft().y + parry.height), (int) parry.width, (int) parry.height);
-//        }
+        // Debug hitboxes
+        Point2f rot = getRotationOrigin();
+        Point2f proj = getProjectileOrigin();
+        Graphics2D g3 = (Graphics2D) g2.create();
+        g3.setColor(Color.GREEN);
+        g3.translate(canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY);
 
         g2 = (Graphics2D) g2.create();
         g2.translate(getBottomLeft().x + canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y);
         draw(g2);
+
+        g3.fillRect(((int) rot.x), -((int) rot.y), 3, 3);
+        g3.fillRect(((int) proj.x), -((int) proj.y), 3, 3);
     }
 }

@@ -123,22 +123,6 @@ public class Commando extends Character {
         Point2f rot = getRotationOrigin();
         Vector2f delta = new Vector2f(rot, xhair).setMagnitude(GUN_LENGTH);
         return rot.translate(delta);
-
-//        Point2f proj_origin = getBottomLeft().copy();
-//        proj_origin.y += 46;
-//        if (xhair.x < position.x)
-//            proj_origin.x -= 29;
-//        else
-//            proj_origin.x += 45;
-//
-//        Point2f arm_origin = getBottomLeft().copy();
-//        arm_origin.x += 9;
-//        arm_origin.y += 58;
-//
-//        Vector2f vec = new Vector2f(arm_origin, xhair);
-//        proj_origin.rotate(vec.getDirection(), arm_origin);
-//
-//        return proj_origin;
     }
 
     private Point2f getRotationOrigin() {
