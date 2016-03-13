@@ -121,12 +121,15 @@ public class Game {
         // Newest ninja
         final float NINJA_RUN_TIME = 0.05f;
 
-        sprites.add(new Sprite("ninja_crouch")
-                .setImage()
-                .setOffset(-14, 0));
-        sprites.add(new Sprite("ninja_body")
-                .setImage()
-                .setOffset(1, 18));
+
+        for (String team : new String[]{"red", "blue"}) {
+            sprites.add(new Sprite("ninja_crouch_" + team)
+                    .setImage()
+                    .setOffset(-14, 0));
+            sprites.add(new Sprite("ninja_body_" + team)
+                    .setImage()
+                    .setOffset(1, 18));
+        }
 
         // Run cycle - first half
         sprites.add(new Sprite("ninja_legs_1")
@@ -278,19 +281,21 @@ public class Game {
         sprites.add(new Sprite("ninja_arm_grapple_2")
                 .setImage()
                 .setOffset(29, 30));
-        sprites.add(new Sprite("ninja_stand")
-                .setImage()
-                .setOffset(4, 0));
-        sprites.add(new Sprite("ninja_parry")
-                .setImage()
-                .setOffset(0, 0));
-        sprites.add(new Sprite("ninja_kick")
-                .setImage()
-                .setOffset(-35, 0));
-        sprites.add(new Sprite("ninja_jump")
-                .setImage()
-                .setRotationOrigin(29, 0) // ??
-                .setOffset(-6, 0));
+        for (String team : new String[]{"red", "blue"}) {
+            sprites.add(new Sprite("ninja_stand_" + team)
+                    .setImage()
+                    .setOffset(4, 0));
+            sprites.add(new Sprite("ninja_parry_" + team)
+                    .setImage()
+                    .setOffset(0, 0));
+            sprites.add(new Sprite("ninja_kick_" + team)
+                    .setImage()
+                    .setOffset(-35, 0));
+            sprites.add(new Sprite("ninja_jump_" + team)
+                    .setImage()
+                    .setRotationOrigin(29, 0) // ??
+                    .setOffset(-6, 0));
+        }
 
         // Generic legs
         final float LEG_TIME = 0.7f / 8;
@@ -339,32 +344,38 @@ public class Game {
                 .setTime(LEG_TIME));
 
         // Commando
-        sprites.add(new Sprite("commando_red_body")
-                .setImage()
-                .setOffset(-6, 31));
-        sprites.add(new Sprite("commando_red_gun")
-                .setImage()
-                .setOffset(-1, 42));
+        for (String team : new String[]{"red", "blue"}) {
+            sprites.add(new Sprite("commando_body_" + team)
+                    .setImage()
+                    .setOffset(-6, 31));
+            sprites.add(new Sprite("commando_gun_" + team)
+                    .setImage()
+                    .setOffset(-1, 42));
+        }
 
 
         // Rocketman
-        sprites.add(new Sprite("rocketman_red_body")
-                .setImage()
-                .setOffset(-1, 31));
-        sprites.add(new Sprite("rocketman_red_launcher")
-                .setImage()
-                .setOffset(-11, 41));
+        for (String team : new String[]{"red", "blue"}) {
+            sprites.add(new Sprite("rocketman_body_" + team)
+                    .setImage()
+                    .setOffset(-1, 31));
+            sprites.add(new Sprite("rocketman_launcher_" + team)
+                    .setImage()
+                    .setOffset(-11, 41));
+        }
 
         // Scout
-        sprites.add(new Sprite("scout_red_walljump_body")
-                .setImage()
-                .setOffset(-4, -3));
-        sprites.add(new Sprite("scout_red_body")
-                .setImage()
-                .setOffset(3, 30));
-        sprites.add(new Sprite("scout_red_run_body")
-                .setImage()
-                .setOffset(1, 31));
+        for (String team : new String[]{"red", "blue"}) {
+            sprites.add(new Sprite("scout_walljump_" + team)
+                    .setImage()
+                    .setOffset(-4, -3));
+            sprites.add(new Sprite("scout_body_" + team)
+                    .setImage()
+                    .setOffset(3, 30));
+            sprites.add(new Sprite("scout_run_body_" + team)
+                    .setImage()
+                    .setOffset(1, 31));
+        }
         sprites.add(new Sprite("scout_gun")
                 .setImage()
                 .setOffset(-3, 48));

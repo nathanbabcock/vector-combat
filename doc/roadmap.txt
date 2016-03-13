@@ -38,6 +38,8 @@ Archer
 - Bow draw
 - Persistent arrows (hitbox issues!)
 
+<-- YOU ARE HERE
+
 ENGINE/UI (~7 days)
 - Health system (regen? shield? health packs?)
 - Team sprite variations

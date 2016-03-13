@@ -33,10 +33,18 @@ public class Commando extends Character {
 
     @Override
     public void updateSprite(float deltaTime) {
+        if (player == null) return;
+
+        String team = null;
+        if (player.team == Team.BLUE)
+            team = "blue";
+        else if (player.team == Team.RED)
+            team = "red";
+
         if (sprite == null) {
-            sprite = game.getSprite("commando_red_body");
+            sprite = game.getSprite("commando_body_" + team);
             legs = game.getSprite("legs_stand");
-            arms = game.getSprite("commando_red_gun");
+            arms = game.getSprite("commando_gun_" + team);
             return;
         }
 
@@ -127,7 +135,7 @@ public class Commando extends Character {
 
     private Point2f getRotationOrigin() {
         final Point2f RELATIVE_ORIGIN = new Point2f(10, 4);
-        Sprite gun = game.getSprite("commando_red_gun");
+        Sprite gun = game.getSprite("commando_gun_red");
         Point2f origin = getBottomLeft().copy();
         origin.x += gun.offsetX + RELATIVE_ORIGIN.x;
         origin.y += gun.offsetY + gun.height - RELATIVE_ORIGIN.y;

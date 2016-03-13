@@ -42,9 +42,17 @@ public class Scout extends Character {
 
     @Override
     public void updateSprite(float deltaTime) {
+        if (player == null) return;
+
+        String team = null;
+        if (player.team == Team.BLUE)
+            team = "blue";
+        else if (player.team == Team.RED)
+            team = "red";
+
         // Init
         if (sprite == null) {
-            sprite = game.getSprite("scout_red_body");
+            sprite = game.getSprite("scout_body_" + team);
             legs = game.getSprite("scout_legs_stand");
             arms = game.getSprite("scout_gun");
         }
@@ -56,15 +64,15 @@ public class Scout extends Character {
             direction = Direction.RIGHT;
 
         if (wallLeft || wallRight) {
-            sprite = game.getSprite("scout_red_walljump_body");
+            sprite = game.getSprite("scout_walljump_" + team);
             legs = null;
         } else if (!onGround) {
-            sprite = game.getSprite("scout_red_run_body");
+            sprite = game.getSprite("scout_run_body_" + team);
             legs = game.getSprite("scout_legs_run_3");
         } else if (movingLeft || movingRight) {
             // Initialize sprite
-            if (!sprite.name.equals("scout_red_run_body"))
-                sprite = game.getSprite("scout_red_run_body");
+            if (!sprite.name.equals("scout_run_body_" + team))
+                sprite = game.getSprite("scout_run_body_" + team);
 
             // Handle legs
             if (legs == null) {
@@ -89,7 +97,7 @@ public class Scout extends Character {
             } else if (arms == null || !arms.name.equals("ninja_arm"))
                 arms = game.getSprite("ninja_arm");*/
         } else {
-            sprite = game.getSprite("scout_red_body");
+            sprite = game.getSprite("scout_body_" + team);
             legs = game.getSprite("scout_legs_stand");
         }
 

@@ -30,10 +30,18 @@ public class Rocketman extends Character {
 
     @Override
     public void updateSprite(float deltaTime) {
+        if (player == null) return;
+
+        String team = null;
+        if (player.team == Team.BLUE)
+            team = "blue";
+        else if (player.team == Team.RED)
+            team = "red";
+
         if (sprite == null) {
-            sprite = game.getSprite("rocketman_red_body");
+            sprite = game.getSprite("rocketman_body_" + team);
             legs = game.getSprite("legs_stand");
-            arms = game.getSprite("rocketman_red_launcher");
+            arms = game.getSprite("rocketman_launcher_" + team);
             return;
         }
 
@@ -83,7 +91,7 @@ public class Rocketman extends Character {
 
     private Point2f getRotationOrigin() {
         final Point2f RELATIVE_ORIGIN = new Point2f(16, 17);
-        Sprite gun = game.getSprite("rocketman_red_launcher");
+        Sprite gun = game.getSprite("rocketman_launcher_red");
         Point2f origin = getBottomLeft().copy();
         origin.x += gun.offsetX + RELATIVE_ORIGIN.x;
         origin.y += gun.offsetY + gun.height - RELATIVE_ORIGIN.y;
