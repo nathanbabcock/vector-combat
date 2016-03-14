@@ -55,7 +55,7 @@ public class GameClient extends JFrame {
     JTextArea health;
     JTextField respawn, winner;
 
-    public static Font FONT_HEADING, FONT_TEXT;
+    public static Font FONT_HEADING, FONT_TEXT, FONT_BOLD, FONT_SEMIBOLD;
 
     private final boolean debug = false;
 
@@ -153,10 +153,14 @@ public class GameClient extends JFrame {
         try {
             FONT_HEADING = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getResourceAsStream("/res/fonts/Cornerstone.ttf")).deriveFont(12f);
             FONT_TEXT = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getResourceAsStream("/res/fonts/OpenSans-Regular.ttf")).deriveFont(14f);
+            FONT_BOLD = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getResourceAsStream("/res/fonts/OpenSans-Bold.ttf")).deriveFont(14f);
+            FONT_SEMIBOLD = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getResourceAsStream("/res/fonts/OpenSans-Semibold.ttf")).deriveFont(14f);
 
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(FONT_HEADING);
             ge.registerFont(FONT_TEXT);
+            ge.registerFont(FONT_BOLD);
+            ge.registerFont(FONT_SEMIBOLD);
         } catch (IOException | FontFormatException e) {
             e.printStackTrace();
         }
