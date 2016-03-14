@@ -54,13 +54,31 @@ public class ScorePanel extends JPanel {
         public JTextField team, score;
 
         static final float TEAMNAME_SIZE = 30;
-        static final float SCORE_SIZE = 50;
+        static final float SCORE_SIZE = 60;
 
         private ScoreColumn(Team teamID) {
             setLayout(new BorderLayout());
             setOpaque(false);
 
-            title = new JPanel();
+            title = new JPanel() {
+                @Override
+                protected void paintComponent(Graphics g) {
+                    //super.paintComponent(g);
+                    Graphics2D g2 = (Graphics2D) g;
+//                    System.out.println("width = "+getWidth());
+//                    System.out.println("height = "+getHeight());
+                    g2.setColor(getBackground());
+                    final int margin = 20;
+                    final int radius = 10;
+                    if (teamID == Team.RED) {
+                        g2.fillRect(radius, margin, getWidth() - radius, getHeight() - 2 * margin);
+                        g2.fillPolygon(new int[]{radius, 0, radius}, new int[]{margin, getHeight() / 2, getHeight() - margin}, 3);
+                    } else {
+                        g2.fillRect(0, margin, getWidth() - radius, getHeight() - 2 * margin);
+                        g2.fillPolygon(new int[]{getWidth() - radius, getWidth(), getWidth() - radius}, new int[]{margin, getHeight() / 2, getHeight() - margin}, 3);
+                    }
+                }
+            };
             title.setLayout(new BorderLayout());
 
             if (teamID == Team.RED) {
@@ -135,7 +153,6 @@ public class ScorePanel extends JPanel {
                 text.setFont(GameClient.FONT_SEMIBOLD.deriveFont(14f));
                 text.setForeground(Color.WHITE);
             }
-
             text.setEditable(false);
             text.setFocusable(false);
             text.setBorder(null);
@@ -153,15 +170,15 @@ public class ScorePanel extends JPanel {
         c.gridwidth = 4;
         c.weightx = 0.5;
         c.weighty = 0.1;
-        c.ipadx = 5;
-        c.insets = new Insets(0, 0, 2, 0);
-        //c.insets = new Insets(10, 10, 10, 10);
+        c.insets = new Insets(2, 0, 0, 0);
         name.setHorizontalAlignment(SwingConstants.LEFT);
         if (player == null) {
-            c.fill = GridBagConstraints.HORIZONTAL;
+            c.gridheight = 1;
             name.setText(" PLAYER");
-        } else
+        } else {
             name.setText(player.clientName);
+            c.gridheight = 2;
+        }
         panel.add(name, c);
 
         // kills
@@ -172,15 +189,14 @@ public class ScorePanel extends JPanel {
         c.weightx = 0.5 / 4;
         c.weighty = 0.1;
         c.gridwidth = 1;
-        c.ipadx = 5;
-        c.insets = new Insets(0, 0, 2, 0);
-        //c.insets = new Insets(10, 10, 10, 10);
+        c.insets = new Insets(2, 0, 0, 0);
         if (player == null) {
-            c.fill = GridBagConstraints.HORIZONTAL;
             kills.setText("K");
-        }
-        else
+            c.gridheight = 1;
+        } else {
             kills.setText(player.kills + "");
+            c.gridheight = 2;
+        }
         panel.add(kills, c);
 
         // deaths
@@ -191,15 +207,14 @@ public class ScorePanel extends JPanel {
         c.weightx = 0.5 / 4;
         c.weighty = 0.1;
         c.gridwidth = 1;
-        c.ipadx = 5;
-        c.insets = new Insets(0, 0, 2, 0);
-        //c.insets = new Insets(10, 10, 10, 10);
+        c.insets = new Insets(2, 0, 0, 0);
         if (player == null) {
-            c.fill = GridBagConstraints.HORIZONTAL;
             deaths.setText("D");
-        }
-        else
+            c.gridheight = 1;
+        } else {
             deaths.setText(player.deaths + "");
+            c.gridheight = 2;
+        }
         panel.add(deaths, c);
 
         // ping
@@ -210,15 +225,14 @@ public class ScorePanel extends JPanel {
         c.gridwidth = 2;
         c.weightx = 0.5 / 2;
         c.weighty = 0.1;
-        c.ipadx = 5;
-        c.insets = new Insets(0, 0, 2, 0);
-        //c.insets = new Insets(10, 10, 10, 10);
+        c.insets = new Insets(2, 0, 0, 0);
         if (player == null) {
-            c.fill = GridBagConstraints.HORIZONTAL;
             ping.setText("PING");
-        }
-        else
+            c.gridheight = 1;
+        } else {
             ping.setText(player.ping + "");
+            c.gridheight = 2;
+        }
         panel.add(ping, c);
     }
 
@@ -228,6 +242,7 @@ public class ScorePanel extends JPanel {
         c.gridy = gridy;
         c.gridwidth = 8;
         c.weighty = 0.1;
+        c.gridheight = 2;
         JPanel empty = new JPanel();
         empty.setOpaque(false);
         panel.add(empty, c);
@@ -246,17 +261,17 @@ public class ScorePanel extends JPanel {
         // Players
         for (Player player : game.players) {
             if (player.team == Team.RED)
-                generateRow(red.players, redIndex++, player);
+                generateRow(red.players, ((redIndex++ - 1) * 2) + 1, player);
             else if (player.team == Team.BLUE)
-                generateRow(blue.players, blueIndex++, player);
+                generateRow(blue.players, ((blueIndex++ - 1) * 2) + 1, player);
         }
 
         // Pad out to the bottom
         GridBagConstraints c;
         while (redIndex - 1 < TEAMSIZE)
-            generateEmptyRow(red.players, redIndex++);
+            generateEmptyRow(red.players, ((redIndex++ - 1) * 2) + 1);
         while (blueIndex - 1 < TEAMSIZE)
-            generateEmptyRow(blue.players, blueIndex++);
+            generateEmptyRow(blue.players, ((blueIndex++ - 1) * 2) + 1);
 
         // Score
         blue.score.setText(game.getScore(Team.BLUE) + "");
