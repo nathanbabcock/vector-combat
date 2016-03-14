@@ -7,7 +7,6 @@ import network.GameClient;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 
 /**
@@ -28,7 +27,7 @@ public class ScorePanel extends JPanel {
         open = false;
 
         setVisible(false);
-        setLayout(new GridLayout(1, 2));
+        setLayout(new GridLayout(1, 2, 20, 0));
         //setBackground(Color.LIGHT_GRAY);
         setOpaque(false);
 
@@ -108,63 +107,144 @@ public class ScorePanel extends JPanel {
 
             players = new JPanel();
             players.setOpaque(false);
-            players.setLayout(new GridLayout(TEAMSIZE + 1, 1));
+            players.setLayout(new GridBagLayout());
             add(title, BorderLayout.NORTH);
             add(players, BorderLayout.CENTER);
         }
     }
 
-    private class ScoreRow extends JPanel {
-        JTextField name, kills, deaths, ping;
+    private void generateRow(JPanel panel, int gridy, Player player) {
+        JTextField name = new JTextField();
+        JTextField kills = new JTextField();
+        JTextField deaths = new JTextField();
+        JTextField ping = new JTextField();
 
-        public ScoreRow() {
-            setOpaque(false);
-            setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
-            name = new JTextField();
-            kills = new JTextField();
-            deaths = new JTextField();
-            ping = new JTextField();
-            for (JTextField text : new JTextField[]{name, kills, deaths, ping}) {
-                text.setEditable(false);
-                text.setFocusable(false);
-                text.setOpaque(false);
-                text.setBorder(null);
-                text.setHorizontalAlignment(SwingConstants.CENTER);
-                text.setFont(GameClient.FONT_TEXT);
-                add(text);
+        Color color = Color.GRAY;
+        if (player == null)
+            color = new Color(255, 255, 255, 128);
+        else if (player.team == Team.RED)
+            color = new Color(255, 0, 0, 128);
+        else if (player.team == Team.BLUE)
+            color = new Color(0, 0, 255, 128);
+
+        for (JTextField text : new JTextField[]{name, kills, deaths, ping}) {
+            if (player == null) {
+                text.setFont(GameClient.FONT_TEXT.deriveFont(11f));
+                text.setForeground(Color.BLACK);
+            } else {
+                text.setFont(GameClient.FONT_TEXT.deriveFont(14f));
+                text.setForeground(Color.WHITE);
             }
+
+            text.setEditable(false);
+            text.setFocusable(false);
+            text.setBorder(null);
+            text.setHorizontalAlignment(SwingConstants.CENTER);
+            text.setBackground(color);
         }
+
+        GridBagConstraints c;
+
+        // Name
+        c = new GridBagConstraints();
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 0;
+        c.gridy = gridy;
+        c.gridwidth = 4;
+        c.weightx = 0.5;
+        c.weighty = 0.1;
+        c.ipady = 10;
+        c.insets = new Insets(10, 10, 10, 10);
+        name.setHorizontalAlignment(SwingConstants.LEFT);
+        if (player == null)
+            name.setText("PLAYER");
+        else
+            name.setText(player.clientName);
+        panel.add(name, c);
+
+        // kills
+        c = new GridBagConstraints();
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 4;
+        c.gridy = gridy;
+        c.weightx = 0.5 / 4;
+        c.weighty = 0.1;
+        c.gridwidth = 1;
+        c.insets = new Insets(10, 10, 10, 10);
+        if (player == null)
+            kills.setText("K");
+        else
+            kills.setText(player.kills + "");
+        panel.add(kills, c);
+
+        // deaths
+        c = new GridBagConstraints();
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 5;
+        c.gridy = gridy;
+        c.weightx = 0.5 / 4;
+        c.weighty = 0.1;
+        c.gridwidth = 1;
+        c.insets = new Insets(10, 10, 10, 10);
+        if (player == null)
+            deaths.setText("D");
+        else
+            deaths.setText(player.deaths + "");
+        panel.add(deaths, c);
+
+        // ping
+        c = new GridBagConstraints();
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 6;
+        c.gridy = gridy;
+        c.gridwidth = 2;
+        c.weightx = 0.5 / 2;
+        c.weighty = 0.1;
+        c.insets = new Insets(10, 10, 10, 10);
+        if (player == null)
+            ping.setText("PING");
+        else
+            ping.setText(player.ping + "");
+        panel.add(ping, c);
+    }
+
+    private void generateEmptyRow(JPanel panel, int gridy) {
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = gridy;
+        c.gridwidth = 8;
+        c.weighty = 0.1;
+        JPanel empty = new JPanel();
+        empty.setOpaque(false);
+        panel.add(empty, c);
     }
 
     public void update() {
-//        System.out.println("Updating score");
+        red.players.removeAll();
+        blue.players.removeAll();
+        int redIndex = 0;
+        int blueIndex = 0;
 
         // Header
-        for (JPanel players : new JPanel[]{blue.players, red.players}) {
-            players.removeAll();
-            ScoreRow header = new ScoreRow();
-            header.name.setText("PLAYER");
-            header.kills.setText("K");
-            header.deaths.setText("D");
-            header.ping.setText("PING");
-            for (JTextComponent text : new JTextComponent[]{header.name, header.kills, header.deaths, header.ping})
-                text.setFont(GameClient.FONT_TEXT.deriveFont(11f));
-            players.add(header);
-        }
+        generateRow(red.players, redIndex++, null);
+        generateRow(blue.players, blueIndex++, null);
 
+        // Players
         for (Player player : game.players) {
-            ScoreRow row = new ScoreRow();
-            String name = player.clientName;
-            row.name.setText(name);
-            row.kills.setText(player.kills + "");
-            row.deaths.setText(player.deaths + "");
-            row.ping.setText(player.ping + "");
-            if (player.team == Team.BLUE)
-                blue.players.add(row);
-            else if (player.team == Team.RED)
-                red.players.add(row);
+            if (player.team == Team.RED)
+                generateRow(red.players, redIndex++, player);
+            else if (player.team == Team.BLUE)
+                generateRow(blue.players, blueIndex++, player);
         }
 
+        // Pad out to the bottom
+        GridBagConstraints c;
+        while (redIndex - 1 < TEAMSIZE)
+            generateEmptyRow(red.players, redIndex++);
+        while (blueIndex - 1 < TEAMSIZE)
+            generateEmptyRow(blue.players, blueIndex++);
+
+        // Score
         blue.score.setText(game.getScore(Team.BLUE) + "");
         red.score.setText(game.getScore(Team.RED) + "");
 
