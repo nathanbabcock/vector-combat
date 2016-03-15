@@ -430,6 +430,23 @@ public class Game {
                 .setTime(NINJA_RUN_TIME)
                 .setNext("scout_legs_run_1"));
 
+        // Menu head sprites
+        sprites.add(getSprite("scout_head").copy()
+                .setName("scout_head_menu")
+                .setOffset(-8, 0));
+        sprites.add(new Sprite("commando_head_red")
+                .setImage()
+                .setOffset(-2, -2));
+        sprites.add(new Sprite("commando_head_blue")
+                .setImage()
+                .setOffset(-2, -2));
+        sprites.add(new Sprite("ninja_head_red")
+                .setImage());
+        sprites.add(new Sprite("ninja_head_blue")
+                .setImage());
+        sprites.add(new Sprite("rocketman_head")
+                .setImage());
+
         System.out.println("Finished sprite init");
     }
 

@@ -20,6 +20,8 @@ public class Canvas extends JPanel {
     private Game game;
     public String clientName;
 
+    public Scoreboard scoreboard;
+
     public AffineTransform backup;
     public final int cameraMarginX = 250;
     public final int cameraMarginY = 250;
@@ -38,10 +40,9 @@ public class Canvas extends JPanel {
         this.game = game;
         this.clientName = clientName;
         xhair = new Point2f(0, 0);
-
         cameraOffsetX = cameraOffsetY = 0;
 
-//        layoutUI();
+        scoreboard = new Scoreboard(game);
     }
 
 //    private void layoutUI() {
@@ -82,7 +83,7 @@ public class Canvas extends JPanel {
             entity.draw(this, g2);
 
         // UI
-//        drawUI(g2);
+        drawGUI(g2);
 
        /* // Physics graphs
         positionGraph.add(height - player.y);
@@ -102,6 +103,14 @@ public class Canvas extends JPanel {
     /* // Draw origin
         g2.setColor(Color.RED);
         g2.drawRect(0, height - 1, 1, 1);*/
+    }
+
+    private void drawGUI(Graphics2D g2) {
+        if (scoreboard.open) {
+            g2 = (Graphics2D) g2.create();
+            g2.translate((getWidth() - scoreboard.width) / 2, (getHeight() - scoreboard.height) / 2);
+            scoreboard.draw(g2);
+        }
     }
 
     private void drawUI(Graphics2D g2) {

@@ -489,7 +489,8 @@ public class GameClient extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (messageMode != 0 || menu.open) return;
-                scores.open();
+                //scores.open();
+                canvas.scoreboard.open = true;
                 am.remove("tabPressed");
             }
         };
@@ -501,7 +502,8 @@ public class GameClient extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (messageMode != 0 || menu.open) return;
-                scores.close();
+                //scores.close();
+                canvas.scoreboard.open = false;
                 am.put("tabPressed", tabPressed);
             }
         };

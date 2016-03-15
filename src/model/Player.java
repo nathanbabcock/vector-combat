@@ -94,4 +94,12 @@ public class Player {
         if (charClass != other.charClass)
             charClass = other.charClass;
     }
+
+    public boolean isRed() {
+        return team == Team.RED;
+    }
+
+    public boolean isBlue() {
+        return team == Team.BLUE;
+    }
 }

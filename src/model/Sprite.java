@@ -13,6 +13,26 @@ public class Sprite {
     public float time;
     public BufferedImage image;
 
+    public Sprite copy() {
+        Sprite sprite = new Sprite(name);
+        sprite.width = width;
+        sprite.height = height;
+        sprite.offsetX = offsetX;
+        sprite.offsetY = offsetY;
+        sprite.rotationX = rotationX;
+        sprite.rotationY = rotationY;
+        sprite.next = next;
+        sprite.interruptible = interruptible;
+        sprite.time = time;
+        sprite.image = image;
+        return sprite;
+    }
+
+    public Sprite setName(String name) {
+        this.name = name;
+        return this;
+    }
+
     public Sprite(String name) {
         this.name = name;
         interruptible = true;
