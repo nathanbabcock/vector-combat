@@ -5,7 +5,6 @@ import com.esotericsoftware.kryonet.Listener;
 import model.Game;
 import model.Player;
 import model.characters.CharClass;
-import model.characters.Character;
 import model.characters.Team;
 import model.geometry.Point2f;
 import view.Canvas;
@@ -96,9 +95,9 @@ public class GameClient extends JFrame {
                     if (object instanceof Game) {
                         if (game == null) { // First time game received
                             initGame((Game) object);
-                            if (debug) {
-                                inputState.xhair = new Point2f(1000, 30);
-                                inputState.attacking = true;
+                            if (true) { // DEBUG
+                                //inputState.xhair = new Point2f(1000, 30);
+                                //inputState.attacking = true;
                                 client.sendTCP(new SpawnParams(Team.BLUE, CharClass.ROCKETMAN));
                             }
                         } else {
@@ -212,7 +211,7 @@ public class GameClient extends JFrame {
         // Menu
         menu = new MenuPanel();
         lp.add(menu, LAYER_OVERLAY);
-        menu.open();
+        //menu.open();
 
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -488,7 +487,7 @@ public class GameClient extends JFrame {
         Action tabPressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (messageMode != 0 || menu.open) return;
+                if (messageMode != 0 || canvas.menu.open) return;
                 //scores.open();
                 canvas.scoreboard.open = true;
                 am.remove("tabPressed");
@@ -501,7 +500,7 @@ public class GameClient extends JFrame {
         Action tabReleased = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (messageMode != 0 || menu.open) return;
+                if (messageMode != 0 || canvas.menu.open) return;
                 //scores.close();
                 canvas.scoreboard.open = false;
                 am.put("tabPressed", tabPressed);
@@ -517,17 +516,15 @@ public class GameClient extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if (messageMode != 0)
                     hideChat();
-                else if (menu.open) {
-                    menu.close();
+                else if (canvas.menu.open) {
+                    canvas.menu.open = false;
                     final Player player = game.getPlayer(clientName);
-                    Character character = player.character;
-//                    System.out.println(player.team+", "+menu.teamSelector.selectedTeam);
-                    if (player.team != menu.teamSelector.selectedTeam || player.charClass != menu.classSelector.selectedClass)
-                        spawnParams = new SpawnParams(menu.teamSelector.selectedTeam, menu.classSelector.selectedClass);
+                    if (player.team != canvas.menu.selectedTeam || player.charClass != canvas.menu.selectedClass)
+                        spawnParams = new SpawnParams(canvas.menu.selectedTeam, canvas.menu.selectedClass);
                 } else {
-                    if (scores.open)
-                        scores.close();
-                    menu.open();
+                    if (canvas.scoreboard.open)
+                        canvas.scoreboard.open = false;
+                    canvas.menu.open = true;
                 }
             }
         };
@@ -537,7 +534,11 @@ public class GameClient extends JFrame {
         canvas.addMouseListener(new MouseListener() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if (messageMode != 0 || menu.open) return;
+                if (messageMode != 0) return;
+                if (canvas.menu.open) {
+                    canvas.menu.checkClick(e.getX(), e.getY());
+                    return;
+                }
                 if (SwingUtilities.isRightMouseButton(e))
                     inputState.altAttacking = true;
                 else
@@ -568,14 +569,14 @@ public class GameClient extends JFrame {
         canvas.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                if (messageMode != 0 || menu.open) return;
+                if (messageMode != 0 || canvas.menu.open) return;
                 Point xhair = e.getPoint();
                 canvas.xhair = new Point2f(xhair.x, xhair.y);
             }
 
             @Override
             public void mouseMoved(MouseEvent e) {
-                if (messageMode != 0 || menu.open) return;
+                if (messageMode != 0 || canvas.menu.open) return;
                 Point xhair = e.getPoint();
                 canvas.xhair = new Point2f(xhair.x, xhair.y);
             }

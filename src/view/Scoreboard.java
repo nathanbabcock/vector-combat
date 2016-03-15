@@ -24,10 +24,6 @@ public class Scoreboard {
         this.game = game;
     }
 
-    public static void drawString_centerHoriz(Graphics2D g2, String string, int containerX, int y, int containerWidth) {
-        g2.drawString(string, containerX + (containerWidth - g2.getFontMetrics().stringWidth(string)) / 2, y);
-//        g2.drawRect(containerX, y - g2.getFontMetrics().getHeight(), containerWidth, g2.getFontMetrics().getHeight());
-    }
 
     public static void drawPingIcon(Graphics2D g2, int bars) {
         final int size = 2;
@@ -127,9 +123,9 @@ public class Scoreboard {
             g.setColor(Color.BLACK);
             g.setFont(tableheader_font);
             g.drawString("PLAYER", table_edgepadding, tableheader_height - tableheader_paddingbottom); // Player
-            drawString_centerHoriz(g, "PING", col_width - ping_width, tableheader_height - tableheader_paddingbottom, ping_width); // Ping
-            drawString_centerHoriz(g, "D", col_width - ping_width - k_width, tableheader_height - tableheader_paddingbottom, k_width); // Deaths
-            drawString_centerHoriz(g, "K", col_width - ping_width - 2 * k_width, tableheader_height - tableheader_paddingbottom, k_width); // Kills
+            GUI.drawString_centerHoriz(g, "PING", col_width - ping_width, tableheader_height - tableheader_paddingbottom, ping_width); // Ping
+            GUI.drawString_centerHoriz(g, "D", col_width - ping_width - k_width, tableheader_height - tableheader_paddingbottom, k_width); // Deaths
+            GUI.drawString_centerHoriz(g, "K", col_width - ping_width - 2 * k_width, tableheader_height - tableheader_paddingbottom, k_width); // Kills
         }
 
         // TABLE ROWS
@@ -178,9 +174,9 @@ public class Scoreboard {
             g.setColor(Color.WHITE);
             g.setFont(row_font);
             g.drawString(player.clientName, table_edgepadding * 2 + head_height, row_height - row_paddingbottom); // Name
-            drawString_centerHoriz(g, player.ping + "", col_width - ping_width, row_height - row_paddingbottom, ping_width - 11); // Ping
-            drawString_centerHoriz(g, player.deaths + "", col_width - ping_width - k_width, row_height - row_paddingbottom, k_width); // Deaths
-            drawString_centerHoriz(g, player.kills + "", col_width - ping_width - 2 * k_width, row_height - row_paddingbottom, k_width); // Kills
+            GUI.drawString_centerHoriz(g, player.ping + "", col_width - ping_width, row_height - row_paddingbottom, ping_width - 11); // Ping
+            GUI.drawString_centerHoriz(g, player.deaths + "", col_width - ping_width - k_width, row_height - row_paddingbottom, k_width); // Deaths
+            GUI.drawString_centerHoriz(g, player.kills + "", col_width - ping_width - 2 * k_width, row_height - row_paddingbottom, k_width); // Kills
 
             Graphics2D ping = (Graphics2D) g.create();
             ping.translate(col_width - 17, row_paddingbottom);

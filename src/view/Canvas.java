@@ -21,6 +21,7 @@ public class Canvas extends JPanel {
     public String clientName;
 
     public Scoreboard scoreboard;
+    public PauseMenu menu;
 
     public AffineTransform backup;
     public final int cameraMarginX = 250;
@@ -43,6 +44,7 @@ public class Canvas extends JPanel {
         cameraOffsetX = cameraOffsetY = 0;
 
         scoreboard = new Scoreboard(game);
+        menu = new PauseMenu(game);
     }
 
 //    private void layoutUI() {
@@ -82,8 +84,19 @@ public class Canvas extends JPanel {
         for (Entity entity : game.entities)
             entity.draw(this, g2);
 
-        // UI
-        drawGUI(g2);
+        // GUI --------------------------------
+
+        // Scoreboard
+        if (scoreboard.open) {
+            Graphics2D g3 = (Graphics2D) g2.create();
+            g3.translate((getWidth() - scoreboard.width) / 2, (getHeight() - scoreboard.height) / 2);
+            scoreboard.draw(g3);
+        }
+
+        if (menu.open) {
+            Graphics2D g3 = (Graphics2D) g2.create();
+            menu.draw(g3, getWidth(), getHeight());
+        }
 
        /* // Physics graphs
         positionGraph.add(height - player.y);
@@ -106,11 +119,7 @@ public class Canvas extends JPanel {
     }
 
     private void drawGUI(Graphics2D g2) {
-        if (scoreboard.open) {
-            g2 = (Graphics2D) g2.create();
-            g2.translate((getWidth() - scoreboard.width) / 2, (getHeight() - scoreboard.height) / 2);
-            scoreboard.draw(g2);
-        }
+
     }
 
     private void drawUI(Graphics2D g2) {

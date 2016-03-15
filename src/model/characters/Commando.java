@@ -211,4 +211,15 @@ public class Commando extends Character {
         arms = otherCommando.arms;
         armSpriteTime = otherCommando.armSpriteTime;
     }
+
+    @Override
+    public String getName() {
+        return "Commando";
+    }
+
+
+    @Override
+    public CharClass getCharClass() {
+        return CharClass.COMMANDO;
+    }
 }

@@ -444,4 +444,16 @@ public class Ninja extends Character {
 //        g3.fillRect(((int) rot.x), -((int) rot.y), 3, 3);
 //        g3.fillRect(((int) proj.x), -((int) proj.y), 3, 3);
     }
+
+    @Override
+    public String getName() {
+        return "Ninja";
+    }
+
+
+    @Override
+    public CharClass getCharClass() {
+        return CharClass.NINJA;
+    }
+
 }

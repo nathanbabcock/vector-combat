@@ -165,4 +165,15 @@ public class Rocketman extends Character {
         arms = otherRocketman.arms;
         armSpriteTime = otherRocketman.armSpriteTime;
     }
+
+    @Override
+    public String getName() {
+        return "Rocketman";
+    }
+
+
+    @Override
+    public CharClass getCharClass() {
+        return CharClass.ROCKETMAN;
+    }
 }

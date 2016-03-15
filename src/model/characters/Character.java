@@ -237,4 +237,8 @@ abstract public class Character extends AABB {
         draw(canvas, g2);
     }
 
+    abstract public String getName();
+
+    abstract public CharClass getCharClass();
+
 }
