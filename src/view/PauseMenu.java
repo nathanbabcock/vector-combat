@@ -19,7 +19,7 @@ public class PauseMenu {
 
     public boolean open;
     public CharClass selectedClass;
-    public Team selectedTeam;
+    public Team selectedTeam = Team.BLUE;
 
     int totwidth;
 
@@ -112,14 +112,33 @@ public class PauseMenu {
         for (Character cClass : classes) {
             cClass.draw(charCanvas); // Class image
             GUI.drawString_centerHoriz(charCanvas, cClass.getName(), -char_padding / 2, 30, (int) (cClass.width + char_padding)); // Class name
-            charCanvas.translate(cClass.width + char_padding, 0);
+
+            final int triangle_width = 15;
+            final int triangle_height = 10;
+            final int triangle_margintop = 10;
 
 //            if(selectedClass == cClass.getCharClass())
 //                charCanvas.drawPolygon(new int[]{}, new int[]{}, 3);
 
             // TODO draw a triangle here
 
-            //Clickable click = clickables.get(i++);
+            final int triangleCenter = (int) (cClass.width / 2);
+
+            if (selectedClass == cClass.getCharClass())
+                charCanvas.fillPolygon( // Selector triangle
+                        new int[]{triangleCenter - triangle_width / 2, triangleCenter, triangleCenter + triangle_width / 2},
+                        new int[]{30 + triangle_margintop + triangle_height, 30 + triangle_margintop, 30 + triangle_margintop + triangle_height},
+                        3);
+
+            charCanvas.translate(cClass.width + char_padding, 0);
         }
+
+        // Menu buttons
+        final int menu_width = 500;
+        final int menu_height = 400;
+        Graphics2D menuC = (Graphics2D) g2.create();
+        menuC.translate((width - menu_width) / 2, (height - menu_height) / 2);
+        menuC.setColor(new Color(1, 0, 0, 0.5f));
+        menuC.fillRect(0, 0, menu_width, menu_height);
     }
 }
