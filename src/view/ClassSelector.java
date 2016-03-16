@@ -29,7 +29,6 @@ public class ClassSelector extends JPanel {
                 new ClassPortrait(new Scout(new Player()))
         };
 
-
         for (int i = 0; i < classes.length; i++) {
             final CharClass newClass = classes[i];
             ClassPortrait current = portraits[i];

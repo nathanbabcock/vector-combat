@@ -25,12 +25,12 @@ import java.util.concurrent.TimeUnit;
  * Created by Nathan on 1/10/2016.
  */
 public class GameClient extends JFrame {
-    Game game;
+    public Game game;
     com.esotericsoftware.kryonet.Client client;
-    String clientName;
+    public String clientName;
     InputState inputState;
     ArrayList<ChatMessage> chatQueue;
-    SpawnParams spawnParams;
+    public SpawnParams spawnParams;
 
     static final int PREF_WIDTH = 1024;
     static final int PREF_HEIGHT = 768;
@@ -209,7 +209,7 @@ public class GameClient extends JFrame {
         lp.add(scores, LAYER_OVERLAY);
 
         // Menu
-        menu = new MenuPanel();
+        menu = new MenuPanel(this);
         lp.add(menu, LAYER_OVERLAY);
         //menu.open();
 
@@ -251,9 +251,11 @@ public class GameClient extends JFrame {
         scores.setBounds((int) ((realWidth - scoresWidth) / 2f), (int) ((realHeight - scoresHeight) / 2f), scoresWidth, scoresHeight);
 
         // Pause
-        final int menuWidth = 500;
-        final int menuHeight = 300;
-        menu.setBounds((int) ((realWidth - menuWidth) / 2f), (int) ((realHeight - menuHeight) / 2f), menuWidth, menuHeight);
+        //final int menuWidth = 500;
+        //final int menuHeight = 300;
+        //menu.setBounds((int) ((realWidth - menuWidth) / 2f), (int) ((realHeight - menuHeight) / 2f), menuWidth, menuHeight);
+        menu.setBounds(0, 0, realWidth, realHeight);
+        menu.layoutGUI();
 
         // HUD
         // Health
@@ -487,7 +489,7 @@ public class GameClient extends JFrame {
         Action tabPressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (messageMode != 0 || canvas.menu.open) return;
+                if (messageMode != 0 || menu.open) return;
                 //scores.open();
                 canvas.scoreboard.open = true;
                 am.remove("tabPressed");
@@ -500,7 +502,7 @@ public class GameClient extends JFrame {
         Action tabReleased = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (messageMode != 0 || canvas.menu.open) return;
+                if (messageMode != 0 || menu.open) return;
                 //scores.close();
                 canvas.scoreboard.open = false;
                 am.put("tabPressed", tabPressed);
@@ -516,15 +518,12 @@ public class GameClient extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if (messageMode != 0)
                     hideChat();
-                else if (canvas.menu.open) {
-                    canvas.menu.open = false;
-                    final Player player = game.getPlayer(clientName);
-                    if (player.team != canvas.menu.selectedTeam || player.charClass != canvas.menu.selectedClass)
-                        spawnParams = new SpawnParams(canvas.menu.selectedTeam, canvas.menu.selectedClass);
+                else if (menu.open) {
+                    menu.close();
                 } else {
                     if (canvas.scoreboard.open)
                         canvas.scoreboard.open = false;
-                    canvas.menu.open = true;
+                    menu.open();
                 }
             }
         };
@@ -534,11 +533,7 @@ public class GameClient extends JFrame {
         canvas.addMouseListener(new MouseListener() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if (messageMode != 0) return;
-                if (canvas.menu.open) {
-                    canvas.menu.checkClick(e.getX(), e.getY());
-                    return;
-                }
+                if (messageMode != 0 || menu.open) return;
                 if (SwingUtilities.isRightMouseButton(e))
                     inputState.altAttacking = true;
                 else
@@ -569,14 +564,14 @@ public class GameClient extends JFrame {
         canvas.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                if (messageMode != 0 || canvas.menu.open) return;
+                if (messageMode != 0 || menu.open) return;
                 Point xhair = e.getPoint();
                 canvas.xhair = new Point2f(xhair.x, xhair.y);
             }
 
             @Override
             public void mouseMoved(MouseEvent e) {
-                if (messageMode != 0 || canvas.menu.open) return;
+                if (messageMode != 0 || menu.open) return;
                 Point xhair = e.getPoint();
                 canvas.xhair = new Point2f(xhair.x, xhair.y);
             }

@@ -21,7 +21,7 @@ public class Canvas extends JPanel {
     public String clientName;
 
     public Scoreboard scoreboard;
-    public PauseMenu menu;
+    //public PauseMenu menu;
 
     public AffineTransform backup;
     public final int cameraMarginX = 250;
@@ -44,7 +44,7 @@ public class Canvas extends JPanel {
         cameraOffsetX = cameraOffsetY = 0;
 
         scoreboard = new Scoreboard(game);
-        menu = new PauseMenu(game);
+        //menu = new PauseMenu(game);
     }
 
 //    private void layoutUI() {
@@ -93,10 +93,10 @@ public class Canvas extends JPanel {
             scoreboard.draw(g3);
         }
 
-        if (menu.open) {
-            Graphics2D g3 = (Graphics2D) g2.create();
-            menu.draw(g3, getWidth(), getHeight());
-        }
+//        if (menu.open) {
+//            Graphics2D g3 = (Graphics2D) g2.create();
+//            menu.draw(g3, getWidth(), getHeight());
+//        }
 
        /* // Physics graphs
         positionGraph.add(height - player.y);

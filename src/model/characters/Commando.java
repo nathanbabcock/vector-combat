@@ -40,6 +40,10 @@ public class Commando extends Character {
         if (player.team == Team.BLUE)
             team = "blue";
 
+        System.out.println("Updating commando sprite");
+        System.out.println("Team = " + team);
+
+
         if (sprite == null) {
             sprite = Game.getSprite("commando_body_" + team);
             legs = Game.getSprite("legs_stand");
