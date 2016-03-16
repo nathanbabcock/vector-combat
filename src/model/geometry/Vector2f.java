@@ -105,8 +105,21 @@ public class Vector2f {
         return x * other.x + y * other.y;
     }
 
+    public float dot(Point2f other) {
+        return x * other.x + y * other.y;
+    }
+
     public Vector2f normal() {
-        return copy().setDirection((float) (getDirection() + Math.toRadians(90)));
+        Vector2f normal = copy();
+        float temp = normal.x;
+        normal.x = -y;
+        normal.y = temp;
+        return normal;
+        //return copy().setDirection((float) (getDirection() + Math.toRadians(90)));
+    }
+
+    public Vector2f normalize() {
+        return setMagnitude(1f);
     }
 
     public Vector2f project(Vector2f onto) {
