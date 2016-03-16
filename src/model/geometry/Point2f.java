@@ -19,10 +19,14 @@ public class Point2f {
         this.y = y;
     }
 
-    public Point2f translate(Vector2f vector) {
-        x += vector.x;
-        y += vector.y;
+    public Point2f translate(float x, float y) {
+        this.x += x;
+        this.y += y;
         return this;
+    }
+
+    public Point2f translate(Vector2f v) {
+        return translate(v.x, v.y);
     }
 
     public void rotate(float angle) {
