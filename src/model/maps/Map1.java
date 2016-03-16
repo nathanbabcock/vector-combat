@@ -1,7 +1,7 @@
 package model.maps;
 
-import model.geometry.AABB;
 import model.geometry.Point2f;
+import model.geometry.Polygon;
 
 import java.util.ArrayList;
 
@@ -18,14 +18,14 @@ public class Map1 extends Map {
         width = height = 2000;
 
         statics = new ArrayList<>();
-        statics.add(new AABB(null, 0, 0, 2000, 64));
-        statics.add(new AABB(null, 0, 128, 400, 40));
-        statics.add(new AABB(null, 1600, 128, 400, 40));
-        statics.add(new AABB(null, 600, 256, 400, 40));
+        statics.add(new Polygon().makeAABB(0, 0, 2000, 64));
+        statics.add(new Polygon().makeAABB(0, 128, 400, 40));
+        statics.add(new Polygon().makeAABB(1600, 128, 400, 40));
+        statics.add(new Polygon().makeAABB(600, 256, 400, 40));
 
-        statics.add(new AABB(null, 0, 0, 40, 1000));
-        statics.add(new AABB(null, 600, 400, 40, 1000));
-        statics.add(new AABB(null, 200, 400, 40, 1000));
+        statics.add(new Polygon().makeAABB(0, 0, 40, 1000));
+        statics.add(new Polygon().makeAABB(600, 400, 40, 1000));
+        statics.add(new Polygon().makeAABB(200, 400, 40, 1000));
 
         spawnpoints_red = new ArrayList();
         spawnpoints_red.add(new Point2f(400, 850));

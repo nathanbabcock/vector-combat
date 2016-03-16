@@ -46,7 +46,7 @@ public class PauseMenu {
         classes = new Character[]{rocketman, ninja, commando, scout};
 
         for (Character cClass : classes) {
-            totwidth += cClass.width + char_padding;
+            totwidth += cClass.getWidth() + char_padding;
             cClass.xhair = new Point2f(Integer.MAX_VALUE, 0);
             cClass.onGround = true;
             cClass.updateSprite(0);
@@ -77,7 +77,7 @@ public class PauseMenu {
         int yOffset = char_height;
 
         for (Character cClass : classes) {
-            Clickable click = new Clickable(xOffset - char_padding / 2, (int) (yOffset - cClass.height + 30), (int) cClass.width + char_padding, (int) cClass.height + 30);
+            Clickable click = new Clickable(xOffset - char_padding / 2, (int) (yOffset - cClass.getHeight() + 30), (int) cClass.getWidth() + char_padding, (int) cClass.getHeight() + 30);
             click.listener = new Clickable.Listener() {
                 @Override
                 public void onClick() {
@@ -91,7 +91,7 @@ public class PauseMenu {
                 }
             };
             clickables.add(click);
-            xOffset += cClass.width + char_padding;
+            xOffset += cClass.getWidth() + char_padding;
         }
     }
 
@@ -111,7 +111,7 @@ public class PauseMenu {
         int i = 0;
         for (Character cClass : classes) {
             cClass.draw(charCanvas); // Class image
-            GUI.drawString_centerHoriz(charCanvas, cClass.getName(), -char_padding / 2, 30, (int) (cClass.width + char_padding)); // Class name
+            GUI.drawString_centerHoriz(charCanvas, cClass.getName(), -char_padding / 2, 30, (int) (cClass.getWidth() + char_padding)); // Class name
 
             final int triangle_width = 15;
             final int triangle_height = 10;
@@ -122,7 +122,7 @@ public class PauseMenu {
 
             // TODO draw a triangle here
 
-            final int triangleCenter = (int) (cClass.width / 2);
+            final int triangleCenter = (int) (cClass.getWidth() / 2);
 
             if (selectedClass == cClass.getCharClass())
                 charCanvas.fillPolygon( // Selector triangle
@@ -130,7 +130,7 @@ public class PauseMenu {
                         new int[]{30 + triangle_margintop + triangle_height, 30 + triangle_margintop, 30 + triangle_margintop + triangle_height},
                         3);
 
-            charCanvas.translate(cClass.width + char_padding, 0);
+            charCanvas.translate(cClass.getWidth() + char_padding, 0);
         }
 
         // Menu buttons

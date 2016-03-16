@@ -100,8 +100,8 @@ public class ClassSelector extends JPanel {
             this.character = character;
             character.player.team = Team.RED;
             character.xhair = new Point2f(Integer.MAX_VALUE, 0);
-            character.position.x = (width - character.width) / 2; // TODO the 500 is the hardcoded pause menu width
-            character.position.y = (height - character.height) / 2;
+            character.getPosition().x = (width - character.getWidth()) / 2; // TODO the 500 is the hardcoded pause menu width
+            character.getPosition().y = (height - character.getHeight()) / 2;
             character.onGround = true;
             character.updateSprite(0);
 

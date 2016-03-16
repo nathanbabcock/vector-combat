@@ -1,7 +1,7 @@
 package model.maps;
 
-import model.geometry.AABB;
 import model.geometry.Point2f;
+import model.geometry.Polygon;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -15,6 +15,6 @@ public abstract class Map {
     public BufferedImage background;
     public int width, height;
     //    public ArrayList<Line2D> boundaries;
-    public ArrayList<AABB> statics;
+    public ArrayList<Polygon> statics;
     public ArrayList<Point2f> spawnpoints_red, spawnpoints_blue;
 }

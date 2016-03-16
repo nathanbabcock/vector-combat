@@ -1,24 +1,64 @@
 package model.geometry;
 
 import model.Collision;
+import model.Game;
+import view.Canvas;
 
+import java.awt.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Nathan on 3/15/2016.
  */
-public class Polygon {
-    public List<Point2f> vertices;
+public class Polygon implements Serializable {
+    public transient Game game;
 
-    Polygon(List<Point2f> vertices) {
+    public List<Point2f> vertices;
+    public Vector2f velocity, acceleration;
+
+    public Polygon() {
+        velocity = new Vector2f(0, 0);
+        acceleration = new Vector2f(0, 0);
+    }
+
+
+    public Polygon(Game game) {
+        this();
+        this.game = game;
+    }
+
+    public Polygon(Game game, List<Point2f> vertices) {
+        this(game);
         this.vertices = vertices;
     }
 
-    public Polygon() {
+    public Point2f getCenter() {
+        return getBottomLeft().translate(getWidth() / 2, getHeight() / 2);
     }
 
-    List<Vector2f> getSides() {
+    public float getWidth() {
+        float min = Float.MAX_VALUE;
+        float max = Float.MIN_VALUE;
+        for (Point2f v : vertices) {
+            min = Math.min(min, v.x);
+            max = Math.max(max, v.x);
+        }
+        return max - min;
+    }
+
+    public float getHeight() {
+        float min = Float.MAX_VALUE;
+        float max = Float.MIN_VALUE;
+        for (Point2f v : vertices) {
+            min = Math.min(min, v.y);
+            max = Math.max(max, v.y);
+        }
+        return max - min;
+    }
+
+    public List<Vector2f> getSides() {
         List<Vector2f> sides = new ArrayList<>();
         for (int i = 0; i < vertices.size() - 1; i++)
             sides.add(new Vector2f(vertices.get(i), vertices.get(i + 1)));
@@ -27,7 +67,7 @@ public class Polygon {
     }
 
     // TODO will list duplicate normals for parallel sides
-    List<Vector2f> getNormals() {
+    public List<Vector2f> getNormals() {
         List<Vector2f> normals = new ArrayList<>();
         for (Vector2f v : getSides())
             normals.add(v.normal().normalize());
@@ -35,7 +75,11 @@ public class Polygon {
     }
 
     public Point2f getPosition() {
-        return vertices.get(0);
+        return vertices.get(0).copy();
+    }
+
+    public Point2f getBottomLeft() {
+        return getPosition();
     }
 
     public Polygon setPosition(Point2f pos) {
@@ -45,24 +89,66 @@ public class Polygon {
         return this;
     }
 
-    public static Polygon makeAABB(Point2f position, float width, float height) {
-        List<Point2f> vertices = new ArrayList<>();
+    public Polygon setPosition(float x, float y) {
+        return setPosition(new Point2f(x, y));
+    }
+
+    public Polygon displace(Vector2f acc, Vector2f vel, float time) {
+        return setPosition(getPosition().displace(acc, vel, time));
+    }
+
+    public Polygon translate(Vector2f v) {
+        return setPosition(getPosition().translate(v));
+    }
+
+    public Polygon translate(float x, float y) {
+        return setPosition(getPosition().translate(x, y));
+    }
+
+    public java.awt.Polygon getAwtPoly() {
+        java.awt.Polygon polygon = new java.awt.Polygon();
+        for (Point2f v : vertices)
+            polygon.addPoint((int) v.x, (int) v.y);
+        return polygon;
+    }
+
+    public Polygon makeAABB(Point2f position, float width, float height) {
+        vertices = new ArrayList<>();
         vertices.add(position);
         vertices.add(position.copy().translate(width, 0));
         vertices.add(position.copy().translate(width, height));
         vertices.add(position.copy().translate(0, height));
-        return new Polygon(vertices);
+        return this;
     }
 
-    public static Polygon makeAABB(float x, float y, float width, float height) {
+    public Polygon makeAABB(float x, float y, float width, float height) {
         return makeAABB(new Point2f(x, y), width, height);
     }
 
-    public static Polygon makeAABB(int x, int y, int width, int height) {
+    public Polygon makeAABB(int x, int y, int width, int height) {
         return makeAABB((float) x, (float) y, (float) width, (float) height);
     }
 
-    Collision collision(Polygon other) {
+    public void update(float deltaTime) {
+        // Remove if necessary
+//        if (getCenter().x > game.map.width || getCenter().y > game.map.height || getCenter().x < 0 || getCenter().y < 0) {
+//            game.garbage.add(this);
+//            return;
+//        }
+
+        // Move
+        displace(acceleration, velocity, deltaTime);
+
+        // Check collisions
+        checkCollisions();
+    }
+
+
+    public void draw(Canvas canvas, Graphics2D g2) {
+        g2.fillPolygon(getAwtPoly());
+    }
+
+    public Collision collision(Polygon other) {
         float overlap = Float.MAX_VALUE;
         Vector2f smallest = null;
         // Project onto axes
@@ -89,7 +175,7 @@ public class Polygon {
         return collision;
     }
 
-    Projection project(Vector2f axis) {
+    public Projection project(Vector2f axis) {
         float min = Float.MAX_VALUE;
         float max = Float.MIN_VALUE;
         for (Point2f v : vertices) {
@@ -98,13 +184,6 @@ public class Polygon {
             max = Math.max(p, max);
         }
         return new Projection(min, max);
-    }
-
-    java.awt.Polygon getAwtPoly() {
-        java.awt.Polygon polygon = new java.awt.Polygon();
-        for (Point2f v : vertices)
-            polygon.addPoint((int) v.x, (int) v.y);
-        return polygon;
     }
 
     class Projection {
@@ -119,40 +198,40 @@ public class Polygon {
             return (min < other.max && min >= other.min) || (max <= other.max && max > other.min);
         }
 
-        /**
-         * Assumes there is an overlap, and returns the magnitude of it
-         *
-         * @param other
-         * @return
-         */
         public float getOverlap(Projection other) {
             return Math.min(other.max, max) - Math.max(other.min, min);
         }
     }
 
-    public static void main(String[] args) {
-        ArrayList<Point2f> vertices = new ArrayList<>();
-        vertices.add(new Point2f(0, 0));
-        vertices.add(new Point2f(1, 0));
-        vertices.add(new Point2f(0, 1));
-        Polygon poly = new Polygon(vertices);
+//    public static void main(String[] args) {
+//        ArrayList<Point2f> vertices = new ArrayList<>();
+//        vertices.add(new Point2f(0, 0));
+//        vertices.add(new Point2f(1, 0));
+//        vertices.add(new Point2f(0, 1));
+//        Polygon poly = new Polygon(vertices);
+//
+//        ArrayList<Point2f> vertices2 = new ArrayList<>();
+//        vertices2.add(new Point2f(2f, 0));
+//        vertices2.add(new Point2f(3f, 0));
+//        vertices2.add(new Point2f(2f, 1));
+//        Polygon poly2 = new Polygon(vertices);
+//
+//        Collision c = poly.collision(poly2);
+//
+//        if (c == null)
+//            System.out.println(c);
+//        else
+//            System.out.println(c.delta);
+//
+////        for(Vector2f v: poly.getNormals()){
+////            System.out.println(v);
+////        }
+//    }
 
-        ArrayList<Point2f> vertices2 = new ArrayList<>();
-        vertices2.add(new Point2f(2f, 0));
-        vertices2.add(new Point2f(3f, 0));
-        vertices2.add(new Point2f(2f, 1));
-        Polygon poly2 = new Polygon(vertices);
+    public void checkCollisions() {
+    }
 
-        Collision c = poly.collision(poly2);
-
-        if (c == null)
-            System.out.println(c);
-        else
-            System.out.println(c.delta);
-
-//        for(Vector2f v: poly.getNormals()){
-//            System.out.println(v);
-//        }
+    public void handleCollision(Collision collision) {
     }
 
 }

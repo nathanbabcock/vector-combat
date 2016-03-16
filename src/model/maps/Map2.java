@@ -1,7 +1,7 @@
 package model.maps;
 
-import model.geometry.AABB;
 import model.geometry.Point2f;
+import model.geometry.Polygon;
 
 import java.util.ArrayList;
 
@@ -20,25 +20,27 @@ public class Map2 extends Map {
 
         statics = new ArrayList<>();
         // Boundaries
-        statics.add(new AABB(null, 0, 0, width, 64));
-        statics.add(new AABB(null, 0, height - 64, width, 64));
-        statics.add(new AABB(null, 0, 0, 64, height));
-        statics.add(new AABB(null, width - 64, 0, 64, height));
+        statics.add(new Polygon().makeAABB(0, 0, width, 64));
+        statics.add(new Polygon().makeAABB(0, height - 64, width, 64));
+        statics.add(new Polygon().makeAABB(0, 0, 64, height));
+        statics.add(new Polygon().makeAABB(width - 64, 0, 64, height));
+
+
 
         // Tunnel
-        statics.add(new AABB(null, 2000 - 256, 164, 512, 64));
+        statics.add(new Polygon().makeAABB(2000 - 256, 164, 512, 64));
 
         // Center wall
-        statics.add(new AABB(null, 2000 - 32, 164, 64, 500));
+        statics.add(new Polygon().makeAABB(2000 - 32, 164, 64, 500));
 
         // Top
-        statics.add(new AABB(null, 2000 - 100, 500 + 164, 200, 32));
+        statics.add(new Polygon().makeAABB(2000 - 100, 500 + 164, 200, 32));
 
         // Mid left
-        statics.add(new AABB(null, 2000 - 400 - 512, 350, 512, 64));
+        statics.add(new Polygon().makeAABB(2000 - 400 - 512, 350, 512, 64));
 
         // Mid right
-        statics.add(new AABB(null, 2000 + 400, 350, 512, 64));
+        statics.add(new Polygon().makeAABB(2000 + 400, 350, 512, 64));
 
         spawnpoints_blue = new ArrayList();
         spawnpoints_blue.add(new Point2f(100, 200));

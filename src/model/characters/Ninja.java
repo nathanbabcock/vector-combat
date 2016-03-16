@@ -6,8 +6,8 @@ import model.Player;
 import model.Sprite;
 import model.entities.Grapple;
 import model.entities.Rocket;
-import model.geometry.AABB;
 import model.geometry.Point2f;
+import model.geometry.Polygon;
 import model.geometry.Vector2f;
 import view.Canvas;
 
@@ -45,9 +45,7 @@ public class Ninja extends Character {
     public Ninja(Player player) {
         super(player);
         attackInterval = 0.5f;
-
-        width = 50;
-        height = 50;
+        makeAABB(0, 0, 50, 50);
         moveSpeed = 400f;
     }
 
@@ -65,7 +63,7 @@ public class Ninja extends Character {
         if (!onGround && grapple != null) {
             // Player grapple
             if (grapple.grappleChar != null && grapple.velocity.isZero()) {
-                if (grapple.grappleChar.position.x < position.x)
+                if (grapple.grappleChar.getPosition().x < getPosition().x)
                     direction = Direction.LEFT;
                 else
                     direction = Direction.RIGHT;
@@ -147,7 +145,7 @@ public class Ninja extends Character {
     @Override
     public void checkCollisions() {
         // Handle grappling to players
-        if (grapple != null && grapple.velocity.isZero() && grapple.grappleChar != null && getCenter().distance(grapple.grappleChar.getCenter()) <= width) {
+        if (grapple != null && grapple.velocity.isZero() && grapple.grappleChar != null && getCenter().distance(grapple.grappleChar.getCenter()) <= getWidth()) {
             Vector2f knockback = new Vector2f(getCenter(), grapple.grappleChar.getCenter());
             knockback.y += KNOCKUP;
             knockback.setMagnitude(KNOCKBACK);
@@ -179,7 +177,7 @@ public class Ninja extends Character {
 
             // Grappled to wall or something
             else {
-                Vector2f radius = new Vector2f(getCenter(), grapple.position);
+                Vector2f radius = new Vector2f(getCenter(), grapple.getPosition());
 
                 // Jump at end of radius
 //            if (radius.getMagnitude() <= width) {
@@ -194,10 +192,10 @@ public class Ninja extends Character {
                     Vector2f deltaRope = radius.copy().setMagnitude(200f * deltaTime * 1.2f);
                     if (movingDown)
                         deltaRope.scale(-1);
-                    position.translate(deltaRope);
+                    translate(deltaRope);
                 }
 
-                radius = new Vector2f(getCenter(), grapple.position);
+                radius = new Vector2f(getCenter(), grapple.getPosition());
 
                 //System.out.println("before gravity = " + velocity + " = " + velocity.getMagnitude());
                 //System.out.println("gravity this tick = " + acceleration.copy().scale(deltaTime) + " = " + acceleration.copy().scale(deltaTime).getMagnitude());
@@ -213,9 +211,9 @@ public class Ninja extends Character {
                 //    System.out.println("Radius was too long (" + position.distance(grapple.position) + ")");
 
                 // Position
-                Vector2f newRadius = new Vector2f(getCenter(), grapple.position);
+                Vector2f newRadius = new Vector2f(getCenter(), grapple.getPosition());
                 newRadius.setMagnitude(newRadius.getMagnitude() - radius.getMagnitude());
-                position.translate(newRadius);
+                translate(newRadius);
 
                 // Tangential velocity
                 //System.out.println("radius normal = " + radius.normal());
@@ -259,7 +257,7 @@ public class Ninja extends Character {
         if (!attacking || currentAttackDelay > 0)
             return;
 
-        AABB hitbox = getAttackHitbox();
+        Polygon hitbox = getAttackHitbox();
 
         for (Player player : game.players) {
             if (player.clientName.equals(this.player.clientName) || player.character == null) continue;
@@ -273,30 +271,32 @@ public class Ninja extends Character {
     @Override
     public void damage(int damage, Point2f position, Player dealer) {
         if (currentParryDelay >= parryInterval - parryWindow) {
-            AABB parry = getParryHitbox();
+            Polygon parry = getParryHitbox();
 
             System.out.println("collision position = " + position);
-            System.out.println("parry box = (" + parry.position.x + ", " + parry.position.y + ") - " + parry.width + "x" + parry.height);
+            System.out.println("parry box = (" + parry.getPosition().x + ", " + parry.getPosition().y + ") - " + parry.getWidth() + "x" + parry.getHeight());
 
-            if (parry.contains(position)) {
-                System.out.println("parried");
-                return;
-            }
+            // TODO contains!!!!! STOPSHIP
+//            if (parry.contains(position)) {
+//                System.out.println("parried");
+//                return;
+//            }
         }
         super.damage(damage, position, dealer);
     }
 
-    public AABB getParryHitbox() {
-        AABB parry = new AABB(game, getBottomLeft().x + 29, getBottomLeft().y, 35, 69);
+    public Polygon getParryHitbox() {
+        Polygon parry = new Polygon(game).makeAABB(getBottomLeft().x + 29, getBottomLeft().y, 35, 69);
         if (direction == Direction.LEFT)
-            parry.position.x = getBottomLeft().x - 16;
+            //parry.position.x = getBottomLeft().x - 16;
+            parry.setPosition(getBottomLeft().x - 16, getBottomLeft().y);
         return parry;
     }
 
-    public AABB getAttackHitbox() {
-        AABB hitbox = new AABB(game, getBottomLeft().x + width / 2, getBottomLeft().y + width / 2, 60, 60);
+    public Polygon getAttackHitbox() {
+        Polygon hitbox = new Polygon(game).makeAABB(getBottomLeft().x + getWidth() / 2, getBottomLeft().y + getWidth() / 2, 60, 60);
         if (direction == Direction.LEFT)
-            hitbox.position.x -= 60;
+            hitbox.translate(-60, 0);
         return hitbox;
     }
 
@@ -394,7 +394,7 @@ public class Ninja extends Character {
                 || sprite.name.startsWith("ninja_kick"))
                 && direction == Direction.LEFT) {
             g2.scale(-1, 1);
-            g2.translate(-width, 0);
+            g2.translate(-getWidth(), 0);
         }
 
         // Draw legs
@@ -409,7 +409,7 @@ public class Ninja extends Character {
             g2.translate(arms.offsetX + 2, -(arms.offsetY + arms.height));
             if (sprite.name.startsWith("ninja_jump")) {
                 if (grapple != null)
-                    g2.rotate(-new Vector2f(getRotationOrigin(), grapple.position).getDirection(), 0, 4);
+                    g2.rotate(-new Vector2f(getRotationOrigin(), grapple.getPosition()).getDirection(), 0, 4);
                 else
                     g2.rotate(Math.toRadians(45));
             }

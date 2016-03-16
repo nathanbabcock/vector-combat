@@ -82,7 +82,7 @@ public class Player {
             return;
         }
         Random rand = new Random();
-        character.position = spawns.get(rand.nextInt(spawns.size())).copy();
+        character.setPosition(spawns.get(rand.nextInt(spawns.size())).copy());
 
         // Reset respawn timeg
         respawnTime = game.RESPAWN_TIME;

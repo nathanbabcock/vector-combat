@@ -3,9 +3,8 @@ package view;
 import model.Game;
 import model.Player;
 import model.characters.Character;
-import model.entities.Entity;
-import model.geometry.AABB;
 import model.geometry.Point2f;
+import model.geometry.Polygon;
 import model.particles.Particle;
 import network.GameClient;
 
@@ -69,8 +68,8 @@ public class Canvas extends JPanel {
 
         // Boundaries
         g2.setColor(Color.black);
-        for (AABB b : game.map.statics)
-            g2.fillRect((int) b.getBottomLeft().x + cameraOffsetX, (int) (getHeight() - cameraOffsetY - b.getBottomLeft().y - b.height), (int) (b.width), (int) (b.height));
+        for (Polygon b : game.map.statics)
+            g2.fillRect((int) b.getBottomLeft().x + cameraOffsetX, (int) (getHeight() - cameraOffsetY - b.getBottomLeft().y - b.getHeight()), (int) (b.getWidth()), (int) (b.getHeight()));
 
         // Players
         for (Player player : game.players)
@@ -81,7 +80,7 @@ public class Canvas extends JPanel {
             particle.draw(this, g2);
 
         // Entities
-        for (Entity entity : game.entities)
+        for (Polygon entity : game.entities)
             entity.draw(this, g2);
 
         // GUI --------------------------------
@@ -146,8 +145,8 @@ public class Canvas extends JPanel {
         if (game == null || game.getPlayer(clientName) == null || game.getPlayer(clientName).character == null) return;
 
         Character character = game.getPlayer(clientName).character;
-        cameraOffsetX = (int) (-character.getCenter().x + ((getWidth() / 2) - (character.width / 2)));
-        cameraOffsetY = (int) (-character.getCenter().y + ((getHeight() / 2) - (character.height / 2)));
+        cameraOffsetX = (int) (-character.getCenter().x + ((getWidth() / 2) - (character.getWidth() / 2)));
+        cameraOffsetY = (int) (-character.getCenter().y + ((getHeight() / 2) - (character.getHeight() / 2)));
 
 /*
 

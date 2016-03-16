@@ -9,9 +9,8 @@ import model.characters.*;
 import model.entities.Bullet;
 import model.entities.Grapple;
 import model.entities.Rocket;
-import model.geometry.AABB;
-import model.geometry.Circle;
 import model.geometry.Point2f;
+import model.geometry.Polygon;
 import model.geometry.Vector2f;
 import model.maps.Map1;
 import model.maps.Map2;
@@ -60,10 +59,9 @@ public class Config {
         kryo.register(Rocket.class);
 
         // Geometry
-        kryo.register(AABB.class);
-        kryo.register(Circle.class);
         kryo.register(Point2f.class);
         kryo.register(Vector2f.class);
+        kryo.register(Polygon.class);
 
         // Network
         kryo.register(SpawnParams.class);

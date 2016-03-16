@@ -4,7 +4,7 @@ import model.Collision;
 import model.Game;
 import model.Player;
 import model.characters.Character;
-import model.geometry.AABB;
+import model.geometry.Polygon;
 import model.geometry.Vector2f;
 import model.particles.Particle;
 import view.Canvas;
@@ -15,7 +15,7 @@ import java.util.Random;
 /**
  * Created by Nathan on 8/25/2015.
  */
-public class Bullet extends AABB {
+public class Bullet extends Polygon {
     public byte owner;
 
     public transient static final float SIZE = 8;
@@ -23,7 +23,8 @@ public class Bullet extends AABB {
     public transient static final int DAMAGE = 10;
 
     public Bullet(Game game, float x, float y, float size) {
-        super(game, x, y, size, size);
+        super(game);
+        makeAABB(x, y, size, size);
     }
 
     public Bullet() {
@@ -32,7 +33,7 @@ public class Bullet extends AABB {
     public void checkCollisions() {
         // Check collisions
         Collision collision = null;
-        for (AABB box : game.map.statics) { // Walls
+        for (Polygon box : game.map.statics) { // Walls
             collision = box.collision(this);
             if (collision != null)
                 break;
@@ -115,8 +116,8 @@ public class Bullet extends AABB {
     public void draw(Canvas canvas, Graphics2D g2) {
         g2.setColor(Color.black);
         int x = (int) (getBottomLeft().x + canvas.cameraOffsetX);
-        int y = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - width);
-        int size = (int) width;
+        int y = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - getHeight());
+        int size = (int) getWidth();
         g2.fillRect(x, y, size, size);
     }
 

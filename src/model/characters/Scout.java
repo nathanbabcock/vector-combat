@@ -37,8 +37,7 @@ public class Scout extends Character {
         extraJump = true;
         attackInterval = 1f;
         moveSpeed = 400f;
-        width = 31;
-        height = 81;
+        makeAABB(0, 0, 31, 81);
     }
 
     @Override
@@ -228,7 +227,7 @@ public class Scout extends Character {
             Particle particle = new Particle(game);
             particle.position = getBottomLeft().copy();
             if (wallRight)
-                particle.position.x += width;
+                particle.position.x += getWidth();
             int sign;
             if (r.nextBoolean())
                 sign = -1;
@@ -259,19 +258,19 @@ public class Scout extends Character {
         origin.x += gun.offsetX + RELATIVE_ORIGIN.x;
         origin.y += gun.offsetY + gun.height - RELATIVE_ORIGIN.y;
 
-        boolean bodyFlipped = movingLeft || (!movingRight && xhair.x < position.x);
-        if (xhair.x < position.x)
+        boolean bodyFlipped = movingLeft || (!movingRight && xhair.x < getPosition().x);
+        if (xhair.x < getPosition().x)
             origin.x += 18;
 
         if (legs != null && legs.name.startsWith("scout_legs_run")) {
-            if (xhair.x > position.x)
+            if (xhair.x > getPosition().x)
                 origin.x += 8;
             else
                 origin.x += 4;
         }
 
         if (movingLeft) {
-            if (xhair.x < position.x)
+            if (xhair.x < getPosition().x)
                 origin.x -= 8;
             else
                 origin.x += 4;
@@ -308,18 +307,18 @@ public class Scout extends Character {
         Graphics2D headCanvas = (Graphics2D) g2.create();
         headCanvas.translate(head.offsetX + 1, -(head.offsetY + head.height));
 
-        boolean bodyFlipped = wallRight || !wallLeft && movingLeft || (!wallLeft && !movingRight && xhair.x < position.x);
+        boolean bodyFlipped = wallRight || !wallLeft && movingLeft || (!wallLeft && !movingRight && xhair.x < getPosition().x);
         // Looking left
         if (bodyFlipped) {
             // Flip body
             g2.scale(-1, 1);
-            g2.translate(-width, 0);
+            g2.translate(-getWidth(), 0);
 
             armCanvas.translate(4, 0);
             headCanvas.translate(2, 0);
         }
 
-        if (xhair.x < position.x) {
+        if (xhair.x < getPosition().x) {
             // Flip arms and head
             ARM_ORIGIN.x += 13;
             armCanvas.rotate(-new Vector2f(getRotationOrigin(), xhair).getDirection(), ARM_ORIGIN.x, ARM_ORIGIN.y);
@@ -331,7 +330,7 @@ public class Scout extends Character {
         } else
             armCanvas.rotate(-new Vector2f(getRotationOrigin(), xhair).getDirection(), ARM_ORIGIN.x, ARM_ORIGIN.y);
 
-        if (!wallRight && movingRight && xhair.x < position.x || !wallLeft && movingLeft && xhair.x > position.x) {
+        if (!wallRight && movingRight && xhair.x < getPosition().x || !wallLeft && movingLeft && xhair.x > getPosition().x) {
             armCanvas.translate(-15, 0);
             headCanvas.translate(-15, 0);
         }

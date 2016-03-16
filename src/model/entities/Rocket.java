@@ -3,8 +3,7 @@ package model.entities;
 import model.Collision;
 import model.Game;
 import model.Player;
-import model.geometry.AABB;
-import model.geometry.Circle;
+import model.geometry.Polygon;
 import model.geometry.Vector2f;
 import model.particles.Fire;
 import model.particles.Particle;
@@ -16,7 +15,7 @@ import java.util.Random;
 /**
  * Created by Nathan on 8/25/2015.
  */
-public class Rocket extends Circle {
+public class Rocket extends model.geometry.Polygon {
     public byte owner;
     public boolean exploded;
 
@@ -30,7 +29,8 @@ public class Rocket extends Circle {
     }
 
     public Rocket(Game game, float x, float y, float radius) {
-        super(game, x, y, radius);
+        super(game);
+        makeAABB(x, y, radius * 2, radius * 2);
         exploded = false;
     }
 
@@ -66,7 +66,7 @@ public class Rocket extends Circle {
     public void checkCollisions() {
         // Check collisions
         Collision collision = null;
-        for (AABB box : game.map.statics) { // Walls
+        for (Polygon box : game.map.statics) { // Walls
             collision = box.collision(this);
             if (collision != null)
                 break;
@@ -89,7 +89,7 @@ public class Rocket extends Circle {
 
         for (Player player : game.players) {
             if (player.character == null) continue;
-            float distance = player.character.position.distance(getCenter());
+            float distance = player.character.getPosition().distance(getCenter());
             if (distance <= Rocket.EXPLOSION_RADIUS) {
                 // Knockback
                 Vector2f explosion = new Vector2f(player.character.getCenter().x - getCenter().x, player.character.getCenter().y - getCenter().y);
@@ -137,8 +137,8 @@ public class Rocket extends Circle {
         if (exploded) return;
         g2.setColor(Color.red);
         int x = (int) (getBottomLeft().x + canvas.cameraOffsetX);
-        int y = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - 2 * radius);
-        int size = (int) (2 * radius);
+        int y = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - getHeight());
+        int size = (int) getWidth();
         g2.fillOval(x, y, size, size);
     }
 

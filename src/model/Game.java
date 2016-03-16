@@ -1,7 +1,7 @@
 package model;
 
 import model.characters.Team;
-import model.entities.Entity;
+import model.geometry.Polygon;
 import model.maps.Map;
 import model.maps.Map1;
 import model.maps.Map2;
@@ -19,7 +19,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class Game {
     public List<Player> players;
-    public List<Entity> entities;
+    public List<Polygon> entities;
     public transient List<Object> garbage;
     public transient List<Particle> particles;
     public transient List<ChatMessage> chat;
@@ -468,7 +468,7 @@ public class Game {
                 player.update(deltaTime);
 
             // Entities
-            for (Entity entity : entities)
+            for (Polygon entity : entities)
                 entity.update(deltaTime);
 
             // Particles
@@ -476,9 +476,17 @@ public class Game {
                 particle.update(deltaTime);
 
             // Garbage
+            collectGarbage();
             takeOutGarbage();
         } catch (Exception e) {
             e.printStackTrace(); // Try to power through errors without crashing
+        }
+    }
+
+    private void collectGarbage() {
+        for (Polygon entity : entities) {
+            if (entity.getCenter().x > map.width || entity.getCenter().y > map.height || entity.getCenter().x < 0 || entity.getCenter().y < 0)
+                garbage.add(this);
         }
     }
 
@@ -511,7 +519,7 @@ public class Game {
 
         // Entities
         entities = other.entities;
-        for (Entity e : entities)
+        for (Polygon e : entities)
             e.game = this;
 
         // Other

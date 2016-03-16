@@ -27,8 +27,7 @@ public class Commando extends Character {
 
     public Commando(Player player) {
         super(player);
-        width = 16;
-        height = 80;
+        makeAABB(0, 0, 16, 80);
         attackInterval = 0.1f;
     }
 
@@ -144,7 +143,7 @@ public class Commando extends Character {
         origin.y += gun.offsetY + gun.height - RELATIVE_ORIGIN.y;
 
         // Flip horizontally
-        if (xhair.x < position.x) {
+        if (xhair.x < getPosition().x) {
             origin.x -= 3;
         }
 
@@ -163,9 +162,9 @@ public class Commando extends Character {
         g3.rotate(-new Vector2f(getRotationOrigin(), xhair).getDirection(), ARM_ORIGIN.x, ARM_ORIGIN.y);
 
         // Flip horizontally
-        if (xhair.x < position.x) {
+        if (xhair.x < getPosition().x) {
             g2.scale(-1, 1);
-            g2.translate(-width, 0);
+            g2.translate(-getWidth(), 0);
 
             g3.translate(3, 8);
             g3.scale(1, -1);

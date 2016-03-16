@@ -3,8 +3,8 @@ package model.characters;
 import model.Collision;
 import model.Player;
 import model.Sprite;
-import model.geometry.AABB;
 import model.geometry.Point2f;
+import model.geometry.Polygon;
 import model.geometry.Vector2f;
 import model.particles.Particle;
 import network.InputState;
@@ -16,7 +16,7 @@ import java.util.Random;
 /**
  * Created by Nathan on 8/19/2015.
  */
-abstract public class Character extends AABB {
+abstract public class Character extends Polygon {
     // Constants
     public transient Float moveSpeed = 200f;
     public transient Float jumpVelocity = 300f;
@@ -41,7 +41,7 @@ abstract public class Character extends AABB {
     }
 
     public Character(Player player) {
-        super(player.game, 0, 0, 24, 80);
+        super(player.game);//, Polygon.makeAABB(0, 0, 24, 80));
         this.player = player;
 //        position = hitbox.position;// = new Point2D(400, 850);
 //        width = hitbox.width;
@@ -85,7 +85,7 @@ abstract public class Character extends AABB {
         acceleration.y = game.GRAVITY;
 
         // Move player
-        position.displace(acceleration, velocity, deltaTime);
+        displace(acceleration, velocity, deltaTime);
     }
 
     public void jump(float deltaTime) {
@@ -119,7 +119,7 @@ abstract public class Character extends AABB {
         onGround = wallLeft = wallRight = false;
 
         // Check collisions
-        for (AABB box : game.map.statics) {
+        for (Polygon box : game.map.statics) {
             Collision collision = collision(box);
             if (collision != null)
                 handleCollision(collision);
@@ -128,7 +128,8 @@ abstract public class Character extends AABB {
 
     public void handleCollision(Collision collision) {
         if (Math.abs(collision.delta.x) > Math.abs(collision.delta.y)) {
-            position.x += collision.delta.x;
+            translate(collision.delta.x, 0);
+            //position.x += collision.delta.x;
             velocity.x = 0f;
             acceleration.x = 0f;
 
@@ -138,7 +139,7 @@ abstract public class Character extends AABB {
                 wallRight = true;
 
         } else {
-            position.y += collision.delta.y;
+            translate(0, collision.delta.y);
             velocity.y = 0f;
 
             if (collision.delta.y > 0) {
@@ -219,8 +220,8 @@ abstract public class Character extends AABB {
         // Draw client name
         // Player
         int playerX = (int) getBottomLeft().x + canvas.cameraOffsetX;
-        int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - height);
-        int playerWidth = (int) width;//24;
+        int playerY = (int) (canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - getHeight());
+        int playerWidth = (int) getWidth();//24;
 
 //        final int fontSize = 14;
 //        g2.setFont(GameClient.FONT_TEXT);

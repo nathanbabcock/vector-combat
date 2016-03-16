@@ -5,17 +5,17 @@ import model.Game;
 import model.Player;
 import model.characters.Character;
 import model.characters.Ninja;
-import model.geometry.AABB;
-import model.geometry.Circle;
 import model.geometry.Point2f;
+import model.geometry.Polygon;
 import view.Canvas;
 
 import java.awt.*;
 
+
 /**
  * Created by Nathan on 8/25/2015.
  */
-public class Grapple extends Circle {
+public class Grapple extends model.geometry.Polygon {
     public byte owner;
 
     public Character grappleChar;
@@ -27,7 +27,8 @@ public class Grapple extends Circle {
     }
 
     public Grapple(Game game, float x, float y, float radius) {
-        super(game, x, y, radius);
+        super(game);
+        makeAABB(x, y, radius * 2, radius * 2);
     }
 
     public void update(float deltaTime) {
@@ -38,12 +39,12 @@ public class Grapple extends Circle {
         }
 
         if (grappleChar != null) {
-            position = grappleChar.getCenter();
+            setPosition(grappleChar.getCenter());
             return;
         }
 
         // Move rocket
-        position.displace(acceleration, velocity, deltaTime);
+        displace(acceleration, velocity, deltaTime);
 
         // Check collisions
         checkCollisions();
@@ -53,7 +54,7 @@ public class Grapple extends Circle {
         // Check collisions
         Collision collision = null;
         boolean isPlayer = false;
-        for (AABB box : game.map.statics) { // Walls
+        for (Polygon box : game.map.statics) { // Walls
             collision = box.collision(this);
             if (collision != null)
                 break;
@@ -92,7 +93,7 @@ public class Grapple extends Circle {
         g2.setColor(Color.black);
         int x = (int) (getCenter().x + canvas.cameraOffsetX - Grapple.RADIUS);
         int y = (int) (canvas.getHeight() - canvas.cameraOffsetY - getCenter().y - Grapple.RADIUS);
-        int size = (int) (2 * radius);
+        int size = (int) getWidth();
         g2.fillOval(x, y, size, size);
         Ninja character = (Ninja) game.getPlayer(owner).character;
         Point2f origin = character.getProjectileOrigin();

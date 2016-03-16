@@ -61,7 +61,7 @@ public class MenuPanel extends JPanel {
         int i = 0;
         classPortraits = new ClassPortrait[4];
         for (Character character : classes) {
-            totwidth += character.width + char_padding;
+            totwidth += character.getWidth() + char_padding;
             character.xhair = new Point2f(Integer.MAX_VALUE, 0);
             character.onGround = true;
             character.updateSprite(0);
@@ -190,8 +190,8 @@ public class MenuPanel extends JPanel {
         // Class portraits
         int offset = -30;
         for (ClassPortrait port : classPortraits) {
-            port.setBounds((getWidth() - totwidth) / 2 + offset, (getHeight() - height) / 2, (int) (port.character.width + char_padding), char_height + char_bottom);
-            offset += port.character.width + char_padding;
+            port.setBounds((getWidth() - totwidth) / 2 + offset, (getHeight() - height) / 2, (int) (port.character.getWidth() + char_padding), char_height + char_bottom);
+            offset += port.character.getWidth() + char_padding;
         }
 
         // Menu buttons
@@ -255,16 +255,16 @@ public class MenuPanel extends JPanel {
 //            g2.fillRect(0, 0, getWidth(), getHeight());
 
 
-            g2.translate((getWidth() - character.width) / 2, char_height);
+            g2.translate((getWidth() - character.getWidth()) / 2, char_height);
             character.draw(g2); // Class image
             g2.setFont(GameClient.FONT_SEMIBOLD.deriveFont(14f));
             g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-            GUI.drawString_centerHoriz(g2, character.getName(), -char_padding / 2, 20, (int) (character.width + char_padding)); // Class name
+            GUI.drawString_centerHoriz(g2, character.getName(), -char_padding / 2, 20, (int) (character.getWidth() + char_padding)); // Class name
 
             final int triangle_width = 15;
             final int triangle_height = 10;
             final int triangle_margintop = 10;
-            final int triangleCenter = (int) (character.width / 2);
+            final int triangleCenter = (int) (character.getWidth() / 2);
 
             if (selectedClass == character.getCharClass())
                 g2.fillPolygon( // Selector triangle
