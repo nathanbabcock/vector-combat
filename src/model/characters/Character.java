@@ -127,8 +127,6 @@ abstract public class Character extends Polygon {
     }
 
     public void handleCollision(Collision collision) {
-        //float slope =
-
         if (collision.delta.x > 0) {
             if (collision.delta.y == 0)
                 wallLeft = true;
@@ -141,18 +139,26 @@ abstract public class Character extends Polygon {
                 velocity.x = 0f;
         }
 
+//        boolean handled = false;
         if (2 * collision.delta.y > Math.abs(collision.delta.x)) {
+            // Custom slope handling
+//            handled = true;
+//            Point2f probe = getBottomLeft().translate(getWidth() / 2, 0);
+//            Collision c = probe.collision((Polygon) collision.collider, collision.delta.copy().normalize());
+//            if(c != null) {
             onGround = true;
             if (!movingUp)
                 velocity.x = 0f;
             velocity.y = 0f;
             acceleration.y = 0f;
+//                translate(c.delta);
+//            }
         } else if (collision.delta.y < 0) {
             // wallAbove = true;
             if (velocity.y > 0)
                 velocity.y = 0f;
         }
-
+//        if(!handled)
         translate(collision.delta);
 //        System.out.println(collision.delta);
 //        if (Math.abs(collision.delta.x) > Math.abs(collision.delta.y)) {

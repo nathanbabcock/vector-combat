@@ -1,5 +1,7 @@
 package model.geometry;
 
+import model.Collision;
+
 /**
  * Created by Nathan on 8/20/2015.
  */
@@ -60,6 +62,24 @@ public class Point2f {
 
     public boolean equals(Point2f other) {
         return x == other.x && y == other.y;
+    }
+
+    public float project(Vector2f axis) {
+        return new Vector2f(x, y).project(axis).getMagnitude();
+    }
+
+    public Collision collision(Polygon polygon, Vector2f axis) {
+        Projection p1 = polygon.project(axis);
+        float p2 = axis.dot(new Vector2f(this));//project(axis);
+        System.out.println("p1 = " + p1);
+        System.out.println("p2 = " + p2);
+        if (!p1.contains(p2))
+            return null;
+
+        float overlap = p1.getOverlap(p2);
+        Collision collision = new Collision();
+        collision.delta = axis.setMagnitude(overlap);
+        return collision;
     }
 
     @Override

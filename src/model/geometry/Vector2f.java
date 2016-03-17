@@ -9,6 +9,11 @@ public class Vector2f {
     public Vector2f() {
     }
 
+    public Vector2f(Point2f p) {
+        x = p.x;
+        y = p.y;
+    }
+
     public Vector2f(float x, float y) {
         this.x = x;
         this.y = y;

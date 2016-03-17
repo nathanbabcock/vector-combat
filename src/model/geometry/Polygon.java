@@ -202,6 +202,7 @@ public class Polygon implements Serializable {
 
         Collision collision = new Collision();
         collision.delta = smallest.setMagnitude(overlap);
+        collision.collider = other;
         return collision;
     }
 
@@ -216,35 +217,6 @@ public class Polygon implements Serializable {
         return new Projection(min, max);
     }
 
-    class Projection {
-        float min, max;
-
-        public Projection(float min, float max) {
-            this.min = min;
-            this.max = max;
-        }
-
-        public boolean overlaps(Projection other) {
-            return (min < other.max && min >= other.min) || (max <= other.max && max > other.min) || (other.min < max && other.min >= min) || (other.max <= max && other.max > min);
-        }
-
-        public float getOverlap(Projection other) {
-            //return Math.min(other.max, max) - Math.max(other.min, min);
-//            return (this.max < other.max) ? max - other.min : other.max - min;
-            // if min inside other, push it
-            float a = other.max - min;
-            float b = other.min - max;
-            if (Math.abs(a) < Math.abs(b))
-                return a;
-            return b;
-        }
-
-        @Override
-        public String toString() {
-            return "(" + min + ", " + max + ")";
-        }
-    }
-
     public void checkCollisions() {
     }
 
@@ -252,13 +224,15 @@ public class Polygon implements Serializable {
     }
 
     public static void main(String[] args) {
-        Polygon a = new Polygon().makeAABB(0, 7, 3, 3);
+        Point2f a = new Point2f(6, 4);
         Polygon b = new Polygon(null, new ArrayList<>(Arrays.asList(new Point2f[]{new Point2f(0, 0), new Point2f(10, 0), new Point2f(10, 10)})));
 
-        System.out.println(b.getSides());
-        System.out.println(b.getNormals());
+//        System.out.println(b.getSides());
+//        System.out.println(b.getNormals());
 
-        System.out.println(a.collision(b).delta);
+        System.out.println(a.collision(b, new Vector2f(-1, 1).normalize()));//.delta);
+
+//        System.out.println(a.collision(b).delta);
     }
 
 }
