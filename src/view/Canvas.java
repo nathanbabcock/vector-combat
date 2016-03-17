@@ -68,8 +68,13 @@ public class Canvas extends JPanel {
 
         // Boundaries
         g2.setColor(Color.black);
+        Graphics2D g3 = (Graphics2D) g2.create();
+        //g3.translate(cameraOffsetX, )
+        g3.translate(cameraOffsetX, getHeight() - cameraOffsetY);
+        g3.scale(1, -1);
         for (Polygon b : game.map.statics)
-            g2.fillRect((int) b.getBottomLeft().x + cameraOffsetX, (int) (getHeight() - cameraOffsetY - b.getBottomLeft().y - b.getHeight()), (int) (b.getWidth()), (int) (b.getHeight()));
+            g3.fillPolygon(b.getAwtPoly());
+//            g2.fillRect((int) b.getBottomLeft().x + cameraOffsetX, (int) (getHeight() - cameraOffsetY - b.getBottomLeft().y - b.getHeight()), (int) (b.getWidth()), (int) (b.getHeight()));
 
         // Players
         for (Player player : game.players)
@@ -87,7 +92,7 @@ public class Canvas extends JPanel {
 
         // Scoreboard
         if (scoreboard.open) {
-            Graphics2D g3 = (Graphics2D) g2.create();
+            g3 = (Graphics2D) g2.create();
             g3.translate((getWidth() - scoreboard.width) / 2, (getHeight() - scoreboard.height) / 2);
             scoreboard.draw(g3);
         }

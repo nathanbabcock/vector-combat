@@ -150,7 +150,7 @@ abstract public class Character extends Polygon {
         }
 
         translate(collision.delta);
-        System.out.println(collision.delta);
+//        System.out.println(collision.delta);
 //        if (Math.abs(collision.delta.x) > Math.abs(collision.delta.y)) {
 //            translate(collision.delta.x, 0);
 //            //position.x += collision.delta.x;
