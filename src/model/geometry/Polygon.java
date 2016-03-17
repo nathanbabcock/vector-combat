@@ -7,6 +7,7 @@ import view.Canvas;
 import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -72,9 +73,9 @@ public class Polygon implements Serializable {
         outer:
         for (Vector2f v : getSides()) {
             Vector2f newNormal = v.normal().normalize();
-            for (Vector2f n : normals)
-                if (n.parallel(newNormal))
-                    continue outer;
+//            for (Vector2f n : normals)
+//                if (n.parallel(newNormal))
+//                    continue outer;
             normals.add(newNormal);
         }
         return normals;
@@ -155,18 +156,38 @@ public class Polygon implements Serializable {
     }
 
     public Collision collision(Polygon other) {
+        // Gather all axes
+        List<Vector2f> axes = new ArrayList<>();
+        outer1:
+        for (Vector2f v : getNormals()) {
+            for (Vector2f a : axes)
+                if (a.parallel(v))
+                    continue outer1;
+            axes.add(v);
+        }
+        outer2:
+        for (Vector2f v : other.getNormals()) {
+            for (Vector2f a : axes)
+                if (a.parallel(v))
+                    continue outer2;
+            axes.add(v);
+        }
+
         float overlap = Float.MAX_VALUE;
         Vector2f smallest = null;
         // Project onto axes
-        for (Vector2f axis : getNormals()) {
+        for (Vector2f axis : axes) {
             Projection p1 = project(axis);
             Projection p2 = other.project(axis);
-//            System.out.println("Prjection on axis " + axis + ": this = " + p1 + ", other = " + p2);
+//            System.out.println("Projection on axis " + axis + ": this = " + p1 + ", other = " + p2);
             if (!p1.overlaps(p2))
                 return null;
             else {
                 // get the overlap
                 float o = p1.getOverlap(p2);
+
+//                System.out.println("Overlap = " + o);
+
                 // check for minimum
                 if (Math.abs(o) < Math.abs(overlap)) {
                     // then set this one as the smallest
@@ -230,12 +251,14 @@ public class Polygon implements Serializable {
     public void handleCollision(Collision collision) {
     }
 
-
     public static void main(String[] args) {
-        Polygon a = new Polygon().makeAABB(0, 10, 100, 50);
-        Polygon b = new Polygon().makeAABB(5, 5, 10, 10);
+        Polygon a = new Polygon().makeAABB(0, 7, 3, 3);
+        Polygon b = new Polygon(null, new ArrayList<>(Arrays.asList(new Point2f[]{new Point2f(0, 0), new Point2f(10, 0), new Point2f(10, 10)})));
 
-        System.out.println(b.collision(a).delta);
+        System.out.println(b.getSides());
+        System.out.println(b.getNormals());
+
+        System.out.println(a.collision(b).delta);
     }
 
 }
