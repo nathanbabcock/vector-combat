@@ -69,8 +69,14 @@ public class Polygon implements Serializable {
     // TODO will list duplicate normals for parallel sides
     public List<Vector2f> getNormals() {
         List<Vector2f> normals = new ArrayList<>();
-        for (Vector2f v : getSides())
-            normals.add(v.normal().normalize());
+        outer:
+        for (Vector2f v : getSides()) {
+            Vector2f newNormal = v.normal().normalize();
+            for (Vector2f n : normals)
+                if (n.parallel(newNormal))
+                    continue outer;
+            normals.add(newNormal);
+        }
         return normals;
     }
 
@@ -155,13 +161,14 @@ public class Polygon implements Serializable {
         for (Vector2f axis : getNormals()) {
             Projection p1 = project(axis);
             Projection p2 = other.project(axis);
+//            System.out.println("Prjection on axis " + axis + ": this = " + p1 + ", other = " + p2);
             if (!p1.overlaps(p2))
                 return null;
             else {
                 // get the overlap
                 float o = p1.getOverlap(p2);
                 // check for minimum
-                if (o < overlap) {
+                if (Math.abs(o) < Math.abs(overlap)) {
                     // then set this one as the smallest
                     overlap = o;
                     smallest = axis;
@@ -169,15 +176,17 @@ public class Polygon implements Serializable {
             }
         }
 
+//        System.out.println("Found collision between this (" + getPosition() + " " + getWidth() + " x " + getHeight() + ") and (" + other.getPosition() + " " + other.getWidth() + " x " + other.getHeight() + ")");
+//        System.out.println("overlap = " + overlap);
+
         Collision collision = new Collision();
         collision.delta = smallest.setMagnitude(overlap);
-        collision.normal = smallest.normalize();
         return collision;
     }
 
     public Projection project(Vector2f axis) {
-        float min = Float.MAX_VALUE;
-        float max = Float.MIN_VALUE;
+        float min = Float.POSITIVE_INFINITY;
+        float max = Float.NEGATIVE_INFINITY;
         for (Point2f v : vertices) {
             float p = axis.dot(v);
             min = Math.min(p, min);
@@ -195,43 +204,38 @@ public class Polygon implements Serializable {
         }
 
         public boolean overlaps(Projection other) {
-            return (min < other.max && min >= other.min) || (max <= other.max && max > other.min);
+            return (min < other.max && min >= other.min) || (max <= other.max && max > other.min) || (other.min < max && other.min >= min) || (other.max <= max && other.max > min);
         }
 
         public float getOverlap(Projection other) {
-            return Math.min(other.max, max) - Math.max(other.min, min);
+            //return Math.min(other.max, max) - Math.max(other.min, min);
+//            return (this.max < other.max) ? max - other.min : other.max - min;
+            // if min inside other, push it
+            float a = other.max - min;
+            float b = other.min - max;
+            if (Math.abs(a) < Math.abs(b))
+                return a;
+            return b;
+        }
+
+        @Override
+        public String toString() {
+            return "(" + min + ", " + max + ")";
         }
     }
-
-//    public static void main(String[] args) {
-//        ArrayList<Point2f> vertices = new ArrayList<>();
-//        vertices.add(new Point2f(0, 0));
-//        vertices.add(new Point2f(1, 0));
-//        vertices.add(new Point2f(0, 1));
-//        Polygon poly = new Polygon(vertices);
-//
-//        ArrayList<Point2f> vertices2 = new ArrayList<>();
-//        vertices2.add(new Point2f(2f, 0));
-//        vertices2.add(new Point2f(3f, 0));
-//        vertices2.add(new Point2f(2f, 1));
-//        Polygon poly2 = new Polygon(vertices);
-//
-//        Collision c = poly.collision(poly2);
-//
-//        if (c == null)
-//            System.out.println(c);
-//        else
-//            System.out.println(c.delta);
-//
-////        for(Vector2f v: poly.getNormals()){
-////            System.out.println(v);
-////        }
-//    }
 
     public void checkCollisions() {
     }
 
     public void handleCollision(Collision collision) {
+    }
+
+
+    public static void main(String[] args) {
+        Polygon a = new Polygon().makeAABB(0, 10, 100, 50);
+        Polygon b = new Polygon().makeAABB(5, 5, 10, 10);
+
+        System.out.println(b.collision(a).delta);
     }
 
 }

@@ -127,27 +127,51 @@ abstract public class Character extends Polygon {
     }
 
     public void handleCollision(Collision collision) {
-        if (Math.abs(collision.delta.x) > Math.abs(collision.delta.y)) {
-            translate(collision.delta.x, 0);
-            //position.x += collision.delta.x;
-            velocity.x = 0f;
-            acceleration.x = 0f;
 
-            if (collision.delta.x > 0)
-                wallLeft = true;
-            else
-                wallRight = true;
-
-        } else {
-            translate(0, collision.delta.y);
-            velocity.y = 0f;
-
-            if (collision.delta.y > 0) {
-                onGround = true;
-                acceleration.y = 0f;
+        if (collision.delta.x > 0) {
+            wallLeft = true;
+            if (velocity.x < 0)
                 velocity.x = 0f;
-            }
+        } else if (collision.delta.x < 0) {
+            wallRight = true;
+            if (velocity.x > 0)
+                velocity.x = 0f;
         }
+
+        if (collision.delta.y > 0) {
+            onGround = true;
+            //if (velocity.y < 0)
+            velocity.y = 0f;
+            acceleration.y = 0f;
+        } else if (collision.delta.y < 0) {
+            // wallAbove = true;
+            if (velocity.y > 0)
+                velocity.y = 0f;
+        }
+
+        translate(collision.delta);
+        System.out.println(collision.delta);
+//        if (Math.abs(collision.delta.x) > Math.abs(collision.delta.y)) {
+//            translate(collision.delta.x, 0);
+//            //position.x += collision.delta.x;
+//            velocity.x = 0f;
+//            acceleration.x = 0f;
+//
+//            if (collision.delta.x > 0)
+//                wallLeft = true;
+//            else
+//                wallRight = true;
+//
+//        } else {
+//            translate(0, collision.delta.y);
+//            velocity.y = 0f;
+//
+//            if (collision.delta.y > 0) {
+//                onGround = true;
+//                acceleration.y = 0f;
+//                velocity.x = 0f;
+//            }
+//        }
     }
 
     public void damage(int damage, Point2f position, Player dealer) {

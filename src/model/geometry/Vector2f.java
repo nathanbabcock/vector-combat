@@ -134,6 +134,15 @@ public class Vector2f {
         return x == 0f && y == 0f;
     }
 
+    public float cross(Vector2f other) {
+        return (x * other.y) - (y * other.x);
+    }
+
+    public boolean parallel(Vector2f other) {
+        return cross(other) == 0;
+        //return (x / y) == (other.x / other.y);
+    }
+
     @Override
     public String toString() {
         return "[" + x + ", " + y + "]";
