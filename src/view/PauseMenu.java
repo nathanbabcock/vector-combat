@@ -5,7 +5,6 @@ import model.Player;
 import model.characters.*;
 import model.characters.Character;
 import model.geometry.Point2f;
-import network.GameClient;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -107,7 +106,7 @@ public class PauseMenu {
         Graphics2D charCanvas = (Graphics2D) g2.create();
         charCanvas.translate((width - totwidth) / 2, char_height);
         charCanvas.setColor(Color.WHITE);
-        charCanvas.setFont(GameClient.FONT_TEXT.deriveFont(12f));
+        charCanvas.setFont(GUI.FONT_TEXT.deriveFont(12f));
         int i = 0;
         for (Character cClass : classes) {
             cClass.draw(charCanvas); // Class image

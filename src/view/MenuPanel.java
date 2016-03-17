@@ -175,7 +175,7 @@ public class MenuPanel extends JPanel {
         });
 
         for (JTextField j : new JTextField[]{red, blue, resume, quit}) {
-            j.setFont(GameClient.FONT_HEADING.deriveFont(20f));
+            j.setFont(GUI.FONT_HEADING.deriveFont(20f));
             j.setForeground(Color.WHITE);
             j.setBorder(null);
             j.setFocusable(false);
@@ -257,7 +257,7 @@ public class MenuPanel extends JPanel {
 
             g2.translate((getWidth() - character.getWidth()) / 2, char_height);
             character.draw(g2); // Class image
-            g2.setFont(GameClient.FONT_SEMIBOLD.deriveFont(14f));
+            g2.setFont(GUI.FONT_SEMIBOLD.deriveFont(14f));
             g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
             GUI.drawString_centerHoriz(g2, character.getName(), -char_padding / 2, 20, (int) (character.getWidth() + char_padding)); // Class name
 

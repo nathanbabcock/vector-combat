@@ -1,7 +1,5 @@
 package view;
 
-import network.GameClient;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -39,7 +37,7 @@ public class ChatPanel extends JPanel {
         textArea.setColumns(25);
         textArea.setLineWrap(true);
         textArea.setOpaque(false);
-        textArea.setFont(GameClient.FONT_TEXT.deriveFont(14f));
+        textArea.setFont(GUI.FONT_TEXT.deriveFont(14f));
         textArea.setEditable(false);
         textArea.setFocusable(false);
         chatPanel.add(textArea);
@@ -48,7 +46,7 @@ public class ChatPanel extends JPanel {
         textField = new JTextField();
         textField.setColumns(25);
         textField.setOpaque(false);
-        textField.setFont(GameClient.FONT_TEXT.deriveFont(14f));
+        textField.setFont(GUI.FONT_TEXT.deriveFont(14f));
         textField.setBorder(null);
         textField.setVisible(false);
         textField.setFocusTraversalKeysEnabled(false);

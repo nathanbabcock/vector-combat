@@ -3,7 +3,6 @@ package view;
 import model.Game;
 import model.Player;
 import model.characters.Team;
-import network.GameClient;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -92,7 +91,7 @@ public class ScorePanel extends JPanel {
             team = new JTextField();
             team.setEditable(false);
             team.setFocusable(false);
-            team.setFont(GameClient.FONT_HEADING.deriveFont(TEAMNAME_SIZE));
+            team.setFont(GUI.FONT_HEADING.deriveFont(TEAMNAME_SIZE));
             team.setForeground(Color.WHITE);
             team.setOpaque(false);
             team.setBorder(null);
@@ -110,7 +109,7 @@ public class ScorePanel extends JPanel {
             score = new JTextField();
             score.setEditable(false);
             score.setFocusable(false);
-            score.setFont(GameClient.FONT_HEADING.deriveFont(SCORE_SIZE));
+            score.setFont(GUI.FONT_HEADING.deriveFont(SCORE_SIZE));
             score.setForeground(Color.WHITE);
             score.setOpaque(false);
             score.setBorder(null);
@@ -147,10 +146,10 @@ public class ScorePanel extends JPanel {
 
         for (JTextField text : new JTextField[]{name, kills, deaths, ping}) {
             if (player == null) {
-                text.setFont(GameClient.FONT_BOLD.deriveFont(11f));
+                text.setFont(GUI.FONT_BOLD.deriveFont(11f));
                 text.setForeground(Color.BLACK);
             } else {
-                text.setFont(GameClient.FONT_SEMIBOLD.deriveFont(14f));
+                text.setFont(GUI.FONT_SEMIBOLD.deriveFont(14f));
                 text.setForeground(Color.WHITE);
             }
             text.setEditable(false);

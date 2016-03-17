@@ -5,7 +5,6 @@ import model.Player;
 import model.Sprite;
 import model.characters.CharClass;
 import model.characters.Team;
-import network.GameClient;
 
 import java.awt.*;
 
@@ -62,9 +61,9 @@ public class Scoreboard {
         final int end_radius = 10;
         final int header_margin = 5;
         final int teamname_padding = 10;
-        final Font teamname_font = GameClient.FONT_HEADING.deriveFont(30f);
-        final Font score_font = GameClient.FONT_HEADING.deriveFont(70f);
-        final Font score_shadow_font = GameClient.FONT_HEADING.deriveFont(73f);
+        final Font teamname_font = GUI.FONT_HEADING.deriveFont(30f);
+        final Font score_font = GUI.FONT_HEADING.deriveFont(70f);
+        final Font score_shadow_font = GUI.FONT_HEADING.deriveFont(73f);
 
         // Red team header
         Graphics2D redHeader = (Graphics2D) g2.create();
@@ -106,7 +105,7 @@ public class Scoreboard {
         final int tableheader_height = 20;
 
         final int table_edgepadding = 10;
-        final Font tableheader_font = GameClient.FONT_BOLD.deriveFont(11f);
+        final Font tableheader_font = GUI.FONT_BOLD.deriveFont(11f);
 
         final int tableheader_paddingbottom = 5;
         final int ping_width = 50; //g2.getFontMetrics(table_font).stringWidth("9999");
@@ -133,7 +132,7 @@ public class Scoreboard {
         final int head_height = 14;
         final int row_marginbottom = 2;
         final int row_paddingbottom = 10;
-        final Font row_font = GameClient.FONT_SEMIBOLD.deriveFont(14f);
+        final Font row_font = GUI.FONT_SEMIBOLD.deriveFont(14f);
 
         Graphics2D redP = (Graphics2D) t1.create();
         Graphics2D blueP = (Graphics2D) t2.create();
