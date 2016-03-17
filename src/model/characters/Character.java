@@ -127,20 +127,24 @@ abstract public class Character extends Polygon {
     }
 
     public void handleCollision(Collision collision) {
+        //float slope =
 
         if (collision.delta.x > 0) {
-            wallLeft = true;
+            if (collision.delta.y == 0)
+                wallLeft = true;
             if (velocity.x < 0)
                 velocity.x = 0f;
         } else if (collision.delta.x < 0) {
-            wallRight = true;
+            if (collision.delta.y == 0)
+                wallRight = true;
             if (velocity.x > 0)
                 velocity.x = 0f;
         }
 
-        if (collision.delta.y > 0) {
+        if (2 * collision.delta.y > Math.abs(collision.delta.x)) {
             onGround = true;
-            //if (velocity.y < 0)
+            if (!movingUp)
+                velocity.x = 0f;
             velocity.y = 0f;
             acceleration.y = 0f;
         } else if (collision.delta.y < 0) {

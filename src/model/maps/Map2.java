@@ -27,7 +27,9 @@ public class Map2 extends Map {
         statics.add(new Polygon().makeAABB(width - 64, 0, 64, height));
 
         // Ramp
-        statics.add(new Polygon(null, new ArrayList<>(Arrays.asList(new Point2f[]{new Point2f(100, 64), new Point2f(300, 128), new Point2f(300, 64)}))));
+        statics.add(new Polygon(null, new ArrayList<>(Arrays.asList(new Point2f[]{new Point2f(64, 464), new Point2f(128, 64), new Point2f(64, 64)}))));
+        statics.add(new Polygon(null, new ArrayList<>(Arrays.asList(new Point2f[]{new Point2f(200, 64), new Point2f(400, 128), new Point2f(400, 64)}))));
+        statics.add(new Polygon(null, new ArrayList<>(Arrays.asList(new Point2f[]{new Point2f(400, 128), new Point2f(400, 64), new Point2f(464, 64)}))));
 
         // Tunnel
         statics.add(new Polygon().makeAABB(width / 2 - 256, 164, 512, 64));
