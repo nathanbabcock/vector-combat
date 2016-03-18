@@ -31,4 +31,26 @@ public abstract class Map {
             b.draw(canvas, g3);
         //g3.fillPolygon(b.getAwtPoly());
     }
+
+    static BufferedImage getCompatibleImage(BufferedImage image, int transparency) {
+        //Get current GraphicsConfiguration
+        GraphicsConfiguration graphicsConfiguration
+                = GraphicsEnvironment
+                .getLocalGraphicsEnvironment()
+                .getDefaultScreenDevice()
+                .getDefaultConfiguration();
+
+        //Create a Compatible BufferedImage
+        BufferedImage output
+                = graphicsConfiguration.createCompatibleImage(
+                image.getWidth(null),
+                image.getHeight(null),
+                transparency);
+        //Copy from original Image to new Compatible BufferedImage
+        Graphics tempGraphics = output.getGraphics();
+        tempGraphics.drawImage(image, 0, 0, null);
+        tempGraphics.dispose();
+
+        return output;
+    }
 }
