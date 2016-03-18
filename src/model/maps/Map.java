@@ -27,8 +27,13 @@ public abstract class Map {
         //g3.translate(cameraOffsetX, )
         g3.translate(canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY);
         g3.scale(1, -1);
-        for (Polygon b : statics)
-            b.draw(canvas, g3);
+        for (Polygon b : statics) {
+            if (!(b instanceof JumpPad))
+                drawPlatform(g3, b);
+            else
+                b.draw(canvas, g3);
+        }
+        //b.draw(canvas, g3);
         //g3.fillPolygon(b.getAwtPoly());
     }
 
@@ -52,5 +57,10 @@ public abstract class Map {
         tempGraphics.dispose();
 
         return output;
+    }
+
+    static void drawPlatform(Graphics2D g2, Polygon poly) {
+        g2.setColor(new Color(200, 200, 200));
+        g2.fillPolygon(poly.getAwtPoly());
     }
 }
