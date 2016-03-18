@@ -6,6 +6,7 @@ import model.Sprite;
 import model.geometry.Point2f;
 import model.geometry.Polygon;
 import model.geometry.Vector2f;
+import model.maps.JumpPad;
 import model.particles.Particle;
 import network.InputState;
 import view.Canvas;
@@ -67,6 +68,11 @@ abstract public class Character extends Polygon {
 
     @Override
     public void update(float deltaTime) {
+        if (getCenter().x > game.map.width || getCenter().y > game.map.height || getCenter().x < 0 || getCenter().y < 0) {
+            player.kill();
+            return;
+        }
+
         if (game.countdown <= 0) {
             jump(deltaTime);
             move(deltaTime);
@@ -160,28 +166,10 @@ abstract public class Character extends Polygon {
         }
 //        if(!handled)
         translate(collision.delta);
-//        System.out.println(collision.delta);
-//        if (Math.abs(collision.delta.x) > Math.abs(collision.delta.y)) {
-//            translate(collision.delta.x, 0);
-//            //position.x += collision.delta.x;
-//            velocity.x = 0f;
-//            acceleration.x = 0f;
-//
-//            if (collision.delta.x > 0)
-//                wallLeft = true;
-//            else
-//                wallRight = true;
-//
-//        } else {
-//            translate(0, collision.delta.y);
-//            velocity.y = 0f;
-//
-//            if (collision.delta.y > 0) {
-//                onGround = true;
-//                acceleration.y = 0f;
-//                velocity.x = 0f;
-//            }
-//        }
+
+        // Jump pads
+        if (collision.collider instanceof JumpPad)
+            velocity = ((JumpPad) collision.collider).velocity.copy();
     }
 
     public void damage(int damage, Point2f position, Player dealer) {

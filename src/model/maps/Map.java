@@ -17,4 +17,5 @@ public abstract class Map {
     //    public ArrayList<Line2D> boundaries;
     public ArrayList<Polygon> statics;
     public ArrayList<Point2f> spawnpoints_red, spawnpoints_blue;
+    public Point2f redflag, blueflag;
 }

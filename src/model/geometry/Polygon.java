@@ -30,6 +30,10 @@ public class Polygon implements Serializable {
         this.game = game;
     }
 
+    public Polygon(Point2f[] points) {
+        this(null, new ArrayList<>(Arrays.asList(points)));
+    }
+
     public Polygon(Game game, List<Point2f> vertices) {
         this(game);
         this.vertices = vertices;
@@ -152,6 +156,7 @@ public class Polygon implements Serializable {
 
 
     public void draw(Canvas canvas, Graphics2D g2) {
+        g2.setColor(Color.BLACK);
         g2.fillPolygon(getAwtPoly());
     }
 

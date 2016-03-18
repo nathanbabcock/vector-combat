@@ -5,6 +5,7 @@ import model.geometry.Polygon;
 import model.maps.Map;
 import model.maps.Map1;
 import model.maps.Map2;
+import model.maps.ctf_space;
 import model.particles.Particle;
 import network.ChatMessage;
 
@@ -71,6 +72,9 @@ public class Game {
                 break;
             case "Map2":
                 map = new Map2();
+                break;
+            case "ctf_space":
+                map = new ctf_space();
                 break;
             default:
                 System.err.println("Unknown map " + mapID + " specified");

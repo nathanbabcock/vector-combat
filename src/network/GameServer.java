@@ -91,7 +91,7 @@ public class GameServer {
     private void init_game() {
         game = new Game();
         game.initSprites();
-        game.setMap("Map2");
+        game.setMap("ctf_space");
 //        new GameUpdater().start();
 
         final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(10);
