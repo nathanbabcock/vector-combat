@@ -33,10 +33,10 @@ public class ctf_space extends Map {
 
         statics.add(new Polygon().makeAABB(2065, 1048, 328, 62)); // Upper
 
-        statics.add(new JumpPad(new Point2f[]{new Point2f(2396, 646), new Point2f(2396, 705), new Point2f(2464, 646)}).setVelocity(new Vector2f(-1, 1.1f).setMagnitude(550f))); // Left jump pad
-
         // MID
         statics.add(new Polygon().makeAABB(2396, 583, 790, 62)); // Mid
+        statics.add(new JumpPad(new Point2f[]{new Point2f(2396, 646), new Point2f(2396, 705), new Point2f(2464, 646)}).setVelocity(new Vector2f(-1, 1.1f).setMagnitude(550f))); // Left jump pad
+        statics.add(new JumpPad(new Point2f[]{new Point2f(3118, 646), new Point2f(3186, 705), new Point2f(3186, 646)}).setVelocity(new Vector2f(1, 1.1f).setMagnitude(550f))); // Right jump pad
 
         // BLUE SIDE
         statics.add(new Polygon().makeAABB(4079, 819, 900, 55)); // Mid
@@ -55,7 +55,6 @@ public class ctf_space extends Map {
 
         statics.add(new Polygon().makeAABB(3186, 1048, 328, 62)); // Upper
 
-        statics.add(new JumpPad(new Point2f[]{new Point2f(3118, 646), new Point2f(3186, 705), new Point2f(3186, 646)}).setVelocity(new Vector2f(1, 1.1f).setMagnitude(550f))); // Right jump pad
 
         // Spawns
         spawnpoints_blue = new ArrayList<>();

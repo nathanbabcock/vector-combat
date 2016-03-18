@@ -135,9 +135,13 @@ abstract public class Character extends Polygon {
     public void handleCollision(Collision collision) {
         // Jump pads
         if (collision.collider instanceof JumpPad) {
+            // System.out.println("Jp collsion");
+            translate(collision.delta);
+            //translate(0, 80);
             velocity = ((JumpPad) collision.collider).velocity.copy();
             return;
         }
+        //System.out.println("non-jp collision with "+collision.collider);
 
         if (collision.delta.x > 0) {
             if (collision.delta.y == 0)
