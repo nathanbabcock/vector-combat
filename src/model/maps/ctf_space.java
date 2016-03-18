@@ -85,10 +85,13 @@ public class ctf_space extends Map {
 
     @Override
     public void draw(Canvas canvas, Graphics2D g2) {
-        g2.setClip(0, 0, canvas.getWidth(), canvas.getHeight());
+        Graphics2D bgCanvas = (Graphics2D) g2.create();
+        bgCanvas.translate((canvas.getWidth() - background.getWidth()) / 2, (canvas.getHeight() - background.getHeight()) / 2);
+        //bgCanvas.setClip(0, 0, canvas.getWidth(), canvas.getHeight());
         //g2.drawImage(bg_a, 0, 0, null);
-        g2.drawImage(background, 0, 0, null);
-        g2.drawImage(clouds, canvas.cameraOffsetX / 2, 0, null);
+        bgCanvas.drawImage(background, 0, 0, null);
+        bgCanvas.dispose();
+//        g2.drawImage(clouds, canvas.cameraOffsetX / 2, 0, null);
         super.draw(canvas, g2);
     }
 }
