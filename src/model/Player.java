@@ -52,6 +52,7 @@ public class Player {
 
     public void kill() {
         character = null;
+        deaths++;
     }
 
     public void spawn() {

@@ -30,7 +30,7 @@ public class Game {
     public float countdown;
     public Team winner;
 
-    public transient static final float GRAVITY = -400;
+    public transient static final float GRAVITY = -440;
     public transient static final int RESPAWN_TIME = 5;
     public transient static final float START_COUNTDOWN = 3;
     public transient static final int SCORE_LIMIT = 10;
@@ -488,10 +488,9 @@ public class Game {
     }
 
     private void collectGarbage() {
-        for (Polygon entity : entities) {
+        for (Polygon entity : entities)
             if (entity.getCenter().x > map.width || entity.getCenter().y > map.height || entity.getCenter().x < 0 || entity.getCenter().y < 0)
                 garbage.add(this);
-        }
     }
 
     private void takeOutGarbage() {

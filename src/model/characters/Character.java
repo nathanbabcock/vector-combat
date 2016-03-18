@@ -133,6 +133,12 @@ abstract public class Character extends Polygon {
     }
 
     public void handleCollision(Collision collision) {
+        // Jump pads
+        if (collision.collider instanceof JumpPad) {
+            velocity = ((JumpPad) collision.collider).velocity.copy();
+            return;
+        }
+
         if (collision.delta.x > 0) {
             if (collision.delta.y == 0)
                 wallLeft = true;
@@ -166,10 +172,6 @@ abstract public class Character extends Polygon {
         }
 //        if(!handled)
         translate(collision.delta);
-
-        // Jump pads
-        if (collision.collider instanceof JumpPad)
-            velocity = ((JumpPad) collision.collider).velocity.copy();
     }
 
     public void damage(int damage, Point2f position, Player dealer) {
