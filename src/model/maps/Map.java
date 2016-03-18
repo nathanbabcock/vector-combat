@@ -2,7 +2,9 @@ package model.maps;
 
 import model.geometry.Point2f;
 import model.geometry.Polygon;
+import view.Canvas;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -18,4 +20,15 @@ public abstract class Map {
     public ArrayList<Polygon> statics;
     public ArrayList<Point2f> spawnpoints_red, spawnpoints_blue;
     public Point2f redflag, blueflag;
+
+    public void draw(Canvas canvas, Graphics2D g2) {
+        g2.setColor(Color.black);
+        Graphics2D g3 = (Graphics2D) g2.create();
+        //g3.translate(cameraOffsetX, )
+        g3.translate(canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY);
+        g3.scale(1, -1);
+        for (Polygon b : statics)
+            b.draw(canvas, g3);
+        //g3.fillPolygon(b.getAwtPoly());
+    }
 }

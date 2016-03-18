@@ -1,15 +1,22 @@
 package model.maps;
 
+import model.Game;
 import model.geometry.Point2f;
 import model.geometry.Polygon;
 import model.geometry.Vector2f;
+import view.Canvas;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 /**
  * Created by Nathan on 3/17/2016.
  */
 public class ctf_space extends Map {
+    BufferedImage background, clouds;
+
     public ctf_space() {
         width = 5584;
         height = 1800;
@@ -62,5 +69,23 @@ public class ctf_space extends Map {
 
         spawnpoints_red = new ArrayList<>();
         spawnpoints_red.add(new Point2f(889, 977));
+
+        // Backgrounds
+        background = null;
+        clouds = null;
+        try {
+            background = ImageIO.read(Game.class.getResourceAsStream("/res/maps/ctf_space/background.png"));
+            clouds = ImageIO.read(Game.class.getResourceAsStream("/res/maps/ctf_space/clouds.png"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void draw(Canvas canvas, Graphics2D g2) {
+        g2.setClip(0, 0, canvas.getWidth(), canvas.getHeight());
+        g2.drawImage(background, 0, 0, null);
+        g2.drawImage(clouds, canvas.cameraOffsetX / 2, 0, null);
+        super.draw(canvas, g2);
     }
 }
