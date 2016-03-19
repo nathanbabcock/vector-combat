@@ -4,6 +4,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import model.Game;
 import model.Player;
+import model.Sprite;
 import model.characters.CharClass;
 import model.characters.Team;
 import model.geometry.Point2f;
@@ -65,7 +66,7 @@ public class GameClient extends JFrame {
         chatQueue = new ArrayList();
 
         this.game = new Game();
-        this.game.initSprites();
+        Sprite.initSprites();
         this.game.setMap(game.mapID);
         this.game.importGame(game);
 

@@ -1,6 +1,5 @@
 package model.characters;
 
-import model.Game;
 import model.Player;
 import model.Sprite;
 import model.entities.Rocket;
@@ -37,25 +36,25 @@ public class Rocketman extends Character {
             team = "blue";
 
         if (sprite == null) {
-            sprite = Game.getSprite("rocketman_body_" + team);
-            legs = Game.getSprite("legs_stand");
-            arms = Game.getSprite("rocketman_launcher_" + team);
+            sprite = Sprite.getSprite("rocketman_body_" + team);
+            legs = Sprite.getSprite("legs_stand");
+            arms = Sprite.getSprite("rocketman_launcher_" + team);
             return;
         }
 
         if (onGround && (movingLeft || movingRight)) {
             // Handle legs
             if (legs == null) {
-                legs = Game.getSprite("legs_walk_1");
+                legs = Sprite.getSprite("legs_walk_1");
                 legSpriteTime = 0;
             } else if (legSpriteTime >= legs.time) {
-                legs = Game.getSprite(legs.next);
+                legs = Sprite.getSprite(legs.next);
                 legSpriteTime = 0;
             }
             legSpriteTime += deltaTime;
         } else {
             if (legs == null || !legs.name.equals("legs_stand"))
-                legs = Game.getSprite("legs_stand");
+                legs = Sprite.getSprite("legs_stand");
         }
     }
 
@@ -89,7 +88,7 @@ public class Rocketman extends Character {
 
     private Point2f getRotationOrigin() {
         final Point2f RELATIVE_ORIGIN = new Point2f(16, 17);
-        Sprite gun = Game.getSprite("rocketman_launcher_red");
+        Sprite gun = Sprite.getSprite("rocketman_launcher_red");
         Point2f origin = getBottomLeft().copy();
         origin.x += gun.offsetX + RELATIVE_ORIGIN.x;
         origin.y += gun.offsetY + gun.height - RELATIVE_ORIGIN.y;

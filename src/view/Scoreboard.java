@@ -153,19 +153,19 @@ public class Scoreboard {
 
             Sprite head = null;
             if (player.charClass == CharClass.ROCKETMAN) {
-                head = Game.getSprite("rocketman_head");
+                head = Sprite.getSprite("rocketman_head");
             } else if (player.charClass == CharClass.NINJA) {
                 if (player.isRed())
-                    head = Game.getSprite("ninja_head_red");
+                    head = Sprite.getSprite("ninja_head_red");
                 else
-                    head = Game.getSprite("ninja_head_blue");
+                    head = Sprite.getSprite("ninja_head_blue");
             } else if (player.charClass == CharClass.COMMANDO) {
                 if (player.isRed())
-                    head = Game.getSprite("commando_head_red");
+                    head = Sprite.getSprite("commando_head_red");
                 else
-                    head = Game.getSprite("commando_head_blue");
+                    head = Sprite.getSprite("commando_head_blue");
             } else if (player.charClass == CharClass.SCOUT) {
-                head = Game.getSprite("scout_head_menu");
+                head = Sprite.getSprite("scout_head_menu");
             }
             if (head != null)
                 g.drawImage(head.image, table_edgepadding + head.offsetX, head.offsetY + (row_height - head_height) / 2, null); // Head

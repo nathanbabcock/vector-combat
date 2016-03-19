@@ -103,13 +103,13 @@ public class Canvas extends JPanel {
         accelerationGraph.add(height - player.acceleration.magnitude());
         g2.setColor(Color.GREEN);
         for (int i = 0; i < positionGraph.size(); i++)
-            g2.fillRect(i, positionGraph.get(i).intValue(), 2, 2); // height
+            g2.fillRect(i, positionGraph.getSprite(i).intValue(), 2, 2); // height
         g2.setColor(Color.BLUE);
         for (int i = 0; i < velocityGraph.size(); i++)
-            g2.fillRect(i, velocityGraph.get(i).intValue(), 2, 2); // velocity
+            g2.fillRect(i, velocityGraph.getSprite(i).intValue(), 2, 2); // velocity
         g2.setColor(Color.ORANGE);
         for (int i = 0; i < accelerationGraph.size(); i++)
-            g2.fillRect(i, accelerationGraph.get(i).intValue(), 2, 2); // acceleration*/
+            g2.fillRect(i, accelerationGraph.getSprite(i).intValue(), 2, 2); // acceleration*/
 
 
     /* // Draw origin
@@ -151,12 +151,12 @@ public class Canvas extends JPanel {
 /*
 
         // Horizontal
-        Point2D pos = game.characters.get(clientName).getBottomLeft();
+        Point2D pos = game.characters.getSprite(clientName).getBottomLeft();
         if (pos.x < cameraMarginX) {
             cameraOffsetX = 0;
             return;
         }
-        if (pos.x + game.characters.get(clientName).width > game.map.width - cameraMarginX) {
+        if (pos.x + game.characters.getSprite(clientName).width > game.map.width - cameraMarginX) {
             cameraOffsetX = getWidth() - game.map.width;
             return;
         }
@@ -165,8 +165,8 @@ public class Canvas extends JPanel {
         if (left < cameraMarginX) {
             cameraOffsetX += cameraMarginX - left;
             return;
-        } else if (left + game.characters.get(clientName).width > getWidth() - cameraMarginX) {
-            cameraOffsetX -= (left + game.characters.get(clientName).width) - (getWidth() - cameraMarginX);
+        } else if (left + game.characters.getSprite(clientName).width > getWidth() - cameraMarginX) {
+            cameraOffsetX -= (left + game.characters.getSprite(clientName).width) - (getWidth() - cameraMarginX);
             return;
         }
 
@@ -176,7 +176,7 @@ public class Canvas extends JPanel {
             cameraOffsetY = 0;
             return;
         }
-        if (pos.y + game.characters.get(clientName).height > game.map.height - cameraMarginX) { // Top of map
+        if (pos.y + game.characters.getSprite(clientName).height > game.map.height - cameraMarginX) { // Top of map
             cameraOffsetY = getHeight() - game.map.height;
             return;
         }
@@ -185,8 +185,8 @@ public class Canvas extends JPanel {
         if (bottom < cameraMarginY) { // In bottom margin
             cameraOffsetY += cameraMarginY - bottom;
             return;
-        } else if (bottom + game.characters.get(clientName).height > getHeight() - cameraMarginY) { // In top margin
-            cameraOffsetY -= (bottom + game.characters.get(clientName).height) - (getHeight() - cameraMarginY);
+        } else if (bottom + game.characters.getSprite(clientName).height > getHeight() - cameraMarginY) { // In top margin
+            cameraOffsetY -= (bottom + game.characters.getSprite(clientName).height) - (getHeight() - cameraMarginY);
             return;
         }
 */

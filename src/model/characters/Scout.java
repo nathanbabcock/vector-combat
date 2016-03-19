@@ -1,6 +1,5 @@
 package model.characters;
 
-import model.Game;
 import model.Player;
 import model.Sprite;
 import model.entities.Bullet;
@@ -50,9 +49,9 @@ public class Scout extends Character {
 
         // Init
         if (sprite == null) {
-            sprite = Game.getSprite("scout_body_" + team);
-            legs = Game.getSprite("scout_legs_stand");
-            arms = Game.getSprite("scout_gun");
+            sprite = Sprite.getSprite("scout_body_" + team);
+            legs = Sprite.getSprite("scout_legs_stand");
+            arms = Sprite.getSprite("scout_gun");
         }
 
         // Preserve direction
@@ -62,22 +61,22 @@ public class Scout extends Character {
             direction = Direction.RIGHT;
 
         if (wallLeft || wallRight) {
-            sprite = Game.getSprite("scout_walljump_" + team);
+            sprite = Sprite.getSprite("scout_walljump_" + team);
             legs = null;
         } else if (!onGround) {
-            sprite = Game.getSprite("scout_run_body_" + team);
-            legs = Game.getSprite("scout_legs_run_3");
+            sprite = Sprite.getSprite("scout_run_body_" + team);
+            legs = Sprite.getSprite("scout_legs_run_3");
         } else if (movingLeft || movingRight) {
             // Initialize sprite
             if (!sprite.name.equals("scout_run_body_" + team))
-                sprite = Game.getSprite("scout_run_body_" + team);
+                sprite = Sprite.getSprite("scout_run_body_" + team);
 
             // Handle legs
             if (legs == null) {
-                legs = Game.getSprite("scout_legs_run_1");
+                legs = Sprite.getSprite("scout_legs_run_1");
                 legSpriteTime = 0;
             } else if (legSpriteTime >= legs.time) {
-                legs = Game.getSprite(legs.next);
+                legs = Sprite.getSprite(legs.next);
                 legSpriteTime = 0;
             }
             legSpriteTime += deltaTime;
@@ -85,18 +84,18 @@ public class Scout extends Character {
             /*// Handle running arms
             if (currentAttackDelay > 0) {
                 if (arms == null || !arms.name.startsWith("ninja_arm_attack")) {
-                    arms = Game.getSprite("ninja_arm_attack_1");
+                    arms = Sprite.getSprite("ninja_arm_attack_1");
                     armSpriteTime = 0;
                 } else if (armSpriteTime >= arms.time) {
-                    arms = Game.getSprite(arms.next);
+                    arms = Sprite.getSprite(arms.next);
                     armSpriteTime = 0;
                 }
                 armSpriteTime += deltaTime;
             } else if (arms == null || !arms.name.equals("ninja_arm"))
-                arms = Game.getSprite("ninja_arm");*/
+                arms = Sprite.getSprite("ninja_arm");*/
         } else {
-            sprite = Game.getSprite("scout_body_" + team);
-            legs = Game.getSprite("scout_legs_stand");
+            sprite = Sprite.getSprite("scout_body_" + team);
+            legs = Sprite.getSprite("scout_legs_stand");
         }
 
         spriteTime += deltaTime;
@@ -105,20 +104,20 @@ public class Scout extends Character {
     /*@Override
     public void updateSprite(float deltaTime) {
         if (sprite == null)
-            sprite = Game.getSprite("scout_standing");
+            sprite = Sprite.getSprite("scout_standing");
 
         if (wallLeft || wallRight) {
-            sprite = Game.getSprite("scout_walljump");
+            sprite = Sprite.getSprite("scout_walljump");
         } else if (movingLeft || movingRight) {
             if (!sprite.name.startsWith("scout_walking")) {
-                sprite = Game.getSprite("scout_walking_1");
+                sprite = Sprite.getSprite("scout_walking_1");
                 spriteTime = 0;
             } else if (spriteTime >= sprite.time) {
-                sprite = Game.getSprite(sprite.next);
+                sprite = Sprite.getSprite(sprite.next);
                 spriteTime = 0;
             }
         } else {
-            sprite = Game.getSprite("scout_standing");
+            sprite = Sprite.getSprite("scout_standing");
         }
         spriteTime += deltaTime;
     }*/
@@ -253,7 +252,7 @@ public class Scout extends Character {
 
     private Point2f getRotationOrigin() {
         final Point2f RELATIVE_ORIGIN = new Point2f(9, 3);
-        Sprite gun = Game.getSprite("scout_gun");
+        Sprite gun = Sprite.getSprite("scout_gun");
         Point2f origin = getBottomLeft().copy();
         origin.x += gun.offsetX + RELATIVE_ORIGIN.x;
         origin.y += gun.offsetY + gun.height - RELATIVE_ORIGIN.y;
@@ -299,7 +298,7 @@ public class Scout extends Character {
 
 
         // Setup coordinate spaces
-        Sprite head = Game.getSprite("scout_head");
+        Sprite head = Sprite.getSprite("scout_head");
         Point2f ARM_ORIGIN = new Point2f(9, 3); // The arms rotation center, in canvas coordinates, relative to the arm sprite
         Graphics2D armCanvas = (Graphics2D) g2.create();
         armCanvas.translate(arms.offsetX + 1, -(arms.offsetY + arms.height));

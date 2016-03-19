@@ -1,6 +1,5 @@
 package model.characters;
 
-import model.Game;
 import model.Player;
 import model.Sprite;
 import model.entities.Bullet;
@@ -40,25 +39,25 @@ public class Commando extends Character {
             team = "blue";
 
         if (sprite == null) {
-            sprite = Game.getSprite("commando_body_" + team);
-            legs = Game.getSprite("legs_stand");
-            arms = Game.getSprite("commando_gun_" + team);
+            sprite = Sprite.getSprite("commando_body_" + team);
+            legs = Sprite.getSprite("legs_stand");
+            arms = Sprite.getSprite("commando_gun_" + team);
             return;
         }
 
         if (onGround && (movingLeft || movingRight)) {
             // Handle legs
             if (legs == null) {
-                legs = Game.getSprite("legs_walk_1");
+                legs = Sprite.getSprite("legs_walk_1");
                 legSpriteTime = 0;
             } else if (legSpriteTime >= legs.time) {
-                legs = Game.getSprite(legs.next);
+                legs = Sprite.getSprite(legs.next);
                 legSpriteTime = 0;
             }
             legSpriteTime += deltaTime;
         } else {
             if (legs == null || !legs.name.equals("legs_stand"))
-                legs = Game.getSprite("legs_stand");
+                legs = Sprite.getSprite("legs_stand");
         }
     }
 
@@ -133,7 +132,7 @@ public class Commando extends Character {
 
     private Point2f getRotationOrigin() {
         final Point2f RELATIVE_ORIGIN = new Point2f(10, 4);
-        Sprite gun = Game.getSprite("commando_gun_red");
+        Sprite gun = Sprite.getSprite("commando_gun_red");
         Point2f origin = getBottomLeft().copy();
         origin.x += gun.offsetX + RELATIVE_ORIGIN.x;
         origin.y += gun.offsetY + gun.height - RELATIVE_ORIGIN.y;

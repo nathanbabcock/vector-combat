@@ -1,7 +1,6 @@
 package model.characters;
 
 import model.Collision;
-import model.Game;
 import model.Player;
 import model.Sprite;
 import model.entities.Grapple;
@@ -58,7 +57,7 @@ public class Ninja extends Character {
             team = "blue";
 
         if (sprite == null)
-            sprite = Game.getSprite("ninja_crouch_" + team);
+            sprite = Sprite.getSprite("ninja_crouch_" + team);
 
         if (!onGround && grapple != null) {
             // Player grapple
@@ -69,7 +68,7 @@ public class Ninja extends Character {
                     direction = Direction.RIGHT;
 
                 if (!sprite.name.equals("ninja_kick_" + team)) {
-                    sprite = Game.getSprite("ninja_kick_" + team);
+                    sprite = Sprite.getSprite("ninja_kick_" + team);
                     arms = null;
                     legs = null;
                 }
@@ -77,13 +76,13 @@ public class Ninja extends Character {
 
             // Normal grapple
             else if (!sprite.name.equals("ninja_jump_" + team)) {
-                sprite = Game.getSprite("ninja_jump_" + team);
-                arms = Game.getSprite("ninja_arm_grapple_2");
+                sprite = Sprite.getSprite("ninja_jump_" + team);
+                arms = Sprite.getSprite("ninja_arm_grapple_2");
                 legs = null;
             }
         } else if (currentParryDelay >= parryInterval - parryWindow) {
             if (!sprite.name.equals("ninja_parry_" + team)) {
-                sprite = Game.getSprite("ninja_parry_" + team);
+                sprite = Sprite.getSprite("ninja_parry_" + team);
                 arms = null;
                 legs = null;
             }
@@ -96,14 +95,14 @@ public class Ninja extends Character {
 
             // Initialize sprite
             if (!sprite.name.equals("ninja_body_" + team))
-                sprite = Game.getSprite("ninja_body_" + team);
+                sprite = Sprite.getSprite("ninja_body_" + team);
 
             // Handle legs
             if (legs == null) {
-                legs = Game.getSprite("ninja_legs_1");
+                legs = Sprite.getSprite("ninja_legs_1");
                 legSpriteTime = 0;
             } else if (legSpriteTime >= legs.time) {
-                legs = Game.getSprite(legs.next);
+                legs = Sprite.getSprite(legs.next);
                 legSpriteTime = 0;
             }
             legSpriteTime += deltaTime;
@@ -111,33 +110,33 @@ public class Ninja extends Character {
             // Handle running arms
             if (currentAttackDelay > 0) {
                 if (arms == null || !arms.name.startsWith("ninja_arm_attack")) {
-                    arms = Game.getSprite("ninja_arm_attack_1");
+                    arms = Sprite.getSprite("ninja_arm_attack_1");
                     armSpriteTime = 0;
                 } else if (armSpriteTime >= arms.time) {
-                    arms = Game.getSprite(arms.next);
+                    arms = Sprite.getSprite(arms.next);
                     armSpriteTime = 0;
                 }
                 armSpriteTime += deltaTime;
             } else if (arms == null || !arms.name.equals("ninja_arm"))
-                arms = Game.getSprite("ninja_arm");
+                arms = Sprite.getSprite("ninja_arm");
         } else if (currentAttackDelay > 0) {
             if (!sprite.name.equals("ninja_stand_" + team)) {
-                sprite = Game.getSprite("ninja_stand_" + team);
+                sprite = Sprite.getSprite("ninja_stand_" + team);
                 legs = null;
             }
 
             if (arms == null || !arms.name.startsWith("ninja_stand_arm_attack")) {
-                arms = Game.getSprite("ninja_stand_arm_attack_1");
+                arms = Sprite.getSprite("ninja_stand_arm_attack_1");
                 armSpriteTime = 0;
             } else if (armSpriteTime >= arms.time) {
-                arms = Game.getSprite(arms.next);
+                arms = Sprite.getSprite(arms.next);
                 armSpriteTime = 0;
             }
             armSpriteTime += deltaTime;
         } else if (!sprite.name.equals("ninja_crouch_" + team)) {
             legs = null;
             arms = null;
-            sprite = Game.getSprite("ninja_crouch_" + team);
+            sprite = Sprite.getSprite("ninja_crouch_" + team);
         }
         spriteTime += deltaTime;
     }
@@ -373,7 +372,7 @@ public class Ninja extends Character {
 
     public Point2f getRotationOrigin() {
         final Point2f RELATIVE_ORIGIN = new Point2f(0, 4);
-        Sprite arm = Game.getSprite("ninja_arm_grapple_2");
+        Sprite arm = Sprite.getSprite("ninja_arm_grapple_2");
         Point2f origin = getBottomLeft().copy();
         origin.x += arm.offsetX + RELATIVE_ORIGIN.x;
         origin.y += arm.offsetY + arm.height - RELATIVE_ORIGIN.y;

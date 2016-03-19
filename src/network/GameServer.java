@@ -7,6 +7,7 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import model.Game;
 import model.Player;
+import model.Sprite;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -90,7 +91,7 @@ public class GameServer {
 
     private void init_game() {
         game = new Game();
-        game.initSprites();
+        Sprite.initSprites();
         game.setMap("ctf_space");
 //        new GameUpdater().start();
 

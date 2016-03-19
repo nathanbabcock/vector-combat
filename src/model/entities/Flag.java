@@ -145,7 +145,7 @@ public class Flag extends Polygon {
         // No holder
         if (holder == -1) {
             g2.translate(getBottomLeft().x + canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY - getBottomLeft().y - getHeight());
-            Sprite sprite = Game.getSprite(team == Team.RED ? "flag_red" : "flag_blue");
+            Sprite sprite = Sprite.getSprite(team == Team.RED ? "flag_red" : "flag_blue");
             g2.drawImage(sprite.image, 0, 0, null);
 
             if (!inBase) {

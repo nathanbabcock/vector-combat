@@ -194,7 +194,7 @@ public class Polygon implements Serializable {
             if (!p1.overlaps(p2))
                 return null;
             else {
-                // get the overlap
+                // getSprite the overlap
                 float o = p1.getOverlap(p2);
 
 //                System.out.println("Overlap = " + o);

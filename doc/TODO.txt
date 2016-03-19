@@ -1,0 +1,16 @@
+BUGS
+- Ninja dying with grapple
+- Jump pad wrong velocity when walked onto
+
+REFACTORING
+- Clean up Graphics usage strategies (create() and destroy(), local coordinate systems)
+- Sprites -> static
+- Double buffering (?)
+- Packet size optimization
+- Disable graphics for server
+
+FEATURES
+- Kill logs
+- Team chat
+- Health bar
+- Flag indicator
