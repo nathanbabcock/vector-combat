@@ -7,6 +7,7 @@ import model.Game;
 import model.Player;
 import model.characters.*;
 import model.entities.Bullet;
+import model.entities.Flag;
 import model.entities.Grapple;
 import model.entities.Rocket;
 import model.geometry.Point2f;
@@ -22,7 +23,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * Created by Nathan on 1/10/2016.
  */
-public class Config {
+public class Network {
     public static final int TCP_PORT = 54555;
     public static final int UDP_PORT = 54777;
 
@@ -57,6 +58,7 @@ public class Config {
         kryo.register(Bullet.class);
         kryo.register(Grapple.class);
         kryo.register(Rocket.class);
+        kryo.register(Flag.class);
 
         // Geometry
         kryo.register(Point2f.class);

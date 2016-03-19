@@ -35,7 +35,7 @@ public class GameClient extends JFrame {
     static final int TIMEOUT = 5000;
     final int VID_FPS = 60; // Number of times per second both GAME LOGIC and RENDERING occur
     final int NET_FPS = 20; // Number of times per second input is sent to the server
-    float TIMESCALE = Config.TIMESCALE;
+    float TIMESCALE = Network.TIMESCALE;
 
     static final Integer LAYER_CANVAS = new Integer(0);
     static final Integer LAYER_HUD = new Integer(1);
@@ -82,7 +82,7 @@ public class GameClient extends JFrame {
     private void initNetwork(String server, int tcp_port, int udp_port) {
         client = new com.esotericsoftware.kryonet.Client();
 
-        Config.register(client);
+        Network.register(client);
 
         client.addListener(new Listener.ThreadedListener(new Listener() {
             public void received(Connection connection, Object object) {
@@ -94,7 +94,7 @@ public class GameClient extends JFrame {
                             if (true) { // DEBUG
                                 //inputState.xhair = new Point2f(1000, 30);
                                 //inputState.attacking = true;
-                                client.sendTCP(new SpawnParams(Team.BLUE, CharClass.ROCKETMAN));
+                                client.sendTCP(new SpawnParams(Team.RED, CharClass.ROCKETMAN));
                             }
                         } else {
 //                        if (game.sent > ((Game) object).sent) {
@@ -107,7 +107,7 @@ public class GameClient extends JFrame {
 //                        game.getPlayer(clientName).ping = (int) Math.min(System.currentTimeMillis() - game.sent, 999L);
                         }
                     } else if (object instanceof ChatMessage) {
-                        System.out.println("RECEIVED CHAT");
+                        //System.out.println("RECEIVED CHAT");
                         game.chat.add((ChatMessage) object);
                         refreshChat();
                     } else
@@ -645,7 +645,7 @@ public class GameClient extends JFrame {
             e.printStackTrace();
         }*/
 
-        new GameClient(JOptionPane.showInputDialog("Username:"), "localhost", Config.TCP_PORT, Config.UDP_PORT);
+        new GameClient(JOptionPane.showInputDialog("Username:"), "localhost", Network.TCP_PORT, Network.UDP_PORT);
 //        new KryoClient(JOptionPane.showInputDialog("Username:"), "68.230.58.93", Network.TCP_PORT, Network.UDP_PORT);
     }
 }

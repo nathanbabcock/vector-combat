@@ -30,6 +30,8 @@ public class Game {
     public float countdown;
     public Team winner;
 
+    public int redScore, blueScore;
+
     public transient static final float GRAVITY = -440;
     public transient static final int RESPAWN_TIME = 5;
     public transient static final float START_COUNTDOWN = 3;
@@ -75,6 +77,8 @@ public class Game {
                 break;
             case "ctf_space":
                 map = new ctf_space();
+                entities.add(map.redflag.setGame(this));
+                entities.add(map.blueflag.setGame(this));
                 break;
             default:
                 System.err.println("Unknown map " + mapID + " specified");
@@ -91,7 +95,11 @@ public class Game {
             winner = null;
     }
 
+    // TODO hacky
     public int getScore(Team team) {
+        if (map.redflag != null)
+            return team == Team.RED ? redScore : blueScore;
+
         int score = 0;
         for (Player player : players)
             if (player.team == team)
@@ -451,6 +459,12 @@ public class Game {
         sprites.add(new Sprite("rocketman_head")
                 .setImage());
 
+        // Flag
+        sprites.add(new Sprite("flag_red")
+                .setImage());
+        sprites.add(new Sprite("flag_blue")
+                .setImage());
+
         System.out.println("Finished sprite init");
     }
 
@@ -527,6 +541,8 @@ public class Game {
 
         // Other
 //        sent = other.sent;
+        redScore = other.redScore;
+        blueScore = other.blueScore;
         countdown = other.countdown;
         winner = other.winner;
     }

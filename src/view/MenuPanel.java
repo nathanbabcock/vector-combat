@@ -22,7 +22,7 @@ public class MenuPanel extends JPanel {
     public boolean open;
 
     public CharClass selectedClass = CharClass.ROCKETMAN;
-    public Team selectedTeam = Team.BLUE;
+    public Team selectedTeam = Team.RED;
 
     final int char_padding = 75;
     final int width = 500;
@@ -44,7 +44,7 @@ public class MenuPanel extends JPanel {
 
         setVisible(false);
         setOpaque(false);
-        setBackground(new Color(0, 0, 0, 0.75f));
+        setBackground(new Color(1f, 1f, 1f, 0.5f));
         setLayout(null);
 
         //  Init players

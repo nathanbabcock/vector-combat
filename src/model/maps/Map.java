@@ -1,5 +1,6 @@
 package model.maps;
 
+import model.entities.Flag;
 import model.geometry.Point2f;
 import model.geometry.Polygon;
 import view.Canvas;
@@ -19,7 +20,11 @@ public abstract class Map {
     //    public ArrayList<Line2D> boundaries;
     public ArrayList<Polygon> statics;
     public ArrayList<Point2f> spawnpoints_red, spawnpoints_blue;
-    public Point2f redflag, blueflag;
+    public Flag redflag, blueflag;
+
+    public boolean outsideBoundaries(Polygon polygon) {
+        return polygon.getCenter().x > width || polygon.getCenter().y > height || polygon.getCenter().x < 0 || polygon.getCenter().y < 0;
+    }
 
     public void draw(Canvas canvas, Graphics2D g2) {
         g2.setColor(Color.black);

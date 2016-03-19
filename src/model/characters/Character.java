@@ -10,6 +10,7 @@ import model.maps.JumpPad;
 import model.particles.Particle;
 import network.InputState;
 import view.Canvas;
+import view.GUI;
 
 import java.awt.*;
 import java.util.Random;
@@ -68,10 +69,15 @@ abstract public class Character extends Polygon {
 
     @Override
     public void update(float deltaTime) {
-        if (getCenter().x > game.map.width || getCenter().y > game.map.height || getCenter().x < 0 || getCenter().y < 0) {
+        if (game.map.outsideBoundaries(this)) {
             player.kill();
             return;
         }
+
+//        if (getCenter().x > game.map.width || getCenter().y > game.map.height || getCenter().x < 0 || getCenter().y < 0) {
+//            player.kill();
+//            return;
+//        }
 
         if (game.countdown <= 0) {
             jump(deltaTime);
@@ -83,15 +89,6 @@ abstract public class Character extends Polygon {
         applyPhysics(deltaTime);
         checkCollisions();
         updateSprite(deltaTime);
-    }
-
-    public void applyPhysics(float deltaTime) {
-        // Apply gravity
-        velocity.add(acceleration.copy().scale(deltaTime));
-        acceleration.y = game.GRAVITY;
-
-        // Move player
-        displace(acceleration, velocity, deltaTime);
     }
 
     public void jump(float deltaTime) {
@@ -262,7 +259,10 @@ abstract public class Character extends Polygon {
         else
             g2.setColor(Color.BLACK);
         int estWidth = clientName.length() * fontSize;
-        g2.drawString(clientName, playerX + playerWidth - (estWidth / 2), playerY - fontSize);
+//        g2.drawString(clientName, playerX + playerWidth - (estWidth / 2), playerY - fontSize);
+        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        g2.setFont(GUI.FONT_SEMIBOLD.deriveFont(14f));
+        GUI.drawString_centerHoriz(g2, clientName, playerX + playerWidth / 2, playerY - 15, 0);
         draw(canvas, g2);
     }
 

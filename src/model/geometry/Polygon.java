@@ -94,7 +94,8 @@ public class Polygon implements Serializable {
     }
 
     public Polygon setPosition(Point2f pos) {
-        Vector2f delta = new Vector2f(getPosition(), pos);
+        if (pos == null) return this;
+        Vector2f delta = new Vector2f(getPosition(), pos.copy());
         for (Point2f v : vertices)
             v.translate(delta);
         return this;
@@ -114,6 +115,11 @@ public class Polygon implements Serializable {
 
     public Polygon translate(float x, float y) {
         return setPosition(getPosition().translate(x, y));
+    }
+
+    public Polygon setGame(Game game) {
+        this.game = game;
+        return this;
     }
 
     public java.awt.Polygon getAwtPoly() {
@@ -226,6 +232,15 @@ public class Polygon implements Serializable {
     }
 
     public void handleCollision(Collision collision) {
+    }
+
+    public void applyPhysics(float deltaTime) {
+        // Apply gravity
+        velocity.add(acceleration.copy().scale(deltaTime));
+        acceleration.y = game.GRAVITY;
+
+        // Move
+        displace(acceleration, velocity, deltaTime);
     }
 
     public static void main(String[] args) {

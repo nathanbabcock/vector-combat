@@ -29,7 +29,7 @@ public class GameServer {
     final int VID_FPS = 60;
     final int NET_FPS = 20;
     final int MAX_PING_HISTORY = 60; // Number of ping times to save per player
-    float TIMESCALE = Config.TIMESCALE;
+    float TIMESCALE = Network.TIMESCALE;
 
     public GameServer() {
         init_network();
@@ -59,11 +59,11 @@ public class GameServer {
             }
         };
 
-        Config.register(server);
+        Network.register(server);
         server.start();
 
         try {
-            server.bind(Config.TCP_PORT, Config.UDP_PORT);
+            server.bind(Network.TCP_PORT, Network.UDP_PORT);
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(2);
@@ -237,7 +237,7 @@ public class GameServer {
 
     public static void main(String[] args) {
         new GameServer();
-        GameClient client = new GameClient("excalo", "68.230.58.93", Config.TCP_PORT, Config.UDP_PORT);
+        GameClient client = new GameClient("excalo", "68.230.58.93", Network.TCP_PORT, Network.UDP_PORT);
 //        new GameClient("asdf", "68.230.58.93", Config.TCP_PORT, Config.UDP_PORT);
 //        try {
 //            Thread.sleep(250);
