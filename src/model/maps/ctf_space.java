@@ -17,7 +17,7 @@ import java.util.ArrayList;
  * Created by Nathan on 3/17/2016.
  */
 public class ctf_space extends Map {
-    BufferedImage background, clouds, bg_a, bg_b;
+    BufferedImage background, clouds, level;// bg_a, bg_b;
 
     public ctf_space() {
         width = 5584;
@@ -78,6 +78,8 @@ public class ctf_space extends Map {
             background = Map.getCompatibleImage(background, Transparency.OPAQUE);
             clouds = ImageIO.read(Game.class.getResourceAsStream("/res/maps/ctf_space/clouds.png"));
             clouds = Map.getCompatibleImage(clouds, Transparency.TRANSLUCENT);
+            level = ImageIO.read(Game.class.getResourceAsStream("/res/maps/ctf_space/ctf_space.png"));
+            level = Map.getCompatibleImage(level, Transparency.TRANSLUCENT);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -96,6 +98,14 @@ public class ctf_space extends Map {
         bgCanvas.drawImage(background, 0, 0, null);
         bgCanvas.dispose();
 //        g2.drawImage(clouds, canvas.cameraOffsetX / 2, 0, null);
+
+
+        Graphics2D levelCanvas = (Graphics2D) g2.create();
+        levelCanvas.translate(canvas.cameraOffsetX, canvas.getHeight() - level.getHeight() - canvas.cameraOffsetY);
+        levelCanvas.translate(600, -559);
+        levelCanvas.drawImage(level, 0, 0, null);
+        levelCanvas.dispose();
+
         super.draw(canvas, g2);
     }
 }

@@ -27,19 +27,16 @@ public abstract class Map {
     }
 
     public void draw(Canvas canvas, Graphics2D g2) {
-        g2.setColor(Color.black);
-        Graphics2D g3 = (Graphics2D) g2.create();
-        //g3.translate(cameraOffsetX, )
-        g3.translate(canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY);
-        g3.scale(1, -1);
-        for (Polygon b : statics) {
-            if (!(b instanceof JumpPad))
-                drawPlatform(g3, b);
-            else
-                b.draw(canvas, g3);
-        }
-        //b.draw(canvas, g3);
-        //g3.fillPolygon(b.getAwtPoly());
+//        g2.setColor(Color.black);
+//        Graphics2D g3 = (Graphics2D) g2.create();
+//        g3.translate(canvas.cameraOffsetX, canvas.getHeight() - canvas.cameraOffsetY);
+//        g3.scale(1, -1);
+//        for (Polygon b : statics) {
+//            if (!(b instanceof JumpPad))
+//                drawPlatform(g3, b);
+//            else
+//                b.draw(canvas, g3);
+//        }
     }
 
     static BufferedImage getCompatibleImage(BufferedImage image, int transparency) {
