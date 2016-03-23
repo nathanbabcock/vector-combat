@@ -89,6 +89,7 @@ public class ctf_space extends Map {
         blueflag = new Flag(null, Team.BLUE).setSpawn(new Point2f(4676, 1127));
     }
 
+
     @Override
     public void draw(Canvas canvas, Graphics2D g2) {
         Graphics2D bgCanvas = (Graphics2D) g2.create();

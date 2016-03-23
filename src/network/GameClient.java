@@ -646,7 +646,7 @@ public class GameClient extends JFrame {
             e.printStackTrace();
         }*/
 
-        new GameClient(JOptionPane.showInputDialog("Username:"), "localhost", Network.TCP_PORT, Network.UDP_PORT);
+        new GameClient(JOptionPane.showInputDialog("Username:"), "68.230.58.93", Network.TCP_PORT, Network.UDP_PORT);
 //        new KryoClient(JOptionPane.showInputDialog("Username:"), "68.230.58.93", Network.TCP_PORT, Network.UDP_PORT);
     }
 }

@@ -124,7 +124,7 @@ public class GameServer {
 
                         // Ping
                         if (!con.player.pings.isEmpty()) {
-                            while (con.player.pings.peek().tick < i.lastTick)
+                            while (con.player.pings.peek().tick < i.lastTick) // ERROR
                                 con.player.pings.remove();
                             con.player.ping = (int) (System.currentTimeMillis() - con.player.pings.remove().time);
                         }
