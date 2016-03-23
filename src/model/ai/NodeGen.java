@@ -143,17 +143,19 @@ public class NodeGen extends JFrame {
                         if (pt.distance(realP) <= point_diam / 2) {
                             curNode.points.add(pt.copy());
                             repaint();
+                            return;
                         }
                     }
                 }
 
-                System.out.println(realP);
+                // else
+                curNode = closestNode(realP);
+                repaint();
             }
         });
 
     }
 
-    //paint
 
     @Override
     public void paint(Graphics g) {
@@ -193,6 +195,23 @@ public class NodeGen extends JFrame {
         }
 
         g2.dispose();
+    }
+
+    public PathNode closestNode(Point2f p) {
+        float minDist = Float.MAX_VALUE;
+        PathNode minNode = null;
+        for (PathNode pathNode : nodes) {
+            if (p.x < pathNode.minX() || p.x > pathNode.maxX()) continue;
+            float y = pathNode.getPoint(p.x).y;
+            if (y > p.y) continue;
+            final float dist = Math.abs(p.y - y);
+            if (dist < minDist) {
+                minDist = dist;
+                minNode = pathNode;
+            }
+        }
+
+        return minNode;
     }
 
     public static void main(String[] args) {

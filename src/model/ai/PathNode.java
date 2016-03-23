@@ -17,6 +17,34 @@ public class PathNode {
         points = new ArrayList<>();
     }
 
+    public float minX() {
+        return points.get(0).x;
+    }
+
+    public float maxX() {
+        return points.get(points.size() - 1).x;
+    }
+
+    public Point2f getPoint(float x) {
+        Point2f start, end, prev;
+        start = end = prev = null;
+        for (Point2f p : points) {
+            if (p.x >= x) {
+                end = p;
+                start = prev;
+                break;
+            }
+            prev = p;
+        }
+
+        if (start == null || end == null) {
+            System.err.println("Could not find x coordinate " + x + " in PathNode.");
+            return null;
+        }
+
+        return new Point2f(x, ((end.y - start.y) / (end.x - start.x)) * (x - start.x) + start.y);
+    }
+
     static void writeNodes(List<PathNode> list, String file) {
         try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "utf-8"))) {
             for (PathNode node : list) {
