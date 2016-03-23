@@ -74,6 +74,8 @@ abstract public class Character extends Polygon {
             return;
         }
 
+        System.out.println(velocity);
+
 //        if (getCenter().x > game.map.width || getCenter().y > game.map.height || getCenter().x < 0 || getCenter().y < 0) {
 //            player.kill();
 //            return;
@@ -132,13 +134,14 @@ abstract public class Character extends Polygon {
     public void handleCollision(Collision collision) {
         // Jump pads
         if (collision.collider instanceof JumpPad) {
-            // System.out.println("Jp collsion");
+            System.out.println("Jp collision");
             translate(collision.delta);
             //translate(0, 80);
             velocity = ((JumpPad) collision.collider).velocity.copy();
+            onGround = false;
             return;
         }
-        //System.out.println("non-jp collision with "+collision.collider);
+        System.out.println("non-jp collision");
 
         if (collision.delta.x > 0) {
             if (collision.delta.y == 0)

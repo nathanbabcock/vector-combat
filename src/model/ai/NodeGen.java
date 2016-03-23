@@ -150,6 +150,7 @@ public class NodeGen extends JFrame {
 
                 // else
                 curNode = closestNode(realP);
+                if (curNode == null) curNode = new PathNode();
                 repaint();
             }
         });
