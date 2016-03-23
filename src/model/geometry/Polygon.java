@@ -147,6 +147,10 @@ public class Polygon implements Serializable {
     }
 
     public void update(float deltaTime) {
+        if (game.map.outsideBoundaries(this)) {
+            game.garbage.add(this);
+            return;
+        }
         // Remove if necessary
 //        if (getCenter().x > game.map.width || getCenter().y > game.map.height || getCenter().x < 0 || getCenter().y < 0) {
 //            game.garbage.add(this);

@@ -109,6 +109,8 @@ public class Game {
      */
     public void update(float deltaTime) {
         try {
+            System.out.println(entities.size());
+
             // Debug
             time += deltaTime;
 //      System.out.println("t = " + time + ", pos = " + player.position + ", v = (" + player.velocity.x + ", " + player.velocity.y + "), a = (" + player.acceleration.x + ", " + player.acceleration.y + ")");

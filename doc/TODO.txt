@@ -1,15 +1,17 @@
 BUGS
-- Ninja dying with grapple
+- Entities not being cleaned up at map boundaries
+- Random null pointer on ping sometimes
 
 REFACTORING
 - Clean up Graphics usage strategies (create() and destroy(), local coordinate systems)
-- Sprites -> static
 - Double buffering (?)
 - Packet size optimization
 - Disable graphics for server
 
 FEATURES
+- Health bar
+- Respawn time HUD display
+- Scoreboard should be sorted by score
 - Kill logs
 - Team chat
-- Health bar
 - Flag indicator
