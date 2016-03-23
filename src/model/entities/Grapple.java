@@ -96,6 +96,7 @@ public class Grapple extends model.geometry.Polygon {
         int size = (int) getWidth();
         g2.fillOval(x, y, size, size);
         Ninja character = (Ninja) game.getPlayer(owner).character;
+        if (character == null) return; // Character died; grapple will be garbage collected shortly.
         Point2f origin = character.getProjectileOrigin();
         g2.drawLine((int) origin.x + canvas.cameraOffsetX, (int) (canvas.getHeight() - canvas.cameraOffsetY - origin.y), (int) (getCenter().x + canvas.cameraOffsetX), (int) (canvas.getHeight() - canvas.cameraOffsetY - getCenter().y));
     }

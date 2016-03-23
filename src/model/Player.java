@@ -51,6 +51,7 @@ public class Player {
     }
 
     public void kill() {
+        character.kill();
         character = null;
         deaths++;
     }

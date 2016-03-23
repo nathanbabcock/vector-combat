@@ -416,6 +416,11 @@ public class Ninja extends Character {
         }
     }
 
+    public void kill() {
+        game.garbage.add(grapple);
+        grapple = null;
+    }
+
     @Override
     public void draw(Canvas canvas, Graphics2D g2) {
         // DEBUG HITBOXES
