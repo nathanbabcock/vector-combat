@@ -1,7 +1,7 @@
 package network;
 
-import model.characters.Character;
-import model.geometry.Point2f;
+import characters.Character;
+import geometry.Point2f;
 
 /**
  * Created by Nathan on 9/12/2015.

@@ -1,7 +1,7 @@
 package network;
 
-import model.characters.CharClass;
-import model.characters.Team;
+import characters.CharClass;
+import characters.Team;
 
 /**
  * Created by Nathan on 12/25/2015.

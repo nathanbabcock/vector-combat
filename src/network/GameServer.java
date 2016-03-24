@@ -5,9 +5,9 @@ import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-import model.Game;
-import model.Player;
-import model.Sprite;
+import core.Game;
+import core.Player;
+import view.Sprite;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -199,7 +199,7 @@ public class GameServer {
                 startTime = System.currentTimeMillis();
 //                System.out.println("Frame " + frameNo + " ========");
 
-                // Part 1: Update model
+                // Part 1: Update core
 //                System.out.println("game tick");
 
 

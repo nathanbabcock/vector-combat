@@ -1,6 +1,6 @@
 package view;
 
-import model.characters.Team;
+import characters.Team;
 
 import javax.swing.*;
 import java.awt.*;

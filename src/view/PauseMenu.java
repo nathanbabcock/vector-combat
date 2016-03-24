@@ -1,10 +1,10 @@
 package view;
 
-import model.Game;
-import model.Player;
-import model.characters.*;
-import model.characters.Character;
-import model.geometry.Point2f;
+import characters.*;
+import characters.Character;
+import core.Game;
+import core.Player;
+import geometry.Point2f;
 
 import java.awt.*;
 import java.util.ArrayList;

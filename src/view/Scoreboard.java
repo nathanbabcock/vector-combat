@@ -1,10 +1,9 @@
 package view;
 
-import model.Game;
-import model.Player;
-import model.Sprite;
-import model.characters.CharClass;
-import model.characters.Team;
+import characters.CharClass;
+import characters.Team;
+import core.Game;
+import core.Player;
 
 import java.awt.*;
 

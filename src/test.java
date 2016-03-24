@@ -13,8 +13,8 @@ public class test {
 //        Point2f point = new Point2f(5, 10);
 //        Point2f origin = new Point2f(3, 7);
 //
-//        model.geometry.Point2f pointB = new model.geometry.Point2f(5, 10);
-//        model.geometry.Point2f originB = new model.geometry.Point2f(3, 7);
+//        geometry.Point2f pointB = new geometry.Point2f(5, 10);
+//        geometry.Point2f originB = new geometry.Point2f(3, 7);
 
 
     }

@@ -1,20 +1,20 @@
 package network;
 
+import characters.*;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
 import com.esotericsoftware.minlog.Log;
-import model.Game;
-import model.Player;
-import model.characters.*;
-import model.entities.Bullet;
-import model.entities.Flag;
-import model.entities.Grapple;
-import model.entities.Rocket;
-import model.geometry.Point2f;
-import model.geometry.Polygon;
-import model.geometry.Vector2f;
-import model.maps.Map1;
-import model.maps.Map2;
+import core.Game;
+import core.Player;
+import entities.Bullet;
+import entities.Flag;
+import entities.Grapple;
+import entities.Rocket;
+import geometry.Point2f;
+import geometry.Polygon;
+import geometry.Vector2f;
+import maps.Map1;
+import maps.Map2;
 
 import java.util.ArrayList;
 import java.util.Date;

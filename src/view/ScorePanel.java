@@ -1,8 +1,8 @@
 package view;
 
-import model.Game;
-import model.Player;
-import model.characters.Team;
+import characters.Team;
+import core.Game;
+import core.Player;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

@@ -1,9 +1,9 @@
 package view;
 
-import model.Player;
-import model.characters.*;
-import model.characters.Character;
-import model.geometry.Point2f;
+import characters.*;
+import characters.Character;
+import core.Player;
+import geometry.Point2f;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

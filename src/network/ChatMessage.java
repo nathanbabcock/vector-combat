@@ -1,6 +1,6 @@
 package network;
 
-import model.characters.Team;
+import characters.Team;
 
 import java.util.Date;
 

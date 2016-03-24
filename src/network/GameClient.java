@@ -1,13 +1,12 @@
 package network;
 
+import characters.CharClass;
+import characters.Team;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import model.Game;
-import model.Player;
-import model.Sprite;
-import model.characters.CharClass;
-import model.characters.Team;
-import model.geometry.Point2f;
+import core.Game;
+import core.Player;
+import geometry.Point2f;
 import view.Canvas;
 import view.*;
 
@@ -260,7 +259,7 @@ public class GameClient extends JFrame {
     private class GameTick implements Runnable {
         @Override
         public void run() {
-            // Part 1: Update model
+            // Part 1: Update core
             if (game != null) {
 //                System.out.println("game tick");
                 game.update(TIMESCALE / VID_FPS);
@@ -311,7 +310,7 @@ public class GameClient extends JFrame {
                 startTime = System.currentTimeMillis();
 //                System.out.println("Frame " +   frameNo);
 
-                // Part 1: Update model
+                // Part 1: Update core
                 if (game != null) {
 //                    System.out.println("game tick");
                     game.update(1f / VID_FPS);

@@ -1,11 +1,11 @@
 package view;
 
-import model.Game;
-import model.Player;
-import model.characters.Character;
-import model.geometry.Point2f;
-import model.geometry.Polygon;
-import model.particles.Particle;
+import characters.Character;
+import core.Game;
+import core.Player;
+import geometry.Point2f;
+import geometry.Polygon;
+import particles.Particle;
 
 import javax.swing.*;
 import java.awt.*;

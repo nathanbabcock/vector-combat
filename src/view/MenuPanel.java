@@ -1,9 +1,9 @@
 package view;
 
-import model.Player;
-import model.characters.*;
-import model.characters.Character;
-import model.geometry.Point2f;
+import characters.*;
+import characters.Character;
+import core.Player;
+import geometry.Point2f;
 import network.GameClient;
 import network.SpawnParams;
 
@@ -235,14 +235,14 @@ public class MenuPanel extends JPanel {
     }
 
     class ClassPortrait extends JPanel {
-        model.characters.Character character;
+        characters.Character character;
 
         public ClassPortrait() {
             setVisible(true);
             setOpaque(false);
         }
 
-        public ClassPortrait(model.characters.Character character) {
+        public ClassPortrait(characters.Character character) {
             this.character = character;
         }
 
