@@ -1,11 +1,10 @@
 package ai;
 
+import characters.CharClass;
 import geometry.Point2f;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Created by Nathan on 3/22/2016.
@@ -13,8 +12,15 @@ import java.util.Scanner;
 public class PathNode {
     public List<Point2f> points;
 
+    public Map<CharClass, List<PathEdge>> edges;
+
     public PathNode() {
         points = new ArrayList<>();
+        edges = new HashMap<>();
+        edges.put(CharClass.ROCKETMAN, new ArrayList<>());
+        edges.put(CharClass.NINJA, new ArrayList<>());
+        edges.put(CharClass.COMMANDO, new ArrayList<>());
+        edges.put(CharClass.SCOUT, new ArrayList<>());
     }
 
     public float minX() {

@@ -62,7 +62,7 @@ public class GameClient extends JFrame {
     private void initGame(Game game) {
         inputState = new InputState();
         messageMode = 0;
-        chatQueue = new ArrayList();
+        chatQueue = new ArrayList<>();
 
         this.game = new Game();
         Sprite.initSprites();
@@ -71,8 +71,6 @@ public class GameClient extends JFrame {
 
         initGUI();
         setupListeners();
-
-        //        new GameUpdater().start();
 
         final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
         scheduler.scheduleAtFixedRate(new GameTick(), 0, 1000 / VID_FPS, TimeUnit.MILLISECONDS);
@@ -259,7 +257,7 @@ public class GameClient extends JFrame {
     private class GameTick implements Runnable {
         @Override
         public void run() {
-            // Part 1: Update core
+            // Part 1: Update model
             if (game != null) {
 //                System.out.println("game tick");
                 game.update(TIMESCALE / VID_FPS);
@@ -273,14 +271,14 @@ public class GameClient extends JFrame {
     private class NetworkTick implements Runnable {
         @Override
         public void run() {
-//            System.out.println("network tick");d
+//            System.out.println("network tick");
             // InputState
             client.sendUDP(inputState);
 
             // Chat
             for (ChatMessage msg : chatQueue)
                 client.sendTCP(msg);
-            chatQueue = new ArrayList();
+            chatQueue = new ArrayList<>();
 
             // Spawn params
             if (spawnParams != null) {
@@ -329,7 +327,7 @@ public class GameClient extends JFrame {
                     // Chat
                     for (ChatMessage msg : chatQueue)
                         client.sendTCP(msg);
-                    chatQueue = new ArrayList();
+                    chatQueue = new ArrayList<>();
 
                     // Spawn params
                     if (spawnParams != null) {
