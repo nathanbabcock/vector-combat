@@ -23,6 +23,14 @@ public class PathNode {
         edges.put(CharClass.SCOUT, new ArrayList<>());
     }
 
+    @Override
+    public String toString() {
+        String result = "";
+        for (Point2f p : points)
+            result += p + ", ";
+        return result;
+    }
+
     public float minX() {
         return points.get(0).x;
     }
@@ -35,7 +43,7 @@ public class PathNode {
         Point2f start, end, prev;
         start = end = prev = null;
         for (Point2f p : points) {
-            if (p.x >= x) {
+            if (p.x > x) {
                 end = p;
                 start = prev;
                 break;
@@ -51,7 +59,7 @@ public class PathNode {
         return new Point2f(x, ((end.y - start.y) / (end.x - start.x)) * (x - start.x) + start.y);
     }
 
-    static void writeNodes(List<PathNode> list, String file) {
+    public static void writeNodes(List<PathNode> list, String file) {
         try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "utf-8"))) {
             for (PathNode node : list) {
                 for (Point2f p : node.points)
@@ -66,7 +74,7 @@ public class PathNode {
 
     }
 
-    static List<PathNode> readNodes(String filename) {
+    public static List<PathNode> readNodes(String filename) {
         List<PathNode> nodes = new ArrayList<>();
         File file = new File(filename);
         try {

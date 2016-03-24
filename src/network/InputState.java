@@ -15,6 +15,17 @@ public class InputState {
         xhair = new Point2f(0, 0);
     }
 
+    public InputState copy() {
+        InputState copy = new InputState();
+        copy.movingLeft = movingLeft;
+        copy.movingRight = movingRight;
+        copy.movingUp = movingUp;
+        copy.movingDown = movingDown;
+        copy.attacking = attacking;
+        copy.altAttacking = altAttacking;
+        return copy;
+    }
+
     public InputState(Character player) {
         movingLeft = player.movingLeft;
         movingRight = player.movingRight;

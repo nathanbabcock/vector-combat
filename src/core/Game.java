@@ -1,5 +1,6 @@
 package core;
 
+import ai.AI;
 import characters.Team;
 import geometry.Polygon;
 import maps.Map;
@@ -37,6 +38,8 @@ public class Game {
     public transient byte nextClientID;
     public transient float time = 0;
     public int net_tick;
+
+    public transient AI ai;
 
     public Game() {
         // TODO CopyOnWriteArrayList cannot possibly be the most efficient data structure for this...

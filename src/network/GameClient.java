@@ -1,5 +1,7 @@
 package network;
 
+import ai.AI;
+import ai.PathNode;
 import characters.CharClass;
 import characters.Team;
 import com.esotericsoftware.kryonet.Connection;
@@ -52,7 +54,7 @@ public class GameClient extends JFrame {
     private JTextArea health;
     private JTextField respawn, winner;
 
-    private final boolean debug = false;
+    public static final boolean devmode = true;
 
     GameClient(String clientName, String server, int tcp_port, int udp_port) {
         this.clientName = clientName;
@@ -72,6 +74,12 @@ public class GameClient extends JFrame {
         initGUI();
         setupListeners();
 
+        if (devmode) {
+            this.game.ai = new AI();
+            this.game.ai.nodes = PathNode.readNodes("ctf_space.nodes");
+            // TODO load nodes and things
+        }
+
         final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
         scheduler.scheduleAtFixedRate(new GameTick(), 0, 1000 / VID_FPS, TimeUnit.MILLISECONDS);
         scheduler.scheduleAtFixedRate(new NetworkTick(), 0, 1000 / NET_FPS, TimeUnit.MILLISECONDS);
@@ -89,7 +97,7 @@ public class GameClient extends JFrame {
                     if (object instanceof Game) {
                         if (game == null) { // First time game received
                             initGame((Game) object);
-                            if (true) { // DEBUG
+                            { // DEBUG
                                 //inputState.xhair = new Point2f(1000, 30);
                                 //inputState.attacking = true;
                                 client.sendTCP(new SpawnParams(Team.RED, CharClass.ROCKETMAN));
@@ -132,10 +140,7 @@ public class GameClient extends JFrame {
         // Window settings
         setSize(PREF_WIDTH, PREF_HEIGHT);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        if (debug)
-            setVisible(false); // DEBUG
-        else
-            setVisible(true);
+        setVisible(true);
         setSize(PREF_WIDTH, PREF_HEIGHT);
         setFocusTraversalKeysEnabled(false);
 
@@ -271,7 +276,6 @@ public class GameClient extends JFrame {
     private class NetworkTick implements Runnable {
         @Override
         public void run() {
-//            System.out.println("network tick");
             // InputState
             client.sendUDP(inputState);
 
@@ -284,6 +288,13 @@ public class GameClient extends JFrame {
             if (spawnParams != null) {
                 client.sendTCP(spawnParams);
                 spawnParams = null;
+            }
+
+            // Devmode
+            if (devmode) {
+                Player player = game.getPlayer(clientName);
+                if (player == null) return;
+                game.ai.update(player.character, inputState);
             }
         }
     }

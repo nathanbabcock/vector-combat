@@ -55,6 +55,8 @@ public class NodeGen extends JFrame {
         };
         am.put("rightPressed", rightPressed);
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, false), "rightPressed");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, false), "rightPressed");
+
         // LEFT pressed
         Action leftPressed = new AbstractAction() {
             @Override
@@ -65,6 +67,7 @@ public class NodeGen extends JFrame {
         };
         am.put("leftPressed", leftPressed);
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0, false), "leftPressed");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, false), "leftPressed");
 
         // UP pressed
         Action upPressed = new AbstractAction() {
@@ -76,6 +79,7 @@ public class NodeGen extends JFrame {
         };
         am.put("upPressed", upPressed);
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, false), "upPressed");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, false), "upPressed");
 
         // DOWN pressed
         Action downPressed = new AbstractAction() {
@@ -87,6 +91,7 @@ public class NodeGen extends JFrame {
         };
         am.put("downPressed", downPressed);
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, false), "downPressed");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0, false), "downPressed");
 
         // ESC pressed
         Action escPressed = new AbstractAction() {
