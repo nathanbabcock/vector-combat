@@ -1,5 +1,4 @@
 BUGS
-- Entities not being cleaned up at map boundaries
 - Random null pointer on ping sometimes
 
 REFACTORING

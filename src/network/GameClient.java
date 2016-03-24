@@ -24,37 +24,37 @@ import java.util.concurrent.TimeUnit;
  */
 public class GameClient extends JFrame {
     public Game game;
-    com.esotericsoftware.kryonet.Client client;
+    private com.esotericsoftware.kryonet.Client client;
     public String clientName;
-    InputState inputState;
-    ArrayList<ChatMessage> chatQueue;
+    private InputState inputState;
+    private ArrayList<ChatMessage> chatQueue;
     public SpawnParams spawnParams;
 
-    static final int PREF_WIDTH = 1024;
-    static final int PREF_HEIGHT = 768;
-    static final int TIMEOUT = 5000;
-    final int VID_FPS = 60; // Number of times per second both GAME LOGIC and RENDERING occur
-    final int NET_FPS = 20; // Number of times per second input is sent to the server
-    float TIMESCALE = Network.TIMESCALE;
+    private static final int PREF_WIDTH = 1024;
+    private static final int PREF_HEIGHT = 768;
+    private static final int TIMEOUT = 5000;
+    private final int VID_FPS = 60; // Number of times per second both GAME LOGIC and RENDERING occur
+    private final int NET_FPS = 20; // Number of times per second input is sent to the server
+    private float TIMESCALE = Network.TIMESCALE;
 
-    static final Integer LAYER_CANVAS = new Integer(0);
-    static final Integer LAYER_HUD = new Integer(1);
-    static final Integer LAYER_CHAT = new Integer(2);
-    static final Integer LAYER_OVERLAY = new Integer(3);
+    private static final Integer LAYER_CANVAS = 0;
+    private static final Integer LAYER_HUD = 1;
+    private static final Integer LAYER_CHAT = 2;
+    private static final Integer LAYER_OVERLAY = 3;
 
-    Canvas canvas;
-    int messageMode;
-    Insets insets;
-    JLayeredPane lp;
-    ChatPanel chat;
-    ScorePanel scores;
-    MenuPanel menu;
-    JTextArea health;
-    JTextField respawn, winner;
+    private Canvas canvas;
+    private int messageMode;
+    private Insets insets;
+    private JLayeredPane lp;
+    private ChatPanel chat;
+    private ScorePanel scores;
+    private MenuPanel menu;
+    private JTextArea health;
+    private JTextField respawn, winner;
 
     private final boolean debug = false;
 
-    public GameClient(String clientName, String server, int tcp_port, int udp_port) {
+    GameClient(String clientName, String server, int tcp_port, int udp_port) {
         this.clientName = clientName;
         initNetwork(server, tcp_port, udp_port);
     }
