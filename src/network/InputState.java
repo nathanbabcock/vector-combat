@@ -3,6 +3,8 @@ package network;
 import characters.Character;
 import geometry.Point2f;
 
+import java.io.FileWriter;
+
 /**
  * Created by Nathan on 9/12/2015.
  */
@@ -23,6 +25,7 @@ public class InputState {
         copy.movingDown = movingDown;
         copy.attacking = attacking;
         copy.altAttacking = altAttacking;
+        copy.xhair = xhair;
         return copy;
     }
 
@@ -34,5 +37,9 @@ public class InputState {
         attacking = player.attacking;
         altAttacking = player.altAttacking;
         xhair = player.xhair;
+    }
+
+    public void write(FileWriter writer) {
+
     }
 }

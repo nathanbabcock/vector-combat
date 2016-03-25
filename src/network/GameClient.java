@@ -3,6 +3,7 @@ package network;
 import ai.AI;
 import ai.PathNode;
 import characters.CharClass;
+import characters.Character;
 import characters.Team;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
@@ -17,6 +18,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -103,14 +106,16 @@ public class GameClient extends JFrame {
                                 client.sendTCP(new SpawnParams(Team.RED, CharClass.ROCKETMAN));
                             }
                         } else {
-//                        if (game.sent > ((Game) object).sent) {
-//                            System.out.println("Ignoring stale packet");
-//                            return; // Ignore stale packets
-//                        }
-//                        lastReceived = game.sent;
-                            game.importGame((Game) object);
-                            inputState.lastTick = ((Game) object).net_tick;
-//                        game.getPlayer(clientName).ping = (int) Math.min(System.currentTimeMillis() - game.sent, 999L);
+                            if (devmode && !game.ai.replay.isEmpty()) {
+                                Character character = game.getPlayer(clientName).character;
+                                if (character != null)
+                                    character.importState(game.ai.replay.remove());
+                                else
+                                    game.ai.replay = new LinkedList<>();
+                            } else {
+                                game.importGame((Game) object);
+                                inputState.lastTick = ((Game) object).net_tick;
+                            }
                         }
                     } else if (object instanceof ChatMessage) {
                         //System.out.println("RECEIVED CHAT");
@@ -570,9 +575,38 @@ public class GameClient extends JFrame {
 
     private void sendChat() {
         String message = chat.textField.getText();
-        if (!message.equals(""))
+        if (!message.equals("") && !consoleCmd(message))
             chatQueue.add(new ChatMessage(clientName, message, game.getPlayer(clientName).team, messageMode == 2));
         hideChat();
+    }
+
+    private boolean consoleCmd(String msg) {
+        Scanner scanner = new Scanner(msg);
+        if (!scanner.hasNext()) return false;
+        String command = scanner.next();
+        switch (command) {
+            case "!saveEdges":
+                game.ai.writeEdges(scanner.next());
+                break;
+            case "!loadEdges":
+                game.ai.readEdges(scanner.next(), Character.getCharClass(scanner.next()));
+                break;
+            case "!replayEdge":
+                if (!game.ai.replay.isEmpty()) {
+                    System.out.println("Please wait until the current replay is over first.");
+                    return true;
+                }
+                Player player = game.getPlayer(clientName);
+                if (player == null || player.character == null || game.ai.edges.isEmpty()) return true;
+                player.character.setPosition(game.ai.edges.get(game.ai.edges.size() - 1).fromPos);
+                player.character.velocity = game.ai.edges.get(game.ai.edges.size() - 1).fromVel;
+                game.ai.replay.addAll(game.ai.edges.get(game.ai.edges.size() - 1).frames);
+                System.out.println("Replaying edge");
+                break;
+            default:
+                return false;
+        }
+        return true;
     }
 
     private void hideChat() {

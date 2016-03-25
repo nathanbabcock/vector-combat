@@ -11,11 +11,9 @@ import java.util.List;
  * Created by Nathan on 3/23/2016.
  */
 public class PathEdge {
-    public Point2f fromPos;
+    public PathNode fromNode, toNode;
+    public Point2f fromPos, toPos;
     public Vector2f fromVel;
-    public int fromNode;
-    public PathNode toNode;
-    public Point2f toPos;
     public List<InputState> frames;
 
     public PathEdge() {

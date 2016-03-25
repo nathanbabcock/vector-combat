@@ -10,6 +10,7 @@ import java.util.*;
  * Created by Nathan on 3/22/2016.
  */
 public class PathNode {
+    int index;
     public List<Point2f> points;
 
     public Map<CharClass, List<PathEdge>> edges;
@@ -71,10 +72,10 @@ public class PathNode {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public static List<PathNode> readNodes(String filename) {
+        int i = 0;
         List<PathNode> nodes = new ArrayList<>();
         File file = new File(filename);
         try {
@@ -83,6 +84,7 @@ public class PathNode {
                 String line = lineScanner.nextLine();
                 Scanner scanner = new Scanner(line);
                 PathNode curNode = new PathNode();
+                curNode.index = i++;
                 while (scanner.hasNextFloat())
                     curNode.points.add(new Point2f(scanner.nextFloat(), scanner.nextFloat()));
                 if (curNode.points.size() > 0)

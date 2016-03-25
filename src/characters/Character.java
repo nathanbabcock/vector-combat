@@ -272,4 +272,18 @@ abstract public class Character extends Polygon {
 
     abstract public CharClass getCharClass();
 
+    static public CharClass getCharClass(String className) {
+        switch (className.toUpperCase()) {
+            case "ROCKETMAN":
+                return CharClass.ROCKETMAN;
+            case "NINJA":
+                return CharClass.NINJA;
+            case "COMMANDO":
+                return CharClass.COMMANDO;
+            case "SCOUT":
+                return CharClass.SCOUT;
+        }
+        return null;
+    }
+
 }

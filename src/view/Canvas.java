@@ -126,14 +126,12 @@ public class Canvas extends JPanel {
                         g2.drawLine((int) prev.x, (int) prev.y, (int) pathPt.x, (int) pathPt.y);
                     prev = pathPt;
                 }
-                Color[] colors = new Color[]{Color.RED, Color.BLACK, Color.GREEN, Color.BLUE};
-                int i = 0;
-                for (java.util.List<PathEdge> edgeList : pathNode.edges.values()) {
-                    g2.setColor(colors[i++]);
-                    for (PathEdge edge : edgeList)
-                        g2.drawLine((int) edge.fromPos.x, (int) edge.fromPos.y, (int) edge.toPos.x, (int) edge.toPos.y);
-                }
             }
+
+            // Draw edges
+            g2.setColor(Color.BLUE);
+            for (PathEdge edge : game.ai.edges)
+                g2.drawLine((int) edge.fromPos.x, (int) edge.fromPos.y, (int) edge.toPos.x, (int) edge.toPos.y);
 
             // Draw cur path node
             if (game.ai.curNode != null) {
