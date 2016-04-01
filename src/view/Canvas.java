@@ -119,6 +119,8 @@ public class Canvas extends JPanel {
             // Draw existing path nodes
             g2.setColor(Color.BLUE);
             for (PathNode pathNode : game.ai.nodes) {
+                Point2f first = pathNode.points.get(0);
+                g2.drawString(pathNode.index + "", first.x - 25, first.y + 25); // Bug: flipped vertically
                 Point2f prev = null;
                 for (Point2f pathPt : pathNode.points) {
                     g2.fillOval((int) pathPt.x - point_diam / 2, (int) pathPt.y - point_diam / 2, point_diam, point_diam);

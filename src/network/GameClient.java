@@ -586,12 +586,24 @@ public class GameClient extends JFrame {
         String command = scanner.next();
         switch (command) {
             case "!saveEdges":
+            case "!save":
                 game.ai.writeEdges(scanner.next());
                 break;
+            case "!removeEdge":
+            case "!remove":
+                if (!game.ai.edges.isEmpty())
+                    game.ai.edges.remove(game.ai.edges.size() - 1);
+                break;
+            case "!clearEdges":
+            case "!clear":
+                game.ai.edges = new ArrayList<>();
+                break;
             case "!loadEdges":
+            case "!load":
                 game.ai.readEdges(scanner.next(), Character.getCharClass(scanner.next()));
                 break;
-            case "!replayEdge":
+            case "!replayEdges":
+            case "!replay":
                 if (!game.ai.replay.isEmpty()) {
                     System.out.println("Please wait until the current replay is over first.");
                     return true;

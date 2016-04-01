@@ -45,11 +45,15 @@ public class AI {
             if (curEdge != null) {
                 PathNode landNode = closestNode(character.getPosition());
                 if (landNode != curNode) {
-                    curEdge.toNode = curNode;
+                    curEdge.frames.add(inputState.copy());
+                    curEdge.toNode = landNode;
                     curEdge.toPos = character.getPosition();
                     curNode.edges.get(character.getCharClass()).add(curEdge);
                     edges.add(curEdge);
                     System.out.println("Saving edge from " + curEdge.fromPos + " to " + curEdge.toPos + " with " + curEdge.frames.size() + " frames.");
+                    curEdge = null;
+                } else {
+                    System.out.println("Discarding edge to same node.");
                     curEdge = null;
                 }
             }
@@ -143,6 +147,79 @@ public class AI {
             e.printStackTrace();
         }
         //return null;
+    }
+
+    // TODO find a better one
+    public float heuristic(PathNode start, PathNode goal) {
+        return start.points.get(0).distance(goal.points.get(0));
+    }
+
+    /*
+     * A* pathfinding
+     */
+    public List<Object> getPath(PathNode start, PathNode goal) {
+        // The set of nodes already evaluated.
+        ArrayList<PathNode> closedSet = new ArrayList<>();
+
+        // The set of currently discovered nodes still to be evaluated.
+        // Initially, only the start node is known.
+        ArrayList<PathNode> openSet = new ArrayList<>();
+        openSet.add(start);
+
+        // For each node, which node it can most efficiently be reached from.
+        // If a node can be reached from many nodes, cameFrom will eventually contain the
+        // most efficient previous step.
+        Map<PathNode, PathNode> cameFrom = new HashMap<>();
+
+        // For each node, the cost of getting from the start node to that node.
+        Map<PathNode, Float> gScore = new HashMap<>();
+        for (PathNode node : nodes)
+            gScore.put(node, Float.MAX_VALUE);
+        // The cost of going from start to start is zero.
+        gScore.put(start, 0f);
+
+        // For each node, the total cost of getting from the start node to the goal
+        // by passing by that node. That value is partly known, partly heuristic.
+        Map<PathNode, Float> fScore = new HashMap<>();
+        for (PathNode node : nodes)
+            fScore.put(node, Float.MAX_VALUE);
+        // For the first node, that value is completely heuristic.
+        fScore.put(start, heuristic(start, goal));
+
+        while (!openSet.isEmpty()) {
+            // Get minimum fScore node in openSet
+            PathNode current = null;
+            for (PathNode n : openSet)
+                if (current == null || fScore.get(n) < fScore.get(current))
+                    current = n;
+            if (current == goal)
+                return reconstruct_path(cameFrom, goal);
+
+            openSet.remove(current);
+            closedSet.add(current);
+            for (PathNode neighbor : current.getNeighbors(CharClass.ROCKETMAN)) {
+                if (closedSet.contains(neighbor))
+                    continue; // Ignore the neighbor which is already evaluated.
+                // The distance from start to a neighbor
+                float tentative_gScore = gScore.get(current) + 1;//dist_between(current, neighbor);
+                if (!openSet.contains(neighbor))    // Discover a new node
+                    openSet.add(neighbor);
+                else if (tentative_gScore >= gScore.get(neighbor))
+                    continue;        // This is not a better path.
+
+                // This path is the best until now. Record it!
+                cameFrom.put(neighbor, current);
+                gScore.put(neighbor, tentative_gScore);
+                fScore.put(neighbor, tentative_gScore + heuristic(neighbor, goal));
+            }
+        }
+
+        System.out.println("Pathfinding failed");
+        return null;
+    }
+
+    public List<Object> reconstruct_path(Map<PathNode, PathNode> cameFrom, PathNode goal) {
+        return new ArrayList<>(cameFrom.values());
     }
 
 }

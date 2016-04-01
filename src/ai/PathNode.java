@@ -10,7 +10,7 @@ import java.util.*;
  * Created by Nathan on 3/22/2016.
  */
 public class PathNode {
-    int index;
+    public int index;
     public List<Point2f> points;
 
     public Map<CharClass, List<PathEdge>> edges;
@@ -38,6 +38,14 @@ public class PathNode {
 
     public float maxX() {
         return points.get(points.size() - 1).x;
+    }
+
+    public List<PathNode> getNeighbors(CharClass charClass) {
+        List<PathNode> neighbors = new ArrayList<>();
+        for (PathEdge edge : edges.get(charClass))
+            if (!neighbors.contains(edge.toNode))
+                neighbors.add(edge.toNode);
+        return neighbors;
     }
 
     public Point2f getPoint(float x) {
