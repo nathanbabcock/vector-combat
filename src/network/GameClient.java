@@ -585,6 +585,14 @@ public class GameClient extends JFrame {
         if (!scanner.hasNext()) return false;
         String command = scanner.next();
         switch (command) {
+            case "!startRecord":
+            case "!start":
+                game.ai.recording = true;
+                break;
+            case "!stopRecord":
+            case "!stop":
+                game.ai.recording = false;
+                break;
             case "!saveEdges":
             case "!save":
                 game.ai.writeEdges(scanner.next());
@@ -614,6 +622,12 @@ public class GameClient extends JFrame {
                 player.character.velocity = game.ai.edges.get(game.ai.edges.size() - 1).fromVel;
                 game.ai.replay.addAll(game.ai.edges.get(game.ai.edges.size() - 1).frames);
                 System.out.println("Replaying edge");
+                break;
+            case "!pathTest":
+            case "!path":
+                PathNode dest = game.ai.closestNode(game.getPlayer(clientName).character.getPosition());
+                System.out.println("Pathing from node 0 to node " + dest.index);
+                System.out.println(game.ai.getPath(game.ai.nodes.get(0), dest));
                 break;
             default:
                 return false;

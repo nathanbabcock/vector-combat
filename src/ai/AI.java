@@ -25,6 +25,8 @@ public class AI {
 
     public Queue<InputState> replay;
 
+    public boolean recording = false;
+
     public AI() {
         nodes = new ArrayList<>();
         edges = new ArrayList<>();
@@ -32,7 +34,7 @@ public class AI {
     }
 
     public void update(Character character, InputState inputState) {
-        if (!replay.isEmpty())
+        if (!replay.isEmpty() || !recording)
             return;
 
         if (character == null) {
@@ -221,5 +223,9 @@ public class AI {
     public List<Object> reconstruct_path(Map<PathNode, PathNode> cameFrom, PathNode goal) {
         return new ArrayList<>(cameFrom.values());
     }
+
+//    public static void main(String[] args){
+//        AI ai = new AI();
+//    }
 
 }

@@ -26,10 +26,11 @@ public class PathNode {
 
     @Override
     public String toString() {
-        String result = "";
+        /*String result = "";
         for (Point2f p : points)
             result += p + ", ";
-        return result;
+        return result;*/
+        return "Node[index=" + index + "]";
     }
 
     public float minX() {
