@@ -625,6 +625,7 @@ public class GameClient extends JFrame {
                 break;
             case "!pathTest":
             case "!path":
+
                 PathNode dest = game.ai.closestNode(game.getPlayer(clientName).character.getPosition());
                 System.out.println("Pathing from node 0 to node " + dest.index);
                 System.out.println(game.ai.getPath(game.ai.nodes.get(0), dest));

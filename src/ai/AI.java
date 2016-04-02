@@ -143,7 +143,7 @@ public class AI {
                 curEdge.fromNode.edges.get(charClass).add(curEdge);
             }
 
-            System.out.println("Read " + nodes.size() + " path nodes from " + filename);
+            System.out.println("Read " + edges.size() + " path edges from " + filename);
             //return nodes;
         } catch (Exception e) {
             e.printStackTrace();
@@ -171,7 +171,7 @@ public class AI {
         // For each node, which node it can most efficiently be reached from.
         // If a node can be reached from many nodes, cameFrom will eventually contain the
         // most efficient previous step.
-        Map<PathNode, PathNode> cameFrom = new HashMap<>();
+        LinkedHashMap<PathNode, PathNode> cameFrom = new LinkedHashMap<>();
 
         // For each node, the cost of getting from the start node to that node.
         Map<PathNode, Float> gScore = new HashMap<>();
@@ -220,8 +220,10 @@ public class AI {
         return null;
     }
 
-    public List<Object> reconstruct_path(Map<PathNode, PathNode> cameFrom, PathNode goal) {
-        return new ArrayList<>(cameFrom.values());
+    public List<Object> reconstruct_path(LinkedHashMap<PathNode, PathNode> cameFrom, PathNode goal) {
+        List<Object> result = new ArrayList<>(cameFrom.values());
+        result.add(goal);
+        return result;
     }
 
 //    public static void main(String[] args){
