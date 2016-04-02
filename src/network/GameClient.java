@@ -623,6 +623,10 @@ public class GameClient extends JFrame {
                 game.ai.replay.addAll(game.ai.edges.get(game.ai.edges.size() - 1).frames);
                 System.out.println("Replaying edge");
                 break;
+            case "!printEdge":
+            case "!print":
+                System.out.println(game.ai.edges.get(game.ai.edges.size() - 1));
+                break;
             case "!pathTest":
             case "!path":
 

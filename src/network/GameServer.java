@@ -123,7 +123,7 @@ public class GameServer {
                         InputState i = (InputState) o;
 
                         // Ping
-                        if (!con.player.pings.isEmpty()) {
+                        if (con.player.pings.peek() != null) {
                             if (con.player == null)
                                 System.out.println("null player");
                             if (con.player.pings == null)
