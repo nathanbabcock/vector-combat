@@ -16,32 +16,55 @@ public class AIController {
     private Player player;
     private Game game;
     private AI ai;
+    private Random r;
 
-    private Queue<Object> path;
+    private Queue<PathEdge> path;
     private Queue<InputState> replay;
 
     public AIController(Player player) {
         this.player = player;
         ai = player.game.ai;
         game = player.game;
+        r = new Random();
+    }
+
+    private void moveRandom() {
+        if (r.nextBoolean()) { // Is moving
+            if (r.nextBoolean()) { // Left
+                player.character.movingLeft = true;
+                player.character.movingRight = false;
+            } else { // Right
+                player.character.movingRight = true;
+                player.character.movingLeft = false;
+            }
+        }
+
+        if (r.nextBoolean())
+            player.character.movingUp = true;
+
     }
 
     public void update(float delta) {
-        if (player.character == null) {
-            player.update(delta);
+        if (player.character == null || player.charClass == null) {
+//            player.update(delta);
             return;
         }
 
         // Playback edge
         if (replay != null && !replay.isEmpty()) {
-            player.character.importState(game.ai.replay.remove());
+            player.character.importState(replay.remove());
+            player.character.update(delta);
             return;
         }
 
         // Pick a path
         if (path == null || path.isEmpty()) {
+            if (ai.closestNode(player.character.getPosition()) == null) {
+                moveRandom();
+                player.character.update(delta);
+                return;
+            }
             System.out.println("No path yet! Picking a random new one:");
-            Random r = new Random();
             PathNode start = game.ai.closestNode(player.character.getPosition());
             PathNode dest = null;
             while (dest == null || dest == start)
@@ -52,16 +75,29 @@ public class AIController {
             path = new LinkedList<>();
             Iterator nodes = temp.iterator();
             PathNode cur = (PathNode) nodes.next();
-            path.add(cur);
+            //path.add(cur);
             while (nodes.hasNext()) {
                 PathNode node = (PathNode) nodes.next();
                 PathEdge edge = cur.getEdgeTo(node, player.charClass);
                 path.add(edge);
-                path.add(node);
+                //path.add(node);
             }
             System.out.println(path);
         }
 
-        int direction;
+        // Move towards next
+        float dist = path.peek().fromPos.x - player.character.getPosition().x;
+        if (Math.abs(dist) < 2f) {
+            replay = new LinkedList<>(path.poll().frames);
+        } else if (dist > 0) {
+            player.character.movingRight = true;
+            player.character.movingLeft = false;
+        } else {
+            player.character.movingLeft = true;
+            player.character.movingRight = false;
+        }
+
+        player.character.update(delta);
+
     }
 }

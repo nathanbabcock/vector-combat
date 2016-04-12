@@ -28,6 +28,7 @@ public class PathNode {
         //System.out.println("Getting all edges from node " + this + " to node " + node);
 
         List<PathEdge> potential = new ArrayList<>();
+        System.out.println("Potential edges = " + potential);
 
         for (PathEdge edge : edges.get(charClass))
             if (edge.toNode == node)
