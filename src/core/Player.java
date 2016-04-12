@@ -1,5 +1,6 @@
 package core;
 
+import ai.AIController;
 import characters.*;
 import characters.Character;
 import geometry.Point2f;
@@ -26,6 +27,8 @@ public class Player {
     public float respawnTime;
     public int kills, deaths, ping;
 
+    public transient AIController ai;
+
     public Player() {
     }
 
@@ -40,12 +43,18 @@ public class Player {
         pings = new LinkedList<>();
     }
 
+    public void attachAI() {
+        ai = new AIController(this);
+    }
+
     public void update(float delta) {
         if ((character == null || character.dead) && team != null && charClass != null) { // Waiting to spawn
             if (respawnTime > 0 && game.countdown <= 0)
                 respawnTime -= delta;
             else
                 spawn();
+        } else if (ai != null) {
+            ai.update(delta);
         } else if (character != null)
             character.update(delta);
     }

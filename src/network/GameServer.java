@@ -1,5 +1,9 @@
 package network;
 
+import ai.AI;
+import ai.PathNode;
+import characters.CharClass;
+import characters.Team;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryonet.Connection;
@@ -94,6 +98,21 @@ public class GameServer {
         Sprite.initSprites();
         game.setMap("ctf_space");
 //        new GameUpdater().start();
+
+        // BOT
+        if (GameClient.devmode) {
+            // Init AI system
+            game.ai = new AI();
+            game.ai.nodes = PathNode.readNodes("ctf_space.nodes");
+            game.ai.readEdges("rocketman.edges", CharClass.ROCKETMAN);
+
+            // Init bot
+            Player bot = new Player(game, "excaloBOT");
+            bot.charClass = CharClass.ROCKETMAN;
+            bot.team = Team.RED;
+            bot.attachAI();
+            game.players.add(bot);
+        }
 
         final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(10);
         scheduler.scheduleAtFixedRate(new GameTick(), 0, 1000 / VID_FPS, TimeUnit.MILLISECONDS);

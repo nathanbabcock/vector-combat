@@ -159,7 +159,7 @@ public class AI {
     /*
      * A* pathfinding
      */
-    public List<Object> getPath(PathNode start, PathNode goal) {
+    public Queue<Object> getPath(PathNode start, PathNode goal) {
         // The set of nodes already evaluated.
         ArrayList<PathNode> closedSet = new ArrayList<>();
 
@@ -220,8 +220,11 @@ public class AI {
         return null;
     }
 
-    public List<Object> reconstruct_path(LinkedHashMap<PathNode, PathNode> cameFrom, PathNode goal) {
-        List<Object> result = new ArrayList<>(cameFrom.values());
+    public Queue<Object> reconstruct_path(LinkedHashMap<PathNode, PathNode> cameFrom, PathNode goal) {
+        Queue<Object> result = new LinkedList<>();
+        for (PathNode node : cameFrom.values())
+            if (!result.contains(node))
+                result.add(node);
         result.add(goal);
         return result;
     }

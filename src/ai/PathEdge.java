@@ -21,11 +21,12 @@ public class PathEdge {
     }
 
     public String toString() {
-        String result = "";
-        result += String.format("%6s %6s %6s %6s %6s %6s %6s %6s%n", "LEFT", "RIGHT", "UP", "DOWN", "ATK1", "ATK2", "X", "Y");
-        for (InputState frame : frames)
-            result += String.format("%6s %6s %6s %6s %6s %6s %6.0f %6.0f%n", frame.movingLeft, frame.movingRight, frame.movingUp, frame.movingDown, frame.attacking, frame.altAttacking, frame.xhair.x, frame.xhair.y);
-        return result;
+//        String result = "";
+//        result += String.format("%6s %6s %6s %6s %6s %6s %6s %6s%n", "LEFT", "RIGHT", "UP", "DOWN", "ATK1", "ATK2", "X", "Y");
+//        for (InputState frame : frames)
+//            result += String.format("%6s %6s %6s %6s %6s %6s %6.0f %6.0f%n", frame.movingLeft, frame.movingRight, frame.movingUp, frame.movingDown, frame.attacking, frame.altAttacking, frame.xhair.x, frame.xhair.y);
+//        return result;
+        return "Edge[" + fromNode.index + " to " + toNode.index + " ]";
     }
 
 //    public static List<PathEdge> getEdges(List<PathEdge> edges, int from) {

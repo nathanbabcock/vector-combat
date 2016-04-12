@@ -24,6 +24,18 @@ public class PathNode {
         edges.put(CharClass.SCOUT, new ArrayList<>());
     }
 
+    public PathEdge getEdgeTo(PathNode node, CharClass charClass) {
+        //System.out.println("Getting all edges from node " + this + " to node " + node);
+
+        List<PathEdge> potential = new ArrayList<>();
+
+        for (PathEdge edge : edges.get(charClass))
+            if (edge.toNode == node)
+                potential.add(edge);
+
+        return potential.get(new Random().nextInt(potential.size()));
+    }
+
     @Override
     public String toString() {
         /*String result = "";
