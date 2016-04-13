@@ -2,7 +2,6 @@ package ai;
 
 import core.Game;
 import core.Player;
-import network.InputState;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -19,7 +18,7 @@ public class AIController {
     private Random r;
 
     private Queue<PathEdge> path;
-    private Queue<InputState> replay;
+    private Queue<CharState> replay;
 
     public AIController(Player player) {
         this.player = player;
