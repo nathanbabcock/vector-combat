@@ -31,8 +31,8 @@ public class GameServer {
     List<Connection> connections;
     List<ChatMessage> newMsgs;
 
-    final int VID_FPS = 60;
-    final int NET_FPS = 20;
+    public static final int VID_FPS = 60;
+    public static final int NET_FPS = 20;
     final int MAX_PING_HISTORY = 60; // Number of ping times to save per player
     float TIMESCALE = Network.TIMESCALE;
 
@@ -198,8 +198,14 @@ public class GameServer {
                 // Chat
                 for (ChatMessage msg : newMsgs)
                     con.sendTCP(msg);
-                newMsgs = new ArrayList();
+                newMsgs = new ArrayList<>();
             }
+
+            // AI
+            for (Player player : game.players)
+                if (player.ai != null)
+                    player.ai.update(TIMESCALE / VID_FPS);
+
             game.net_tick++;
         }
     }

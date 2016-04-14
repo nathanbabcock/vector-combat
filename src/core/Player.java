@@ -53,8 +53,6 @@ public class Player {
                 respawnTime -= delta;
             else
                 spawn();
-        } else if (ai != null) {
-            ai.update(delta);
         } else if (character != null)
             character.update(delta);
     }
