@@ -1,5 +1,6 @@
 package characters;
 
+import ai.CharState;
 import core.Player;
 import geometry.Collision;
 import geometry.Point2f;
@@ -284,6 +285,20 @@ abstract public class Character extends Polygon {
                 return CharClass.SCOUT;
         }
         return null;
+    }
+
+    public CharState getCharState() {
+        CharState state = new CharState();
+        state.inputState = new InputState(this);
+        state.velocity = velocity.copy();
+        state.position = getPosition();
+        return state;
+    }
+
+    public void importState(CharState state) {
+        velocity = state.velocity;
+        setPosition(state.position);
+        importState(state.inputState);
     }
 
 }

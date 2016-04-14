@@ -19,11 +19,12 @@ public class AI {
     public PathNode curNode;
     public PathEdge curEdge;
 
-    public Point2f prevPos;
-    public Vector2f prevVel;
-    public InputState prevInput;
+    //public Point2f prevPos;
+    //public Vector2f prevVel;
+    //public InputState prevInput;
+    public CharState prevState;
 
-    public Queue<InputState> replay;
+    public Queue<CharState> replay;
 
     public boolean recording = false;
 
@@ -40,19 +41,18 @@ public class AI {
         if (character == null) {
             curNode = null;
             curEdge = null;
-            prevInput = null;
-            prevPos = null;
-            prevVel = null;
+            prevState = null;
         } else if (character.onGround) {
             if (curEdge != null) {
                 PathNode landNode = closestNode(character.getPosition());
                 if (landNode != curNode) {
-                    curEdge.frames.add(inputState.copy());
+                    curEdge.frames.add(character.getCharState());
                     curEdge.toNode = landNode;
                     curEdge.toPos = character.getPosition();
                     curNode.edges.get(character.getCharClass()).add(curEdge);
                     edges.add(curEdge);
                     System.out.println("Saving edge from " + curEdge.fromPos + " to " + curEdge.toPos + " with " + curEdge.frames.size() + " frames.");
+                    System.out.println(curEdge);
                     curEdge = null;
                 } else {
                     System.out.println("Discarding edge to same node.");
@@ -60,18 +60,16 @@ public class AI {
                 }
             }
             curNode = closestNode(character.getPosition());
-            prevPos = character.getPosition();
-            prevVel = character.velocity.copy();
-            prevInput = inputState.copy();
+            prevState = character.getCharState();
         } else {
             if (curNode == null) return;
             if (curEdge == null) {
                 curEdge = new PathEdge();
                 curEdge.fromNode = curNode;
-                curEdge.fromPos = prevPos;
-                curEdge.fromVel = prevVel;
+                curEdge.fromPos = prevState.position;
+                curEdge.fromVel = prevState.velocity;
             }
-            curEdge.frames.add(inputState.copy());
+            curEdge.frames.add(character.getCharState());
         }
     }
 
@@ -101,10 +99,12 @@ public class AI {
                 writer.write(edge.fromPos.x + " " + edge.fromPos.y + " " + edge.toPos.x + " " + edge.toPos.y + " ");
                 writer.write(edge.fromVel.x + " " + edge.fromVel.y + " ");
                 writer.write(edge.frames.size() + "\n");
-                for (InputState input : edge.frames) {
+                for (CharState state : edge.frames) {
+                    InputState input = state.inputState;
                     writer.write(input.movingLeft + " " + input.movingRight + " " + input.movingUp + " " + input.movingDown + " ");
                     writer.write(input.attacking + " " + input.altAttacking + " ");
-                    writer.write(input.xhair.x + " " + input.xhair.y);
+                    writer.write(input.xhair.x + " " + input.xhair.y + " ");
+                    writer.write(state.position.x + " " + state.position.y + " " + state.velocity.x + " " + state.velocity.y);
                     writer.write("\n");
                 }
             }
@@ -129,6 +129,7 @@ public class AI {
                 curEdge.fromVel = new Vector2f(scanner.nextFloat(), scanner.nextFloat());
                 int frames = scanner.nextInt();
                 for (int i = 0; i < frames; i++) {
+                    CharState state = new CharState();
                     InputState inputstate = new InputState();
                     inputstate.movingLeft = scanner.nextBoolean();
                     inputstate.movingRight = scanner.nextBoolean();
@@ -137,7 +138,10 @@ public class AI {
                     inputstate.attacking = scanner.nextBoolean();
                     inputstate.altAttacking = scanner.nextBoolean();
                     inputstate.xhair = new Point2f(scanner.nextFloat(), scanner.nextFloat());
-                    curEdge.frames.add(inputstate);
+                    state.inputState = inputstate;
+                    state.position = new Point2f(scanner.nextFloat(), scanner.nextFloat());
+                    state.velocity = new Vector2f(scanner.nextFloat(), scanner.nextFloat());
+                    curEdge.frames.add(state);
                 }
                 edges.add(curEdge);
                 curEdge.fromNode.edges.get(charClass).add(curEdge);
