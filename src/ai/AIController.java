@@ -48,6 +48,9 @@ public class AIController {
     }
 
     public void update(float delta) {
+        // TODO Detect when AI gets lost (lands on node not specified by previous edge playback)
+        // TODO Rigorously test A* pathfinding
+
         try {
             if (player.character == null || player.charClass == null)
                 return;
