@@ -20,6 +20,12 @@ public class PathEdge {
         frames = new ArrayList<>();
     }
 
+    public PathEdge(PathNode fromNode, PathNode toNode) {
+        this();
+        this.fromNode = fromNode;
+        this.toNode = toNode;
+    }
+
     public String toString() {
 //        String result = "";
 //        result += String.format("%6s %6s %6s %6s %6s %6s %6s %6s%n", "LEFT", "RIGHT", "UP", "DOWN", "ATK1", "ATK2", "X", "Y");

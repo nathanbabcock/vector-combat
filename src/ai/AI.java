@@ -199,6 +199,10 @@ public class AI {
 
             openSet.remove(current);
             closedSet.add(current);
+
+//            System.out.println("Pathfinding is evaluation all neighbors of " + current + ": ");
+//            System.out.println(current.getNeighbors(CharClass.ROCKETMAN));
+
             for (PathNode neighbor : current.getNeighbors(CharClass.ROCKETMAN)) {
                 if (closedSet.contains(neighbor))
                     continue; // Ignore the neighbor which is already evaluated.
