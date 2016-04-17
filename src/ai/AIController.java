@@ -1,7 +1,9 @@
 package ai;
 
+import characters.Character;
 import core.Game;
 import core.Player;
+import geometry.Point2f;
 import network.GameServer;
 import network.InputState;
 
@@ -47,13 +49,13 @@ public class AIController {
 
     }
 
-    public void update(float delta) {
-        // TODO Detect when AI gets lost (lands on node not specified by previous edge playback)
-        // TODO Rigorously test A* pathfinding
-
+    public void pathfinding() {
         try {
-            if (player.character == null || player.charClass == null)
+            if (player.character == null || player.charClass == null) {
+                path = null;
+                replay = null;
                 return;
+            }
 
             // Playback edge
             if (replay != null && !replay.isEmpty()) {
@@ -70,6 +72,11 @@ public class AIController {
                 System.out.println("No path yet! Picking a random new one:");
                 PathNode start = game.ai.closestNode(player.character.getPosition());
                 PathNode dest = null;
+                //Character excalo = game.getPlayer("excalo").character;
+                //if(excalo == null) return;
+                //dest = game.ai.closestNode(excalo.getPosition());
+                //if (start == dest) return;
+
                 while (dest == null || dest == start)
                     dest = game.ai.nodes.get(new Random().nextInt(7));
                 System.out.println("Chose " + dest);
@@ -83,10 +90,17 @@ public class AIController {
                     PathEdge edge = cur.getEdgeTo(node, player.charClass);
                     path.add(edge);
                 }
-                System.out.println(path);
+                System.out.println("Processed path: " + path);
             }
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+    }
 
-            // Move towards next
+    public void moveTowardsEdge() {
+        try {
+            if (path == null || path.isEmpty())
+                return;
             float dist = path.peek().fromPos.x - player.character.getPosition().x;
             if (Math.abs(dist) < player.character.moveSpeed * (TIMESCALE / GameServer.NET_FPS)) {
                 replay = new LinkedList<>(path.poll().frames);
@@ -97,6 +111,145 @@ public class AIController {
                 player.character.movingLeft = true;
                 player.character.movingRight = false;
             }
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+    }
+
+    public void aimAt(Character target) {
+        player.character.xhair = target.getPosition();
+    }
+
+    public void attackTarget(Character target) {
+        if (target == null)
+            player.character.attacking = false;
+        else {
+            aimAt(target);
+            player.character.attacking = true;
+        }
+    }
+
+    public void offensiveMovement(Character target) {
+        Point2f targetPos = target.getPosition();
+        Point2f pos = player.character.getPosition();
+
+        if (targetPos.x > pos.x) {
+            player.character.movingRight = true;
+            player.character.movingLeft = false;
+        } else {
+            player.character.movingLeft = true;
+            player.character.movingRight = false;
+        }
+    }
+
+    public void defensiveMovement(Character target) {
+        Point2f targetPos = target.getPosition();
+        Point2f pos = player.character.getPosition();
+
+        if (targetPos.x > pos.x) {
+            player.character.movingRight = false;
+            player.character.movingLeft = true;
+        } else {
+            player.character.movingLeft = false;
+            player.character.movingRight = true;
+        }
+    }
+
+    public void neutralMovement() {
+        player.character.movingLeft = false;
+        player.character.movingRight = false;
+    }
+
+    public void combatMovement(Character target) {
+        if (player.character == null) return;
+
+        // Watch out for the edge of the node
+        Point2f pos = player.character.getPosition();
+        PathNode node = ai.closestNode(player.character.getPosition());
+
+        final int MARGIN = 10;
+        if (pos.x < node.minX() || Math.abs(pos.x - node.minX()) < MARGIN) {
+            player.character.movingLeft = false;
+            player.character.movingRight = true;
+            return;
+        } else if (pos.x > node.maxX() || Math.abs(pos.x - node.maxX()) < MARGIN) {
+            player.character.movingLeft = true;
+            player.character.movingRight = false;
+            return;
+        }
+
+        // No target (move randomly)
+        if (target == null) {
+            if (r.nextFloat() > 0.1f) return; // Don't change
+            switch (r.nextInt(3)) {
+                case 0:
+                    player.character.movingLeft = false;
+                    player.character.movingRight = true;
+                    break;
+                case 1:
+                    player.character.movingLeft = false;
+                    player.character.movingRight = false;
+                    break;
+                case 2:
+                    player.character.movingLeft = true;
+                    player.character.movingRight = false;
+                    break;
+            }
+
+            return;
+        }
+
+        // Target
+        if (r.nextFloat() > 0.1f) return; // Don't change strategies
+        System.out.println("Changing strategy");
+        switch (r.nextInt(3)) {
+            case 0:
+                offensiveMovement(target);
+                break;
+            case 1:
+                neutralMovement();
+                break;
+            case 2:
+                defensiveMovement(target);
+                break;
+        }
+    }
+
+    public void randomJump() {
+
+        if (r.nextFloat() < 0.05f)
+            player.character.movingUp = true;
+        else
+            player.character.movingUp = false;
+    }
+
+    public void update(float delta) {
+        try {
+            // TODO Detect when AI gets lost (lands on node not specified by previous edge playback)
+            //pathfinding();
+
+            if (player.character == null) return;
+
+            // Perception
+            Character target = null;
+
+            for (Player other : game.players) {
+                if (other.character == null) continue;
+                if (other == player) continue;
+                //if (other.team == player.team) continue;
+
+                final int SIGHT_RADIUS = 1000;
+                if (player.character.getPosition().distance(other.character.getPosition()) < SIGHT_RADIUS) {
+                    target = other.character;
+                    break;
+                }
+            }
+
+            attackTarget(target);
+            combatMovement(target);
+            randomJump();
+
+            //moveTowardsEdge();
         } catch (Throwable t) {
             t.printStackTrace();
         }

@@ -4,7 +4,7 @@ package ai;
 import geometry.Point2f;
 import geometry.Polygon;
 import maps.Map;
-import maps.ctf_space;
+import maps.ai_arena;
 
 import javax.swing.*;
 import java.awt.*;
@@ -221,7 +221,6 @@ public class NodeGen extends JFrame {
     }
 
     public static void main(String[] args) {
-        new NodeGen(new ctf_space());
-        //PathNode.readNodes("nodes");
+        new NodeGen(new ai_arena());
     }
 }

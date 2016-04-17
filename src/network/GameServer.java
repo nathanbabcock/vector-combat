@@ -96,18 +96,24 @@ public class GameServer {
     private void init_game() {
         game = new Game();
         Sprite.initSprites();
-        game.setMap("ctf_space");
+        game.setMap("ai_arena");
 //        new GameUpdater().start();
 
         // BOT
         if (GameClient.devmode) {
             // Init AI system
             game.ai = new AI();
-            game.ai.nodes = PathNode.readNodes("ctf_space.nodes");
-            game.ai.readEdges("rocketman.edges", CharClass.ROCKETMAN);
+            game.ai.nodes = PathNode.readNodes("ai_arena.nodes");
+            //game.ai.readEdges("rocketman.edges", CharClass.ROCKETMAN);
 
-            // Init bot
+            // Init bots
             Player bot = new Player(game, "excaloBOT");
+            bot.charClass = CharClass.ROCKETMAN;
+            bot.team = Team.BLUE;
+            bot.attachAI();
+            game.players.add(bot);
+
+            bot = new Player(game, "otherBOT");
             bot.charClass = CharClass.ROCKETMAN;
             bot.team = Team.RED;
             bot.attachAI();
@@ -185,6 +191,11 @@ public class GameServer {
         @Override
         public void run() {
 //            System.out.println("network tick");
+            // AI
+            for (Player player : game.players)
+                if (player.ai != null)
+                    player.ai.update(TIMESCALE / VID_FPS);
+
             for (Connection con : connections) {
                 Player player = ((PlayerConnection) con).player;
                 player.pings.add(new Ping(game.net_tick, System.currentTimeMillis()));
@@ -200,11 +211,6 @@ public class GameServer {
                     con.sendTCP(msg);
                 newMsgs = new ArrayList<>();
             }
-
-            // AI
-            for (Player player : game.players)
-                if (player.ai != null)
-                    player.ai.update(TIMESCALE / VID_FPS);
 
             game.net_tick++;
         }

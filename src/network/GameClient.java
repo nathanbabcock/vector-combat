@@ -2,7 +2,6 @@ package network;
 
 import ai.AI;
 import ai.PathNode;
-import characters.CharClass;
 import characters.Character;
 import characters.Team;
 import com.esotericsoftware.kryonet.Connection;
@@ -79,8 +78,7 @@ public class GameClient extends JFrame {
 
         if (devmode) {
             this.game.ai = new AI();
-            this.game.ai.nodes = PathNode.readNodes("ctf_space.nodes");
-            // TODO load nodes and things
+            this.game.ai.nodes = PathNode.readNodes("ai_arena.nodes");
         }
 
         final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
@@ -103,7 +101,7 @@ public class GameClient extends JFrame {
                             { // DEBUG
                                 //inputState.xhair = new Point2f(1000, 30);
                                 //inputState.attacking = true;
-                                client.sendTCP(new SpawnParams(Team.RED, CharClass.ROCKETMAN));
+                                //client.sendTCP(new SpawnParams(Team.RED, CharClass.ROCKETMAN));
                             }
                         } else {
                             if (devmode && !game.ai.replay.isEmpty()) {

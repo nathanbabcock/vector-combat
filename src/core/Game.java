@@ -3,10 +3,7 @@ package core;
 import ai.AI;
 import characters.Team;
 import geometry.Polygon;
-import maps.Map;
-import maps.Map1;
-import maps.Map2;
-import maps.ctf_space;
+import maps.*;
 import network.ChatMessage;
 import particles.Particle;
 
@@ -79,6 +76,9 @@ public class Game {
                 map = new ctf_space();
                 entities.add(map.redflag.setGame(this));
                 entities.add(map.blueflag.setGame(this));
+                break;
+            case "ai_arena":
+                map = new ai_arena();
                 break;
             default:
                 System.err.println("Unknown map " + mapID + " specified");
