@@ -338,7 +338,7 @@ public class Ninja extends Character {
             Point2f origin = getRotationOrigin();
             grapple = new Grapple(game, origin.x, origin.y, Grapple.RADIUS);
             grapple.owner = player.clientID;
-            grapple.velocity = new Vector2f(xhair.x - origin.x, xhair.y - origin.y).setMagnitude(Rocket.VELOCITY);
+            grapple.velocity = new Vector2f(xhair.x - origin.x, xhair.y - origin.y).setMagnitude(Rocket.SPEED);
             grapple.acceleration = new Vector2f(0, 0);
             game.entities.add(grapple);
         }

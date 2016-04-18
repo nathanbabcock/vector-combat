@@ -1,9 +1,12 @@
 package ai;
 
 import characters.Character;
+import characters.Rocketman;
 import core.Game;
 import core.Player;
+import entities.Rocket;
 import geometry.Point2f;
+import geometry.Vector2f;
 import network.GameServer;
 import network.InputState;
 
@@ -117,7 +120,49 @@ public class AIController {
     }
 
     public void aimAt(Character target) {
-        player.character.xhair = target.getPosition();
+        try {
+            // TODO this entire caculation assumes linear motion, which is incorrect!
+
+            Point2f Pt = target.getPosition();
+            Point2f Pb = ((Rocketman) player.character).getProjectileOrigin();
+            float D = Pt.distance(Pb);
+            float St = target.velocity.getMagnitude();
+            float Sb = Rocket.SPEED;
+
+            Vector2f direction = new Vector2f(Pb.x - Pt.x, Pb.y - Pt.y).normalize();
+            Vector2f Vt = target.velocity.copy();
+            float cosTheta = direction.dot(Vt.normalize()); //  DotProduct( Normalize(Pbi - Pti), Normalize(Vt) )
+
+            // TODO optimize this calculation
+            float t1 = (float) ((-2 * D * St * cosTheta + Math.sqrt(Math.pow(2 * D * St * cosTheta, 2) + 4 * (Sb * Sb - St * St) * D * D)) / (2 * (Sb * Sb - St * St)));
+            float t2 = (float) ((-2 * D * St * cosTheta - Math.sqrt(Math.pow(2 * D * St * cosTheta, 2) + 4 * (Sb * Sb - St * St) * D * D)) / (2 * (Sb * Sb - St * St)));
+
+
+            boolean t1Possible = true;
+            boolean t2Possible = true;
+            if (t1 < 0 || Float.isNaN(t1))
+                t1Possible = false;
+            if (t2 < 0 || Float.isNaN(t2))
+                t2Possible = false;
+
+            float t;
+            if (t1Possible && !t2Possible)
+                t = t1;
+            else if (t2Possible && !t1Possible)
+                t = t2;
+            else if (t2Possible && t1Possible)
+                t = Math.min(t1, t2);
+            else
+                return;
+
+            System.out.println(t + " seconds to hit target");
+
+            Point2f col = Pt.copy().translate(Vt.scale(t));
+
+            player.character.xhair = col;//target.getPosition();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
     }
 
     public void attackTarget(Character target) {
@@ -168,15 +213,17 @@ public class AIController {
         PathNode node = ai.closestNode(player.character.getPosition());
 
         final int MARGIN = 10;
-        if (pos.x < node.minX() || Math.abs(pos.x - node.minX()) < MARGIN) {
-            player.character.movingLeft = false;
-            player.character.movingRight = true;
-            return;
-        } else if (pos.x > node.maxX() || Math.abs(pos.x - node.maxX()) < MARGIN) {
-            player.character.movingLeft = true;
-            player.character.movingRight = false;
-            return;
-        }
+        if (node != null)
+            if (pos.x < node.minX() || Math.abs(pos.x - node.minX()) < MARGIN) {
+                player.character.movingLeft = false;
+                player.character.movingRight = true;
+                return;
+            } else if (pos.x > node.maxX() || Math.abs(pos.x - node.maxX()) < MARGIN) {
+                player.character.movingLeft = true;
+                player.character.movingRight = false;
+                return;
+            }
+
 
         // No target (move randomly)
         if (target == null) {

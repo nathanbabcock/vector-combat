@@ -20,7 +20,7 @@ public class Rocket extends geometry.Polygon {
     public boolean exploded;
 
     public transient static final float RADIUS = 8;
-    public transient static final float VELOCITY = 500;
+    public transient static final float SPEED = 500;
     public transient static final float EXPLOSION_RADIUS = 100;
     public transient static final float EXPLOSION_MAGNITUDE = 300;
     public transient static final int DAMAGE = 0;//70;

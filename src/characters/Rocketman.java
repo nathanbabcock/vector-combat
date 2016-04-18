@@ -71,13 +71,13 @@ public class Rocketman extends Character {
         Rocket rocket = new Rocket(game, origin.x, origin.y, Rocket.RADIUS);
         rocket.owner = player.clientID;
         rocket.velocity = new Vector2f(xhair.x - origin.x, xhair.y - origin.y);
-        rocket.velocity.setMagnitude(Rocket.VELOCITY);
+        rocket.velocity.setMagnitude(Rocket.SPEED);
         rocket.acceleration = new Vector2f(0, 0);
         game.entities.add(rocket);
         currentAttackDelay = attackInterval;
     }
 
-    private Point2f getProjectileOrigin() {
+    public Point2f getProjectileOrigin() {
         final float GUN_LENGTH = 40;
         Point2f rot = getRotationOrigin();
         Vector2f delta = new Vector2f(rot, xhair).setMagnitude(GUN_LENGTH);
