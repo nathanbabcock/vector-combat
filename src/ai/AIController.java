@@ -119,7 +119,35 @@ public class AIController {
         }
     }
 
+
     public void aimAt(Character target) {
+        try {
+            final int MAX_ITER = 1;
+            Point2f Pt = target.getPosition();
+            Point2f Pb = ((Rocketman) player.character).getProjectileOrigin();
+            Vector2f Vt = target.velocity.copy();
+            Vector2f At = target.acceleration.copy();
+            if (At.isZero()) System.out.println("Zero acceleration");
+
+            float t = Pt.distance(Pb) / Rocket.SPEED;
+            if (Float.isNaN(t)) return;
+
+            System.out.println("Iterating for t:");
+            for (int n = 0; n < MAX_ITER; n++) {
+                Point2f Ptn = Pt.copy().translate(Vt.scale(t)).translate(At.scale(0.5f * t * t));
+                t = Ptn.distance(Pb) / Rocket.SPEED;
+                System.out.println("t = " + t);
+            }
+
+            System.out.println("After " + MAX_ITER + " iterations, t = " + t);
+
+            player.character.xhair = Pt.copy().translate(Vt.scale(t)).translate(At.scale(0.5f * t * t)); // Pt.copy().translate(Vt.scale(t));
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+    }
+
+    public void aimAt_old(Character target) {
         try {
             // TODO this entire caculation assumes linear motion, which is incorrect!
 
@@ -168,7 +196,7 @@ public class AIController {
     public void attackTarget(Character target) {
         if (target == null)
             player.character.attacking = false;
-        else {
+        else if (player.character.currentAttackDelay < 0.1f) {
             aimAt(target);
             player.character.attacking = true;
         }
