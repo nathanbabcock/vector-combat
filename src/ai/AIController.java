@@ -119,31 +119,36 @@ public class AIController {
         }
     }
 
+    float t = -1;
 
-    public void aimAt(Character target) {
+    public boolean aimAt(Character target) {
         try {
-            final int MAX_ITER = 1;
             Point2f Pt = target.getPosition();
             Point2f Pb = ((Rocketman) player.character).getProjectileOrigin();
             Vector2f Vt = target.velocity.copy();
             Vector2f At = target.acceleration.copy();
-            if (At.isZero()) System.out.println("Zero acceleration");
 
-            float t = Pt.distance(Pb) / Rocket.SPEED;
-            if (Float.isNaN(t)) return;
-
-            System.out.println("Iterating for t:");
-            for (int n = 0; n < MAX_ITER; n++) {
-                Point2f Ptn = Pt.copy().translate(Vt.scale(t)).translate(At.scale(0.5f * t * t));
-                t = Ptn.distance(Pb) / Rocket.SPEED;
-                System.out.println("t = " + t);
+            if (t < 0)
+                t = Pt.distance(Pb) / Rocket.SPEED;
+            if (Float.isNaN(t)) {
+                t = -1;
+                return false;
             }
 
-            System.out.println("After " + MAX_ITER + " iterations, t = " + t);
+            Point2f Ptn = Pt.copy().translate(Vt.scale(t)).translate(At.scale(0.5f * t * t));
+            t = Ptn.distance(Pb) / Rocket.SPEED;
+            System.out.println("t = " + t);
+
+            if (Float.isNaN(t) || t > 3) {
+                t = -1;
+                return false;
+            }
 
             player.character.xhair = Pt.copy().translate(Vt.scale(t)).translate(At.scale(0.5f * t * t)); // Pt.copy().translate(Vt.scale(t));
+            return true;
         } catch (Throwable t) {
             t.printStackTrace();
+            return false;
         }
     }
 
@@ -194,11 +199,14 @@ public class AIController {
     }
 
     public void attackTarget(Character target) {
-        if (target == null)
+        if (target == null) {
             player.character.attacking = false;
-        else if (player.character.currentAttackDelay < 0.1f) {
-            aimAt(target);
-            player.character.attacking = true;
+            t = -1;
+        } else {
+            if (aimAt(target))
+                player.character.attacking = true;
+            else
+                player.character.attacking = false;
         }
     }
 
@@ -240,7 +248,7 @@ public class AIController {
         Point2f pos = player.character.getPosition();
         PathNode node = ai.closestNode(player.character.getPosition());
 
-        final int MARGIN = 10;
+        final int MARGIN = 20;
         if (node != null)
             if (pos.x < node.minX() || Math.abs(pos.x - node.minX()) < MARGIN) {
                 player.character.movingLeft = false;
@@ -303,7 +311,10 @@ public class AIController {
             // TODO Detect when AI gets lost (lands on node not specified by previous edge playback)
             //pathfinding();
 
-            if (player.character == null) return;
+            if (player.character == null) {
+                t = -1;
+                return;
+            }
 
             // Perception
             Character target = null;
